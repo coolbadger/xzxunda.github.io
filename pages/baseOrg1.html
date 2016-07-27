@@ -61,22 +61,8 @@ layout: base
             }]
         });
     };
-    var editFields = new Array('id','orgCode','orgName','orgContact');
-    window.operateEvents = {
-        'click .edit': function (e, value, row, index) {
-            for (var item in editFields) {
-                $('#' + editFields[item]).val(row[editFields[item]]);
-            }
-            $('#myModal').modal('show');
-        },
-        'click .remove': function (e, value, row, index) {
-            alert('你选择了删除第' + index + '条记录,' + value + '是: ' + JSON.stringify(row));
-            $('#table').bootstrapTable('remove', {
-                field: 'id',
-                values: [row.id]
-            });
-        }
-    };
+
+    window.operateEvents = tableGen.operationEvent();
 
     tableGen.bind();
 

@@ -75,75 +75,23 @@ TableGen.prototype.operateFormatter = function (value, row, index) {
     ].join('');
 };
 
-//预设编辑事件方法
-// TableGen.prototype.operationEvent = function () {
-//     'click .edit': function(e, value, row, index) {
-//         for(var item in this.editFields){
-//             $('#'+item).val(row.[item]);
-//         }
-//         $('#'+this.modalName).modal('show');
-//     },
-//     'click .remove': function (e, value, row, index) {
-//         alert('你选择了删除第' + index + '条记录,' + value + '是: ' + JSON.stringify(row));
-//         $('#table').bootstrapTable('remove', {
-//             field: 'id',
-//             values: [row.id]
-//         });
-//     }
-// };
-
-//
-// var tableGen = new TableGen();
-// var tID = tableGen.tableID;
-// tableGen.setTable = function (inTable) {
-//     table.bootstrapTable({
-//         height: $(window).height(),
-//         columns: [{
-//             field: 'state',
-//             checkbox: true,
-//             align: 'center',
-//             valign: 'middle'
-//         }, {
-//             title: 'ID',
-//             field: 'id',
-//             align: 'center',
-//             sortable: true,
-//         }, {
-//             title: '组织代码',
-//             field: 'orgCode',
-//             align: 'center',
-//         }, {
-//             title: '组织名称',
-//             field: 'orgName',
-//             align: 'center',
-//         }, {
-//             title: '联系人',
-//             field: 'orgContact',
-//             align: 'center',
-//         }, {
-//             title: '地址',
-//             field: 'orgAddress',
-//             align: 'center',
-//         }, {
-//             title: '电话',
-//             field: 'orgTell',
-//             align: 'center',
-//         }, {
-//             title: '传真',
-//             field: 'orgFax',
-//             align: 'center',
-//         }, {
-//             title: '邮箱',
-//             field: 'orgEmail',
-//             align: 'center',
-//         }, {
-//             title: '操作',
-//             field: 'operate',
-//             align: 'center',
-//             valign: 'middle',
-//             formatter: operateFormatter,
-//             events: operateEvents
-//         }]
-//     });
-// }
-// tableGen.bind();
+// 预设编辑事件方法
+TableGen.prototype.operationEvent = function () {
+    var fields = this.editFields;
+    window.operateEvents = {
+        'click .edit': function (e, value, row, index) {
+            for (var item in fields) {
+                $('#' + fields[item]).val(row[fields[item]]);
+            }
+            $('#myModal').modal('show');
+        },
+        'click .remove': function (e, value, row, index) {
+            alert('你选择了删除第' + index + '条记录,' + value + '是: ' + JSON.stringify(row));
+            $('#table').bootstrapTable('remove', {
+                field: 'id',
+                values: [row.id]
+            });
+        }
+    };
+    return window.operateEvents;
+};
