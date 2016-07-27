@@ -1,0 +1,75 @@
+---
+layout: home
+---
+
+<div class="header">
+
+    <div class="dl-title">
+        <a href="">
+            <span class="lp-title-port">AMM</span><span class="dl-title-text">农机管理信息系统</span>
+        </a>
+    </div>
+
+    <div class="dl-log">欢迎您，<span class="dl-log-user">admin</span><a href="#" title="退出系统" class="dl-log-quit">[退出]</a>
+    </div>
+</div>
+<div class="content">
+    <div class="dl-main-nav">
+        <div class="dl-inform">
+            <div class="dl-inform-title"><s class="dl-inform-icon dl-up"></s>
+            </div>
+        </div>
+        <ul id="J_Nav" class="nav-list ks-clear">
+            <li class="nav-item dl-selected">
+                <div class="nav-item-inner nav-home">业务管理</div>
+            </li>
+            <li class="nav-item dl-selected">
+                <div class="nav-item-inner nav-order">系统管理</div>
+            </li>
+
+        </ul>
+    </div>
+    <ul id="J_NavContent" class="dl-tab-conten">
+    </ul>
+</div>
+
+<script>
+    BUI.use('common/main', function () {
+        var config = [{
+            id: 'business',
+//            homePage : 'code',
+            menu: [{
+                text: '农机监控',
+                items: [
+                    {id: 'code', text: '农机跟踪', href: '/pages/mach/mach_map.html'},
+                    {id: 'example', text: '历史记录', href: 'form/example.html'}
+                ]
+            }]
+        }, {
+            id: 'menu',
+            menu: [{
+                text: '组织机构',
+                items: [
+                    {id: 'baseOrg', text: '机构维护', href: 'baseOrg1.html'}
+                ]
+            },{
+                text: '用户管理',
+                items: [
+                    {id: 'orgUser', text: '业务人员', href: 'baseOrg.html'},
+                    {id: 'main-menu', text: '司机管理', href: 'main/menu.html'},
+                    {id: 'second-menu', text: '客户管理', href: 'main/second-menu.html'}
+                ]
+            }, {
+                text: '设备管理',
+                items: [
+                    {id: 'mach', text: '农机管理', href: 'main/operation.html'},
+                    {id: 'terminal', text: '终端管理', href: 'main/quick.html'},
+                    {id: 'mach_terminal', text: '农机终端', href: 'main/quick.html'}
+                ]
+            }]
+        }];
+        new PageUtil.MainPage({
+            modulesConfig: config
+        });
+    });
+</script>

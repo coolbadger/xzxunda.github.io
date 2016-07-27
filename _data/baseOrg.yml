@@ -1,0 +1,19 @@
+- name: ID
+  id: id
+  visible: false
+  placeholder:
+
+- name: 组织代码
+  id: orgCode
+  placeholder: 请输入组织代码
+
+- name: 组织名称
+  id: orgName
+  placeholder: 请输入组织名称
+
+- name: 联系人
+  id: orgContact
+  placeholder: 请输入联系人
+
+
+

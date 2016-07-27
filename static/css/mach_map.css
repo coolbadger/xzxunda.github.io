@@ -1,0 +1,44 @@
+html {
+    height: 100%
+}
+
+body {
+    height: 100%;
+    margin: 0px;
+    padding: 0px
+}
+
+.full_height {
+    height: 100%;
+}
+
+.main_container {
+    height: 100%;
+    padding-right: 15px;
+    padding-left: 0px;
+    margin-right: 0px;
+    margin-left: 0px;
+    background-color: #f6f6f6;
+}
+
+#map_container {
+    height: 100%;
+    padding-right: 0px;
+    padding-left: 0px;
+    margin-right: 0px;
+    margin-left: 0px;
+    border-color: #ddd;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+    box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+}
+
+.map_top {
+    height: 80%;
+}
+
+.map_bottom {
+    height: 20%;
+}
+

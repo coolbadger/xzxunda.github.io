@@ -1,0 +1,28 @@
+---
+layout: base
+title: 农机跟踪
+---
+
+{% include mapScript.html %}
+
+<div class="main_container">
+    <div class="row map_top">
+        <div class="col-md-9 full_height">
+            <div id="map_container"></div>
+        </div>
+        <div class="col-md-3">
+            <div id="operation">
+                <input type="button" value="跳转当前位置" onclick="goCurrentPosition()"/>
+                <input type="button" value="清除所有覆盖物" onclick="clearAll()"/>
+            </div>
+        </div>
+    </div>
+    <div class="row map_bottom">
+        <div class="col-md-12">bottom</div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    initMap('map_container');
+</script>
