@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script type="text/javascript">
+    function TableGen() {
+    }
+
+    TableGen.prototype.setTable = function (inTable) {
+
+    }
+    TableGen.prototype.tableID = 'table';
+    TableGen.prototype.modalName = 'myModal';
+    TableGen.prototype.editFields = {'id','orgCode','orgName','orgContact'};
+    TableGen.prototype.init = function () {
+        var $table = $('#' + this.tableID);
+        var $remove = $('#remove');
+        var selections = [];
+    };
+    TableGen.prototype.operateFormatter = function (value, row, index) {
+        return [
+            '<a class="edit" href="javascript:void(0)" title="修改">',
+            '<i class="glyphicon glyphicon-edit"></i>',
+            '</a>&nbsp;&nbsp;&nbsp;',
+            '<a class="remove" href="javascript:void(0)" title="删除">',
+            '<i class="glyphicon glyphicon-remove"></i>',
+            '</a>'
+        ].join('');
+    };
+    TableGen.prototype.operationEvent = function () {
+        'click .edit': function (e, value, row, index) {
+            for(var item in this.editFields){
+                $('#'+item).val(row.[item]);
+            }
+            $('#'+this.modalName).modal('show');
+        },
+        'click .remove': function (e, value, row, index) {
+            alert('你选择了删除第' + index + '条记录,' + value + '是: ' + JSON.stringify(row));
+            $('#table').bootstrapTable('remove', {
+                field: 'id',
+                values: [row.id]
+            });
+        }
+    }
+
+</script>
+</body>
+</html>
