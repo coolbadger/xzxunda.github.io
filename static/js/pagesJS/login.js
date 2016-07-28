@@ -16,7 +16,8 @@ secondCtrl.controller('loginCtrl', function ($scope, $location, httpService) {
             if (data.code == '200') {
                 //alert("success")
                 //$location.path('/home');
-                window.location.href="/pages/home.html";
+                $.cookie('islogin', 'true', {path: '/'});
+                window.location.href = "/pages/home.html";
             } else {
                 alert("error")
                 $location.path('/');
