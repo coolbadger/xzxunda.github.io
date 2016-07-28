@@ -23,3 +23,11 @@ function transformParams(params) {
 
     return paramStr;
 }
+
+function alertTip(alertId) {
+    var $alert = $('#' + alertId);
+    $alert.addClass('show');
+    setTimeout(function(){
+        $alert.removeClass('show').addClass('hide');
+    },1000);
+}

@@ -8,6 +8,8 @@ function TableGen() {
 TableGen.prototype.setTable = function (inTable) {
 
 }
+TableGen.prototype.success = 'success';
+TableGen.prototype.error = 'error';
 TableGen.prototype.tableID = 'table';
 TableGen.prototype.modalName = 'myModal';
 TableGen.prototype.editFields = new Array();
@@ -148,14 +150,14 @@ function saveItem (url, params, $http) {
         console.log(data);
         console.log(state);
         if (state == '201') {
-            alert("success");
+            alertTip(TableGen.prototype.success);
             $table.bootstrapTable('refresh', {url: apiUrl});
         } else {
-            alert("error");
+            alertTip(TableGen.prototype.error);
         }
     }).error(function (data) {
         console.log(data);
-        alert("error!!!!!!")
+        alertTip(TableGen.prototype.error);
     });
 }
 
@@ -169,14 +171,14 @@ function updateItem (url, params, $http) {
         console.log(state);
         console.log("success result:" + data);
         if (state == '205') {
-            alert("success");
+            alertTip(TableGen.prototype.success);
             $table.bootstrapTable('refresh', {url: apiUrl});
         } else {
-            alert("error");
+            alertTip(TableGen.prototype.error);
         }
     }).error(function (data) {
         console.log("err result:" + JSON.stringify(data));
-        alert("error!!!!!!")
+        alertTip(TableGen.prototype.error);
     });
 }
 
@@ -191,11 +193,11 @@ function deleteItem (apiUrl, id) {
             console.log("状态："+state);
             //console.log("返回删除对象："+JSON.stringify(result));
             if(state == 'success') {
-                //alert("成功删除记录");
+                alertTip(TableGen.prototype.success);
             }
         },
         error: function(result){
-            alert("error!!!!!");
+            alertTip(TableGen.prototype.error);
             console.log(result);
         }
     });

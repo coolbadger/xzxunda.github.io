@@ -2,6 +2,16 @@
     var apiUrl = '{{ site.apiurl }}' + '/' + '{{ include.apiName }}';
 </script>
 
+<div id="success" class="alert alert-success hide in">
+    <a href="#" class="close" data-dismiss="alert">&times;</a>
+    <strong>成功！</strong>操作是成功的。
+</div>
+
+<div id="error" class="alert alert-danger hide in">
+    <a href="#" class="close" data-dismiss="alert">&times;</a>
+    <strong>失败！</strong>操作是失败的。
+</div>
+
 <div class="container">
     <div id="toolbar">
         <button id="add" class="btn btn-primary" data-toggle="modal" data-target="#myModal" style="font-size: 12px">
