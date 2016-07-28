@@ -10,10 +10,11 @@ TableGen.prototype.setTable = function (inTable) {
 }
 TableGen.prototype.tableID = 'table';
 TableGen.prototype.modalName = 'myModal';
-TableGen.prototype.editFields = new Array('id','orgCode','orgName','orgContact');
+TableGen.prototype.editFields = new Array();
 
 //
 TableGen.prototype.bind = function () {
+    this.createOrUpdate();
     window.onload = this.init();
 }
 
@@ -39,6 +40,9 @@ TableGen.prototype.init = function () {
     //'删除已选'按钮操作
     $remove.click(function () {
         var ids = getIdSelections();
+        for(var idx in ids) {
+            deleteItem(apiUrl, ids[idx]);
+        }
         $table.bootstrapTable('remove', {
             field: 'id',
             values: ids
@@ -58,9 +62,14 @@ TableGen.prototype.init = function () {
 
     $(window).resize(function () {
         $table.bootstrapTable('resetView', {
-            height: getHeight()
+            height: $(window).height()
         });
     });
+    function getIdSelections() {
+        return $.map($table.bootstrapTable('getSelections'), function (row) {
+            return row.id
+        });
+    }
 };
 
 //预设初始化编辑列方法
@@ -77,17 +86,21 @@ TableGen.prototype.operateFormatter = function (value, row, index) {
 
 // 预设编辑事件方法
 TableGen.prototype.operationEvent = function () {
+    var $table = $('#' + this.tableID);
+    var $modal = $('#' + this.modalName);
     var fields = this.editFields;
     window.operateEvents = {
         'click .edit': function (e, value, row, index) {
             for (var item in fields) {
                 $('#' + fields[item]).val(row[fields[item]]);
             }
-            $('#myModal').modal('show');
+            $modal.modal('show');
         },
         'click .remove': function (e, value, row, index) {
-            alert('你选择了删除第' + index + '条记录,' + value + '是: ' + JSON.stringify(row));
-            $('#table').bootstrapTable('remove', {
+            var id = [row.id];
+            alert(id);
+            deleteItem(apiUrl, id);
+            $table.bootstrapTable('remove', {
                 field: 'id',
                 values: [row.id]
             });
@@ -95,3 +108,97 @@ TableGen.prototype.operationEvent = function () {
     };
     return window.operateEvents;
 };
+
+//angularjs提交创建记录或修改记录的方法
+TableGen.prototype.createOrUpdate = function () {
+    var app = angular.module('app', []);
+    var fields = this.editFields;
+    app.controller('ctrl', function ($scope, $http) {
+        $scope.saveObj = function() {
+            var params = '';
+            for(var item in fields) {
+                params += '"'+ fields[item] + '":"' + $('#' + fields[item]).val() + '",'
+            }
+            params = params.substring(0, params.length - 1);
+            params = "{" + params + "}";
+            params = JSON.parse(params);
+            var id = $('#id').val();//取得隐藏id控件的值，用来判断saveOrg方法是创建记录，还是还是修改记录
+            console.log(id);
+            if (id != "") {  //修改
+                var url = apiUrl + '/' + id;
+                console.log(params);
+                updateItem(url, params, $http);
+            } else {    //创建
+                var url = apiUrl;
+                var paramStr = transformParams(params);
+                console.log(paramStr);
+                saveItem(url, params, $http);
+            }
+            $('#myModal').modal('hide');
+        }
+    });
+}
+
+//删除一条记录的方法
+function deleteItem (apiUrl, id) {
+    var url = apiUrl + "/" +id;
+    $.ajax({
+        url: url,
+        type: 'DELETE',
+        success: function(result, state) {
+            console.log("状态："+state);
+            //console.log("返回删除对象："+JSON.stringify(result));
+            if(state == 'success') {
+                //alert("成功删除记录");
+            }
+        },
+        error: function(result){
+            alert("error!!!!!");
+            console.log(result);
+        }
+    });
+}
+
+//创建一条记录的方法
+function saveItem (url, params, $http) {
+    var $table = $('#' + TableGen.prototype.tableID);
+    $http.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+    var paramStr = transformParams(params);
+    console.log(paramStr);
+    $http.post(url, paramStr, {
+        'Content-Type': "application/json"
+    }).success(function (data, state) {
+        console.log(data);
+        console.log(state);
+        if (state == '201') {
+            alert("success");
+            $table.bootstrapTable('refresh', {url: apiUrl});
+        } else {
+            alert("error");
+        }
+    }).error(function (data) {
+        console.log(data);
+        alert("error!!!!!!")
+    });
+}
+
+//修改一条记录的方法
+function updateItem (url, params, $http) {
+    var $table = $('#' + TableGen.prototype.tableID);
+    $http.put(url, params, {
+        'Content-Type': "application/json",
+        "X-HTTP-Method-Override": "PUT"
+    }).success(function (data, state) {
+        console.log(state);
+        console.log("success result:" + data);
+        if (state == '205') {
+            alert("success");
+            $table.bootstrapTable('refresh', {url: apiUrl});
+        } else {
+            alert("error");
+        }
+    }).error(function (data) {
+        console.log("err result:" + JSON.stringify(data));
+        alert("error!!!!!!")
+    });
+}
