@@ -1,10 +1,6 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title></title>
+---
+layout: index
+---
 
     <style type="text/css">
         body {
@@ -46,9 +42,7 @@
         }
 
     </style>
-</head>
-<body>
-<div class="container">
+<div class="container" ng-app="login" ng-controller="loginCtrl">
 
     <form id="loginForm" class="form-signin" method="post">
         <h2 class="form-signin-heading col-lg-12">登录系统</h2>
@@ -63,5 +57,3 @@
         <!--<div ng-model="name"><p>我的第一个表达式: {{ name }}</p></div>-->
     </form>
 </div>
-</body>
-</html>
