@@ -7,7 +7,7 @@ layout: base
 <script type="text/javascript">
 
     var tableGen = new TableGen();
-    tableGen.editFields = new Array('id','orgCode','orgName','orgContact');
+    tableGen.editFields = new Array('id','orgCode','orgName','orgContact', 'orgAddress', 'orgTell', 'orgFax', 'orgEmail', 'notes');
 
     tableGen.setTable = function (inTable) {
         inTable.bootstrapTable({
@@ -49,6 +49,10 @@ layout: base
             }, {
                 title: '邮箱',
                 field: 'orgEmail',
+                align: 'center',
+            },{
+                title: '备注',
+                field: 'notes',
                 align: 'center',
             }, {
                 title: '操作',

@@ -109,7 +109,7 @@ TableGen.prototype.operationEvent = function () {
     return window.operateEvents;
 };
 
-//angularjs提交创建记录或修改记录的方法
+//angular提交创建记录或修改记录的方法
 TableGen.prototype.createOrUpdate = function () {
     var app = angular.module('app', []);
     var fields = this.editFields;
@@ -130,8 +130,7 @@ TableGen.prototype.createOrUpdate = function () {
                 updateItem(url, params, $http);
             } else {    //创建
                 var url = apiUrl;
-                var paramStr = transformParams(params);
-                console.log(paramStr);
+                console.log(params);
                 saveItem(url, params, $http);
             }
             $('#myModal').modal('hide');
@@ -139,33 +138,11 @@ TableGen.prototype.createOrUpdate = function () {
     });
 }
 
-//删除一条记录的方法
-function deleteItem (apiUrl, id) {
-    var url = apiUrl + "/" +id;
-    $.ajax({
-        url: url,
-        type: 'DELETE',
-        success: function(result, state) {
-            console.log("状态："+state);
-            //console.log("返回删除对象："+JSON.stringify(result));
-            if(state == 'success') {
-                //alert("成功删除记录");
-            }
-        },
-        error: function(result){
-            alert("error!!!!!");
-            console.log(result);
-        }
-    });
-}
-
 //创建一条记录的方法
 function saveItem (url, params, $http) {
     var $table = $('#' + TableGen.prototype.tableID);
-    $http.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
-    var paramStr = transformParams(params);
-    console.log(paramStr);
-    $http.post(url, paramStr, {
+    //$http.defaults.headers.post['Content-Type'] = 'application/json';
+    $http.post(url, params, {
         'Content-Type': "application/json"
     }).success(function (data, state) {
         console.log(data);
@@ -200,5 +177,26 @@ function updateItem (url, params, $http) {
     }).error(function (data) {
         console.log("err result:" + JSON.stringify(data));
         alert("error!!!!!!")
+    });
+}
+
+
+//删除一条记录的方法
+function deleteItem (apiUrl, id) {
+    var url = apiUrl + "/" +id;
+    $.ajax({
+        url: url,
+        type: 'DELETE',
+        success: function(result, state) {
+            console.log("状态："+state);
+            //console.log("返回删除对象："+JSON.stringify(result));
+            if(state == 'success') {
+                //alert("成功删除记录");
+            }
+        },
+        error: function(result){
+            alert("error!!!!!");
+            console.log(result);
+        }
     });
 }

@@ -15,5 +15,24 @@
   id: orgContact
   placeholder: 请输入联系人
 
+- name: 地址
+  id: orgAddress
+  placeholder: 请输入地址
+
+- name: 电话
+  id: orgTell
+  placeholder: 请输入电话
+
+- name: 传真
+  id: orgFax
+  placeholder: 请输入传真
+
+- name: 邮箱
+  id: orgEmail
+  placeholder: 请输入邮箱
+- name: 备注
+  id: notes
+  placeholder: 请输入备注
+
 
 
