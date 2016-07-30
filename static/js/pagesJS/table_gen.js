@@ -14,6 +14,8 @@ TableGen.prototype.tableID = 'table';
 TableGen.prototype.modalName = 'myModal';
 TableGen.prototype.editFields = new Array();
 
+TableGen.prototype.validates;
+
 //
 TableGen.prototype.bind = function () {
     this.createOrUpdate();
@@ -31,6 +33,7 @@ TableGen.prototype.init = function () {
     setTimeout(function () {
         $table.bootstrapTable('resetView');
     }, 200);
+
     $table.on('check.bs.table uncheck.bs.table ' +
         'check-all.bs.table uncheck-all.bs.table', function () {
         $remove.prop('disabled', !$table.bootstrapTable('getSelections').length);
@@ -42,14 +45,23 @@ TableGen.prototype.init = function () {
     //'删除已选'按钮操作
     $remove.click(function () {
         var ids = getIdSelections();
-        for(var idx in ids) {
-            deleteItem(apiUrl, ids[idx]);
-        }
-        $table.bootstrapTable('remove', {
-            field: 'id',
-            values: ids
+        bootbox.setLocale("zh_CN");
+        bootbox.confirm({
+            size: 'small',
+            message: "确认删除已选记录吗？",
+            callback: function (result) {
+                if (result) {
+                    for (var idx in ids) {
+                        deleteItem(apiUrl, ids[idx]);
+                    }
+                    $table.bootstrapTable('remove', {
+                        field: 'id',
+                        values: ids
+                    });
+                    $remove.prop('disabled', !getIdSelections().length);
+                }
+            }
         });
-        $remove.prop('disabled', true);
     });
 
     //'添加'按钮操作，清除模态框内的数据
@@ -72,6 +84,7 @@ TableGen.prototype.init = function () {
             return row.id
         });
     }
+
 };
 
 //预设初始化编辑列方法
@@ -88,7 +101,6 @@ TableGen.prototype.operateFormatter = function (value, row, index) {
 
 // 预设编辑事件方法
 TableGen.prototype.operationEvent = function () {
-    var $table = $('#' + this.tableID);
     var $modal = $('#' + this.modalName);
     var fields = this.editFields;
     window.operateEvents = {
@@ -100,11 +112,15 @@ TableGen.prototype.operationEvent = function () {
         },
         'click .remove': function (e, value, row, index) {
             var id = [row.id];
-            alert(id);
-            deleteItem(apiUrl, id);
-            $table.bootstrapTable('remove', {
-                field: 'id',
-                values: [row.id]
+            bootbox.setLocale("zh_CN");
+            bootbox.confirm({
+                size: 'small',
+                message: "确认删除已选记录吗？",
+                callback: function (result) {
+                    if (result) {
+                        deleteItem(apiUrl, id);
+                    }
+                }
             });
         }
     };
@@ -115,33 +131,40 @@ TableGen.prototype.operationEvent = function () {
 TableGen.prototype.createOrUpdate = function () {
     var app = angular.module('app', []);
     var fields = this.editFields;
+    var val = this.validates;
     app.controller('ctrl', function ($scope, $http) {
-        $scope.saveObj = function() {
-            var params = '';
-            for(var item in fields) {
-                params += '"'+ fields[item] + '":"' + $('#' + fields[item]).val() + '",'
-            }
-            params = params.substring(0, params.length - 1);
-            params = "{" + params + "}";
-            params = JSON.parse(params);
-            var id = $('#id').val();//取得隐藏id控件的值，用来判断saveOrg方法是创建记录，还是还是修改记录
-            console.log(id);
-            if (id != "") {  //修改
-                var url = apiUrl + '/' + id;
-                console.log(params);
-                updateItem(url, params, $http);
-            } else {    //创建
-                var url = apiUrl;
-                console.log(params);
-                saveItem(url, params, $http);
-            }
-            $('#myModal').modal('hide');
+        $scope.saveObj = function () {
+            var rules = val;
+            new validate({
+                rules: rules,
+                focusInvalid : false,
+                submitFun: function () {
+                    var params = '';
+                    for (var item in fields) {
+                        params += '"' + fields[item] + '":"' + $('#' + fields[item]).val() + '",'
+                    }
+                    params = params.substring(0, params.length - 1);
+                    params = "{" + params + "}";
+                    params = JSON.parse(params);
+                    var id = $('#id').val();//取得隐藏id控件的值，用来判断saveOrg方法是创建记录，还是还是修改记录
+                    console.log("id:" + id);
+                    console.log("传入的参数：" + params);
+                    if (id != "") {  //修改
+                        var url = apiUrl + '/' + id;
+                        updateItem(url, params, $http);
+                    } else {    //创建
+                        var url = apiUrl;
+                        saveItem(url, params, $http);
+                    }
+                    $('#myModal').modal('hide');
+                }
+            })
         }
     });
 }
 
 //创建一条记录的方法
-function saveItem (url, params, $http) {
+function saveItem(url, params, $http) {
     var $table = $('#' + TableGen.prototype.tableID);
     //$http.defaults.headers.post['Content-Type'] = 'application/json';
     $http.post(url, params, {
@@ -156,13 +179,13 @@ function saveItem (url, params, $http) {
             alertTip(TableGen.prototype.error);
         }
     }).error(function (data) {
-        console.log(data);
+        console.log("err result:" + JSON.stringify(data));
         alertTip(TableGen.prototype.error);
     });
 }
 
 //修改一条记录的方法
-function updateItem (url, params, $http) {
+function updateItem(url, params, $http) {
     var $table = $('#' + TableGen.prototype.tableID);
     $http.put(url, params, {
         'Content-Type': "application/json",
@@ -184,19 +207,24 @@ function updateItem (url, params, $http) {
 
 
 //删除一条记录的方法
-function deleteItem (apiUrl, id) {
-    var url = apiUrl + "/" +id;
+function deleteItem(apiUrl, id) {
+    var $table = $('#' + TableGen.prototype.tableID);
+    var url = apiUrl + "/" + id;
     $.ajax({
         url: url,
         type: 'DELETE',
-        success: function(result, state) {
-            console.log("状态："+state);
+        success: function (result, state) {
+            console.log("状态：" + state);
             //console.log("返回删除对象："+JSON.stringify(result));
-            if(state == 'success') {
+            if (state == 'success') {
                 alertTip(TableGen.prototype.success);
+                $table.bootstrapTable('remove', {
+                    field: 'id',
+                    values: id
+                });
             }
         },
-        error: function(result){
+        error: function (result) {
             alertTip(TableGen.prototype.error);
             console.log(result);
         }

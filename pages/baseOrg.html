@@ -9,6 +9,8 @@ layout: base
     var tableGen = new TableGen();
     tableGen.editFields = new Array('id','orgCode','orgName','orgContact', 'orgAddress', 'orgTell', 'orgFax', 'orgEmail', 'notes');
 
+    tableGen.validates = {orgCode: "notEmpty", orgName: "notEmpty", orgContact: "notEmpty"};
+
     tableGen.setTable = function (inTable) {
         inTable.bootstrapTable({
             height: $(window).height(),

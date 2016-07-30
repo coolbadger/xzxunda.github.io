@@ -26,8 +26,7 @@ function transformParams(params) {
 
 function alertTip(alertId) {
     var $alert = $('#' + alertId);
-    $alert.addClass('show');
-    setTimeout(function(){
-        $alert.removeClass('show').addClass('hide');
-    },1000);
+    $alert.css('z-index','999');
+    $alert.show();
+    $alert.delay(1000).hide(0);
 }
