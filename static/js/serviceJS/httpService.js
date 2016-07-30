@@ -9,7 +9,7 @@
 
     httpService.service('httpService', function ($http) {
 
-        var baseURL = 'http://192.168.1.200:8080/';
+        var baseURL = 'http://lekoxnfx.oicp.net:17104/';
 
         var postURL = function (url, params, successFunc) {
             var strUrl = baseURL + url;
