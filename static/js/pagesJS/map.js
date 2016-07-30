@@ -37,7 +37,7 @@ function initMap(containerID) {
 //跳转到徐州双沟镇
 function goShuangGou() {
     var sgPoint = new BMap.Point(117.606257, 34.042178);
-    var mk = new BMap.Marker(position.point);//添加标记点
+    var mk = new BMap.Marker(sgPoint);//添加标记点
     map.addOverlay(mk);
     map.panTo(sgPoint);
     map.setCenter(sgPoint);
