@@ -34,6 +34,12 @@ function initMap(containerID) {
     return map;
 }
 
+//跳转到徐州双沟镇
+function goShuangGou() {
+    var sgPoint = new BMap.Point(117.606257, 34.042178);
+    map.setCenter(sgPoint);
+}
+
 // 跳转到当前位置,并添加标记点
 function goCurrentPosition() {
     var geolocation = new BMap.Geolocation();
