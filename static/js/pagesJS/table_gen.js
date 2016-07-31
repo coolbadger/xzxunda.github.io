@@ -16,6 +16,7 @@ TableGen.prototype.editFields = new Array();
 
 TableGen.prototype.validates;
 
+
 //
 TableGen.prototype.bind = function () {
     this.createOrUpdate();
@@ -129,10 +130,10 @@ TableGen.prototype.operationEvent = function () {
 
 //angular提交创建记录或修改记录的方法
 TableGen.prototype.createOrUpdate = function () {
-    var app = angular.module('app', []);
+    var app = angular.module("app", []);
     var fields = this.editFields;
     var val = this.validates;
-    app.controller('ctrl', function ($scope, $http) {
+    app.controller("ctrl", function ($scope, $http) {
         $scope.saveObj = function () {
             var rules = val;
             new validate({
