@@ -18,11 +18,6 @@
   span: 1
   placeholder: 请输入联系人
 
-- name: 地址
-  id: orgAddress
-  span: 1
-  placeholder: 请输入地址
-
 - name: 电话
   id: orgTell
   span: 1
@@ -30,11 +25,18 @@
 
 - name: 传真
   id: orgFax
+  span: 1
   placeholder: 请输入传真
 
 - name: 邮箱
   id: orgEmail
+  span: 1
   placeholder: 请输入邮箱
+
+- name: 地址
+  id: orgAddress
+  placeholder: 请输入地址
+
 - name: 备注
   id: notes
   placeholder: 请输入备注

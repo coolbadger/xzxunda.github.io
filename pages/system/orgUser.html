@@ -9,7 +9,7 @@ layout: base
     var tableGen = new TableGen();
     tableGen.editFields = new Array('id','userName','password','fullName', 'post', 'tell', 'email', 'state', 'notes');
 
-    tableGen.validates = {userName: "notEmpty", password: "notEmpty", tell: "mobile"};
+    tableGen.validates = {userName: "notEmpty", password: "notEmpty"};
 
     tableGen.setTable = function (inTable) {
         inTable.bootstrapTable({

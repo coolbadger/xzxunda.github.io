@@ -5,30 +5,37 @@
 
 - name: 用户名
   id: userName
+  span: 1
   placeholder: 请输入用户名
 
 - name: 密码
   id: password
+  span: 1
   placeholder: 请输入密码
-
-- name: 真实姓名
-  id: fullName
-  placeholder: 请输入真实姓名
-
-- name: 职位
-  id: post
-  placeholder: 请输入职位
 
 - name: 联系电话
   id: tell
+  span: 1
   placeholder: 请输入联系电话
 
 - name: 邮箱
   id: email
+  span: 1
   placeholder: 请输入邮箱
+
+- name: 真实姓名
+  id: fullName
+  span: 1
+  placeholder: 请输入真实姓名
+
+- name: 职位
+  id: post
+  span: 1
+  placeholder: 请输入职位
 
 - name: 状态
   id: state
+  span: 1
   placeholder: 请输入状态
 
 - name: 备注
