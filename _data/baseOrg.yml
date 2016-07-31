@@ -5,22 +5,27 @@
 
 - name: 组织代码
   id: orgCode
+  span: 1
   placeholder: 请输入组织代码
 
 - name: 组织名称
   id: orgName
+  span: 1
   placeholder: 请输入组织名称
 
 - name: 联系人
   id: orgContact
+  span: 1
   placeholder: 请输入联系人
 
 - name: 地址
   id: orgAddress
+  span: 1
   placeholder: 请输入地址
 
 - name: 电话
   id: orgTell
+  span: 1
   placeholder: 请输入电话
 
 - name: 传真

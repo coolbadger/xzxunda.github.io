@@ -1,0 +1,140 @@
+<script>
+    var apiObjUrl = '{{ site.apiurl }}' + '/api/' + '{{ include.apiName }}';
+</script>
+
+<div id="success" class="alert alert-success po">
+    <a href="#" class="close" data-dismiss="alert">&times;</a>
+    <strong>成功！&nbsp;</strong>操作成功！。
+</div>
+
+<div id="error" class="alert alert-danger po">
+    <a href="#" class="close" data-dismiss="alert">&times;</a>
+    <strong>失败！&nbsp;</strong>&nbsp;操作失败，请联系管理员。
+</div>
+
+<div class="container" style="z-index: 1">
+    <div id="toolbar">
+        <button id="add" class="btn btn-primary" data-toggle="modal" data-target="#myModal" style="font-size: 12px">
+            <i class="glyphicon glyphicon-plus"></i> 添加
+        </button>
+        <button id="remove" class="btn btn-danger" disabled style="font-size: 12px">
+            <i class="glyphicon glyphicon-remove"></i> 删除已选
+        </button>
+    </div>
+    <table id="table"
+           class="table table-hover table-bordered table-striped"
+           data-toolbar="#toolbar"
+           data-search="true"
+           data-show-refresh="true"
+           data-show-toggle="true"
+           data-show-columns="true"
+           data-show-export="true"
+           data-minimum-count-columns="2"
+           data-show-pagination-switch="true"
+           data-pagination="true"
+           data-id-field="id"
+           data-page-list="[10, 25, 50, 100, ALL]"
+           data-url="{{ site.apiurl }}/api/{{ include.apiName }}"
+           datatype="json"
+           data-local="zh-US"
+    >
+    </table>
+</div>
+
+<!-- Modal -->
+<div ng-app="app" ng-controller="ctrl" class="modal fade" id="myModal" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" data-backdrop="static">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">添加信息</h4>
+            </div>
+            <div class="modal-body">
+                <div id="myForm" action="#" method="post" class="form-horizontal">
+                    <!--定义上一个标签是否未完结-->
+                    {% assign isFinished = true %}
+                    {% for item in include.inData %}
+                    <!--如果当前为半长-->
+                    {% if item.span == 1 %}
+                    <!--判断上一个标签是否完结-->
+                    {% if isFinished %}
+                    <div class="form-group {% if item.visible == false %} hidden {% endif %}">
+                        <label for="{{ item.id }}"
+                               class="col-sm-2 control-label">{{
+                            item.name }}</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" id="{{ item.id }}" name="{{ item.id }}"
+                                   placeholder="{{ item.placeholder }}">
+                        </div>
+
+                    {% assign isFinished = false %}
+                    {% else %}
+                        <label for="{{ item.id }}"
+                               class="col-sm-2 control-label">{{
+                            item.name }}</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" id="{{ item.id }}" name="{{ item.id }}"
+                                   placeholder="{{ item.placeholder }}">
+                        </div>
+                    </div>
+
+                    {% assign isFinished = true %}
+                    {% endif %}
+                    <!--如果当前为全长-->
+                    {% else %}
+                    <!--判断上一个标签是否完结-->
+                    {% if isFinished %}
+                    <div class="form-group {% if item.visible == false %} hidden {% endif %}">
+                        <label for="{{ item.id }}"
+                               class="col-sm-2 control-label">{{
+                            item.name }}</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="{{ item.id }}" name="{{ item.id }}"
+                                   placeholder="{{ item.placeholder }}">
+                        </div>
+                    </div>
+                    {% else %}
+                    </div>
+                    <div class="form-group {% if item.visible == false %} hidden {% endif %}">
+                        <label for="{{ item.id }}"
+                               class="col-sm-2 control-label">{{
+                            item.name }}</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="{{ item.id }}" name="{{ item.id }}"
+                                   placeholder="{{ item.placeholder }}">
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% assign isFinished = true %}
+                    {% endif %}
+                    {% endfor %}
+                    <!--判断结尾一个是否为半长,若为半长,则添加标签尾部-->
+                    {% if !isFinished %}
+                    </div>
+                    {% endif%}
+                    <!--{% for item in include.inData %}-->
+                    <!--<div class="form-group {% if item.visible == false %} hidden {% endif %}">-->
+                    <!--<label for="{{ item.id }}" class="{% if item.span == 1 %}col-sm-2{% else %}col-sm-2{% endif %} control-label">{{ item.name }}</label>-->
+                    <!--<div class="{% if item.span == 1 %}col-sm-4{% else %}col-sm-10{% endif %}">-->
+                    <!--<input type="text" class="form-control" id="{{ item.id }}" name="{{ item.id }}"-->
+                    <!--placeholder="{{ item.placeholder }}">-->
+                    <!--</div>-->
+                    <!--</div>-->
+                    <!--{% endfor %}-->
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button ng-click="saveObj()" class="btn btn-success">
+                    <i class="glyphicon glyphicon-ok"></i> 保存
+                </button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">
+                    <i class="glyphicon glyphicon-remove"></i> 取消
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="/static/js/pagesJS/table_gen.js" charset="utf-8"></script>

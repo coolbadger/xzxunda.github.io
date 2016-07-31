@@ -53,7 +53,7 @@ TableGen.prototype.init = function () {
             callback: function (result) {
                 if (result) {
                     for (var idx in ids) {
-                        deleteItem(apiUrl, ids[idx]);
+                        deleteItem(apiObjUrl, ids[idx]);
                     }
                     $table.bootstrapTable('remove', {
                         field: 'id',
@@ -119,7 +119,7 @@ TableGen.prototype.operationEvent = function () {
                 message: "确认删除已选记录吗？",
                 callback: function (result) {
                     if (result) {
-                        deleteItem(apiUrl, id);
+                        deleteItem(apiObjUrl, id);
                     }
                 }
             });
@@ -151,10 +151,10 @@ TableGen.prototype.createOrUpdate = function () {
                     console.log("id:" + id);
                     console.log("传入的参数：" + params);
                     if (id != "") {  //修改
-                        var url = apiUrl + '/' + id;
+                        var url = apiObjUrl + '/' + id;
                         updateItem(url, params, $http);
                     } else {    //创建
-                        var url = apiUrl;
+                        var url = apiObjUrl;
                         saveItem(url, params, $http);
                     }
                     $('#myModal').modal('hide');
@@ -175,7 +175,7 @@ function saveItem(url, params, $http) {
         console.log(state);
         if (state == '201') {
             alertTip(TableGen.prototype.success);
-            $table.bootstrapTable('refresh', {url: apiUrl});
+            $table.bootstrapTable('refresh', {url: apiObjUrl});
         } else {
             alertTip(TableGen.prototype.error);
         }
@@ -196,7 +196,7 @@ function updateItem(url, params, $http) {
         console.log("success result:" + data);
         if (state == '205') {
             alertTip(TableGen.prototype.success);
-            $table.bootstrapTable('refresh', {url: apiUrl});
+            $table.bootstrapTable('refresh', {url: apiObjUrl});
         } else {
             alertTip(TableGen.prototype.error);
         }
