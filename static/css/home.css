@@ -1,10 +1,11 @@
 body{
     font-size: 12px;
 }
-/*ÌáÊ¾¿òÑùÊ½*/
+/*æç¤ºæ¡†æ ·å¼*/
 .po{
     position: absolute;
     display: none;
+    top: 35%;
     left: 35%;
     width: 300px;
 }
