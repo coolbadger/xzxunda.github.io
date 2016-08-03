@@ -4,25 +4,33 @@ title: 农机跟踪
 ---
 
 {% include mapScript.html %}
+{% include temp/control_head.html %}
 
 <div class="main_container">
-    <div class="row map_top">
-        <div class="col-md-9 full_height">
-            <div id="map_container"></div>
+    <div class="row full_height">
+        <div class="col-md-9 map_part border">
+            <div class="row map_top border">
+                <div id="map_container"></div>
+            </div>
+            <div class="row map_bottom border">
+                <div id="operation">
+                    <input type="button" value="跳转到当前位置" onclick="goCurrentPosition()"/>
+                    <input type="button" value="跳转到双沟镇" onclick="goShuangGou()"/>
+                    <input type="button" value="清除所有覆盖物" onclick="clearAll()"/>
+                </div>
+            </div>
         </div>
-        <div class="col-md-3">
-            <div id="operation">
-                <input type="button" value="跳转到当前位置" onclick="goCurrentPosition()"/>
-                <input type="button" value="跳转到双沟镇" onclick="goShuangGou()"/>
-                <input type="button" value="清除所有覆盖物" onclick="clearAll()"/>
+        <div class="col-md-3 info_part border">
+            <div class="row">
+                <div class="col-md-12">
+                    {% include temp/datetime.html id='dtp_start' text='开始时间:' %}
+                    {% include temp/datetime.html id='dtp_end' text='结束时间:' %}
+                    {% include temp/textbox.html id='dtp_car' text='车牌号:' placeholder='请输入车牌号' %}
+                </div>
             </div>
         </div>
     </div>
-    <div class="row map_bottom">
-        <div class="col-md-12">bottom</div>
-    </div>
 </div>
-
 
 <script type="text/javascript">
     initMap('map_container');

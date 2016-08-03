@@ -1,37 +1,42 @@
-html {
+html, body, .full_height, .map_part {
     height: 100%
 }
 
-body {
-    height: 100%;
-    margin: 0px;
-    padding: 0px
-}
-
-.full_height {
-    height: 100%;
+.none_border {
+    padding-right: 0px;
+    padding-left: 0px;
+    margin-right: 0px;
+    margin-left: 0px
 }
 
 .main_container {
     height: 100%;
     padding-right: 15px;
-    padding-left: 0px;
-    margin-right: 0px;
-    margin-left: 0px;
+    padding-left: 15px;
     background-color: #f6f6f6;
 }
 
 #map_container {
     height: 100%;
-    padding-right: 0px;
-    padding-left: 0px;
-    margin-right: 0px;
-    margin-left: 0px;
     border-color: #ddd;
     border: 1px solid transparent;
     border-radius: 4px;
     -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
     box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+}
+
+.info_part {
+    height: 100%;
+    padding-top: 15px;
+}
+
+.border {
+    border-color: #000000;
+    border: 1px solid;
+    border-radius: 4px;
+}
+
+.map_part {
 }
 
 .map_top {
@@ -42,3 +47,6 @@ body {
     height: 20%;
 }
 
+.calendar {
+    width: 200px;
+}

@@ -1,0 +1,9 @@
+/*自定义空间类型样式表*/
+
+.lab_padding {
+    padding: 8px;
+}
+
+.text_input {
+    border-radius: 4px !important;
+}
