@@ -13,6 +13,7 @@ TableGen.prototype.error = 'error';
 TableGen.prototype.tableID = 'table';
 TableGen.prototype.modalName = 'myModal';
 TableGen.prototype.editFields = new Array();
+TableGen.prototype.settings = new Object();
 
 TableGen.prototype.validates;
 
@@ -29,7 +30,9 @@ TableGen.prototype.init = function () {
     var $remove = $('#remove');
     var selections = [];
 
-    this.setTable($table);
+    // this.setTable($table);
+
+    $table.bootstrapTable(this.settings);
 
     setTimeout(function () {
         $table.bootstrapTable('resetView');

@@ -25,7 +25,8 @@ title: 农机跟踪
                 <div class="col-md-12">
                     {% include temp/datetime.html id='dtp_start' text='开始时间:' %}
                     {% include temp/datetime.html id='dtp_end' text='结束时间:' %}
-                    {% include temp/textbox.html id='dtp_car' text='车牌号:' placeholder='请输入车牌号' %}
+                    {% include temp/textbox.html id='dtp_car' text='车牌号:' placeholder='请输入车牌号' showButton = true %}
+                    {% include temp/simple_table.html %}
                 </div>
             </div>
         </div>
@@ -34,4 +35,35 @@ title: 农机跟踪
 
 <script type="text/javascript">
     initMap('map_container');
+    var simpleTableGen = new SimpleTableGen();
+    var settings = new Object();
+    settings.columns = [{
+        field: 'state',
+        checkbox: true,
+        align: 'center',
+        valign: 'middle'
+    }, {
+        field: 'carID',
+        title: '车号',
+        align: 'center',
+    }, {
+        field: 'states',
+        title: '状态',
+        align: 'center',
+    }];
+    settings.data = [{
+        carID: 'A001',
+        states: '活动中',
+    }, {
+        carID: 'A002',
+        states: '不活动',
+    }];
+    settings.rowStyle = function (row, index) {
+        console.log(row);
+        return 'row_focus';
+    };
+    settings.clickToSelect = true;
+
+    simpleTableGen.settings = settings;
+    simpleTableGen.bind();
 </script>
