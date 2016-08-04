@@ -34,7 +34,8 @@ title: 农机跟踪
 </div>
 
 <script type="text/javascript">
-    initMap('map_container');
+    var map = initMap('map_container');
+
     var simpleTableGen = new SimpleTableGen();
     var settings = new Object();
     settings.columns = [{
@@ -43,27 +44,31 @@ title: 农机跟踪
         align: 'center',
         valign: 'middle'
     }, {
-        field: 'carID',
+        field: 'machCode',
         title: '车号',
         align: 'center',
     }, {
-        field: 'states',
-        title: '状态',
+        field: 'machName',
+        title: '车型',
         align: 'center',
     }];
-    settings.data = [{
-        carID: 'A001',
-        states: '活动中',
-    }, {
-        carID: 'A002',
-        states: '不活动',
-    }];
-    settings.rowStyle = function (row, index) {
-        console.log(row);
-        return 'row_focus';
-    };
-    settings.clickToSelect = true;
+
+    settings.url = API_URL + '/api/gpsRecords';
+
+    var points = new Array();
+
+    settings.onCheckAll = function (rows) {
+        rows.forEach(function (row) {
+            var point = new BMap.Point(row.lng, row.lat);
+            points.push(point);
+        });
+        console.log(points);
+        var polyline = new BMap.Polyline(points);
+        map.addOverlay(polyline);
+    }
+//    clickMapShowLocation();
 
     simpleTableGen.settings = settings;
     simpleTableGen.bind();
+
 </script>
