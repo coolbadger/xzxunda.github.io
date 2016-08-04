@@ -8,11 +8,11 @@ title: 农机跟踪
 
 <div class="main_container">
     <div class="row full_height">
-        <div class="col-md-9 map_part border">
-            <div class="row map_top border">
+        <div class="col-md-9 map_part ">
+            <div class="row map_top ">
                 <div id="map_container"></div>
             </div>
-            <div class="row map_bottom border">
+            <div class="row map_bottom ">
                 <div id="operation">
                     <input type="button" value="跳转到当前位置" onclick="goCurrentPosition()"/>
                     <input type="button" value="跳转到双沟镇" onclick="goShuangGou()"/>
@@ -20,7 +20,7 @@ title: 农机跟踪
                 </div>
             </div>
         </div>
-        <div class="col-md-3 info_part border">
+        <div class="col-md-3 info_part ">
             <div class="row">
                 <div class="col-md-12">
                     {% include temp/datetime.html id='dtp_start' text='开始时间:' %}
@@ -55,18 +55,21 @@ title: 农机跟踪
 
     settings.url = API_URL + '/api/gpsRecords';
 
-    var points = new Array();
 
     settings.onCheckAll = function (rows) {
+        clearAll();
+        var points = new Array();
         rows.forEach(function (row) {
             var point = new BMap.Point(row.lng, row.lat);
             points.push(point);
         });
         console.log(points);
-        var polyline = new BMap.Polyline(points);
+        var polyline = new BMap.Polyline(points,
+                {strokeColor: "blue", strokeWeight: 6, strokeOpacity: 0.5});
         map.addOverlay(polyline);
     }
-//    clickMapShowLocation();
+
+    //    clickMapShowLocation();
 
     simpleTableGen.settings = settings;
     simpleTableGen.bind();

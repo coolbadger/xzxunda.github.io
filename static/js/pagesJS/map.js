@@ -74,7 +74,4 @@ function clearAll() {
     map.clearOverlays();
 }
 
-function drawLin(points) {
-    
-}
 
