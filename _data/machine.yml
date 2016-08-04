@@ -1,0 +1,24 @@
+- name: ID
+  id: id
+  visible: false
+  placeholder:
+
+- name: 车牌号
+  id: machCode
+  placeholder: 请输入车牌号
+
+- name: 农机名称
+  id: machName
+  placeholder: 请输入农机名称
+
+- name: 农机类型
+  id: workingType
+  placeholder: 请输入农机类型
+
+- name: 状态
+  id: state
+  placeholder: 请输入状态
+
+- name: 备注
+  id: notes
+  placeholder: 请输入备注
