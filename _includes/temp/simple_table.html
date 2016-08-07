@@ -1,5 +1,5 @@
 <div style="-moz-user-select:none;" onselectstart="return false;">
-    <table id="table">
+    <table id="{% if(include.tableId != null )%}{{ include.tableId}}{% else %}table{% endif %}">
     </table>
 </div>
 

@@ -18,6 +18,9 @@ TableGen.prototype.table;
 
 TableGen.prototype.validates;
 
+TableGen.prototype.module = 'app';
+TableGen.prototype.ctrl = 'ctrl';
+
 
 //
 TableGen.prototype.bind = function () {
@@ -136,10 +139,13 @@ TableGen.prototype.operationEvent = function () {
 
 //angular提交创建记录或修改记录的方法
 TableGen.prototype.createOrUpdate = function () {
-    var app = angular.module("app", []);
+    var module = this.module;
+    var ctrl = this.ctrl;
+    var $modal = $('#' + this.modalName);
+    var app = angular.module(module, []);
     var fields = this.editFields;
     var val = this.validates;
-    app.controller("ctrl", function ($scope, $http) {
+    app.controller(ctrl, function ($scope, $http) {
         $scope.saveObj = function () {
             var rules = val;
             new validate({
@@ -163,7 +169,7 @@ TableGen.prototype.createOrUpdate = function () {
                         var url = apiObjUrl;
                         saveItem(url, params, $http);
                     }
-                    $('#myModal').modal('hide');
+                    $modal.modal('hide');
                 }
             })
         }
