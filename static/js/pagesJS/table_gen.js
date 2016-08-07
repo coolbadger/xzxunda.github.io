@@ -14,6 +14,7 @@ TableGen.prototype.tableID = 'table';
 TableGen.prototype.modalName = 'myModal';
 TableGen.prototype.editFields = new Array();
 TableGen.prototype.settings = new Object();
+TableGen.prototype.table;
 
 TableGen.prototype.validates;
 
@@ -22,17 +23,19 @@ TableGen.prototype.validates;
 TableGen.prototype.bind = function () {
     this.createOrUpdate();
     window.onload = this.init();
+    setTable(this.table);
 }
 
 //初始化Table的主函数
 TableGen.prototype.init = function () {
     var $table = $('#' + this.tableID);
+    this.table = $table;
     var $remove = $('#remove');
     var selections = [];
 
     // this.setTable($table);
 
-    $table.bootstrapTable(this.settings);
+    // $table.bootstrapTable(this.settings);
 
     setTimeout(function () {
         $table.bootstrapTable('resetView');
