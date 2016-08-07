@@ -89,11 +89,19 @@ TableGen.prototype.init = function () {
             height: $(window).height()
         });
     });
+
     function getIdSelections() {
         return $.map($table.bootstrapTable('getSelections'), function (row) {
             return row.id
         });
     }
+
+    //未绑定农机筛选按钮
+    $("#unBind").click(function() {
+        var $table = $('#' + TableGen.prototype.tableID);
+        var url = apiObjUrl + '?isBind=false';
+        $table.bootstrapTable('refresh', {url: url});
+    });
 
 };
 

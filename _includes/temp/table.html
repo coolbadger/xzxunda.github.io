@@ -22,7 +22,7 @@
             <i class="glyphicon glyphicon-remove"></i> 删除已选
         </button>
         {% else %}
-        <button id="unBind" class="btn btn-primary" data-toggle="modal" data-target="#machTerminalModal" style="font-size: 12px">
+        <button id="unBind" class="btn btn-primary" style="font-size: 12px">
             <i class="glyphicon glyphicon-hourglass"></i> 未绑定
         </button>
         {% endif %}
@@ -114,15 +114,6 @@
                 {% if !isFinished %}
             </div>
             {% endif%}
-            <!--{% for item in include.inData %}-->
-            <!--<div class="form-group {% if item.visible == false %} hidden {% endif %}">-->
-            <!--<label for="{{ item.id }}" class="{% if item.span == 1 %}col-sm-2{% else %}col-sm-2{% endif %} control-label">{{ item.name }}</label>-->
-            <!--<div class="{% if item.span == 1 %}col-sm-4{% else %}col-sm-10{% endif %}">-->
-            <!--<input type="text" class="form-control" id="{{ item.id }}" name="{{ item.id }}"-->
-            <!--placeholder="{{ item.placeholder }}">-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--{% endfor %}-->
             </form>
         </div>
         <div class="modal-footer">

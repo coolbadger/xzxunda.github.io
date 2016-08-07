@@ -7,14 +7,19 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                         aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel1">添加信息</h4>
+                <h4 class="modal-title" id="myModalLabel1">绑定农机终端</h4>
             </div>
             <div class="modal-body">
+                <div id="toolbar1">
+                    <input type="text" class="hidden" id="id">
+                    <input type="text" class="hidden" id="machId">
+                    <span class="label label-primary">请 双 击 需 要 绑 定 的 终 端 设 备！</span>
+                </div>
                 <table id="machTerminalTable"
                        style="-moz-user-select:none;"
                        onselectstart="return false;"
                        class="table table-hover table-bordered table-striped"
-                       data-toolbar="#toolbar"
+                       data-toolbar="#toolbar1"
                        data-search="true"
                        data-show-refresh="true"
                        data-show-toggle="true"
@@ -28,13 +33,10 @@
                        data-url="{{ site.apiurl }}/api/{{ include.terminal }}"
                        datatype="json"
                        data-local="zh-US"
-                >
+                        >
                 </table>
             </div>
             <div class="modal-footer">
-                <button ng-click="saveObj()" class="btn btn-success">
-                    <i class="glyphicon glyphicon-ok"></i> 保存
-                </button>
                 <button type="button" class="btn btn-primary" data-dismiss="modal">
                     <i class="glyphicon glyphicon-remove"></i> 取消
                 </button>
@@ -48,11 +50,6 @@
     simpleTableGen.tableID = 'machTerminalTable';
     var settings = new Object();
     settings.columns = [{
-        field: 'state',
-        checkbox: true,
-        align: 'center',
-        valign: 'middle'
-    }, {
         title: 'ID',
         field: 'id',
         align: 'center',
@@ -78,10 +75,51 @@
         field: 'notes',
         align: 'center',
     }];
+
+    settings.height = $(window).height() - 350;
+
+
     settings.onDblClickRow = function (row, $element) {
-        console.log(row);
+        console.log("terminalId:" + row.id);
+        var id = $("#id").val();
+        var machId = $("#machId").val();
+        var terminalId = row.id;
+        console.log("machTerminalId:" + id + ",machId:" + machId);
+        if (id != "") {
+            var url = apiObjUrl;
+        } else {
+            var url = apiObjUrl;
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: '{"id":"' + id + '", "machId":"' + machId + '", "terminalId":"' + terminalId + '"}',
+                dataType: 'json',
+                contentType: 'application/json',
+                success: function (result, state) {
+                    console.log("状态：" + state);
+                    //console.log("返回创建的对象："+JSON.stringify(result));
+                    if (state == 'success') {
+                        $('#machTerminalModal').modal('hide');
+                        $('#table').bootstrapTable('refresh', {url: apiObjUrl});
+                        alertTip('success');
+                    }
+                },
+                error: function (result) {
+                    alertTip('error');
+                    console.log("error info:" + result);
+                }
+            });
+        }
     }
+
+
     simpleTableGen.settings = settings;
+
     simpleTableGen.bind();
+
+    var app = angular.module('machApp', []);
+    app.controller('machCtrl', function ($scope, $http) {
+
+    });
 
 </script>

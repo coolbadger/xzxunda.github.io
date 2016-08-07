@@ -10,10 +10,6 @@ layout: base_page
 
     tableGen.validates = {machCode: "notEmpty", terminalCode: "notEmpty", startTime: "notEmpty"};
 
-    tableGen.module = "machApp";
-    tableGen.ctrl = "machCtrl";
-    tableGen.modalName = "machTerminalModal";
-
     tableGen.setTable = function (inTable) {
         inTable.bootstrapTable({
             height: $(window).height(),
@@ -62,7 +58,29 @@ layout: base_page
         });
     }
 
+    tableGen.operateFormatter = function (value, row, index) {
+        return [
+            '<button class="btn btn-primary" style="font-size: 12px" title="绑定终端">',
+            '<i class="glyphicon glyphicon-cog"></i> 绑定',
+            '</button>'
+        ].join('');
+    }
+
+    tableGen.operationEvent = function () {
+        var $modal = $('#machTerminalModal');
+        window.operateEvents = {
+            'click .btn': function (e, value, row, index) {
+                console.log("machTerminalId:" + row.id + ",machId:" + row.machId);
+                $("#id").val(row.id);
+                $("#machId").val(row.machId);
+                $modal.modal('show');
+            }
+        };
+        return window.operateEvents;
+    };
+
     window.operateEvents = tableGen.operationEvent();
+
     tableGen.bind();
 
 </script>
