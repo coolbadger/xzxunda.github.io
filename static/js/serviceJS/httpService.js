@@ -9,7 +9,7 @@
 
     httpService.service('httpService', function ($http) {
 
-        var baseURL = 'http://lekoxnfx.oicp.net:17104/';
+        var baseURL = API_URL+'/';
 
         var postURL = function (url, params, successFunc) {
             var strUrl = baseURL + url;

@@ -2,19 +2,47 @@
  * Created by Badger on 16/7/25.
  */
 
-// 定义全局变量map
-var map;
+function GpsRecord() {
+}
+GpsRecord.prototype.fullLine;
+GpsRecord.prototype.activelines;
+GpsRecord.prototype.mach_terminal;
 
-// 显示点击位置的坐标
-function clickMapShowLocation() {
-    map.addEventListener("click", function (e) {
-        alert(e.point.lng + "," + e.point.lat);
-    });
+GpsRecord.prototype.addRecords = function (records) {
+    var points = new Array();
+    // 现根据预定义规则进行排序
+    var jsonData = records;
+    jsonData.sort(Sorts);
+    for (var i = 0; i < jsonData.length; i++) {
+        var item = jsonData[i];
+        var point = new BMap.Point(item.lng, item.lat);
+        points.push(point);
+    }
+    this.fullLine = new BMap.Polyline(points,
+        {strokeColor: "red", strokeWeight: 6, strokeOpacity: 0.5});
+    return points;
 }
 
+// 排序规则
+function Sorts(a, b) {
+    // GPS时间类型忽略毫秒
+    var aDate = new Date(Date.parse(a.gpsTime.substring(0, 19).replace(/-/g, "/")));
+    var bDate = new Date(Date.parse(b.gpsTime.substring(0, 19).replace(/-/g, "/")));
+
+    return aDate - bDate;
+}
+
+
+function MachMap() {
+    this.map = this.initMap(this.containerId);
+}
+MachMap.prototype.containerId = "map_container";
+MachMap.prototype.map;
+MachMap.prototype.overLays = new Array();
+
 // 根据地图容器的ID,初始化地图
-function initMap(containerID) {
-    map = new BMap.Map("map_container");            // 创建地图实例
+MachMap.prototype.initMap = function (containerID) {
+    var map = new BMap.Map("map_container");            // 创建地图实例
     var point = new BMap.Point(117.606257, 34.042178);  // 创建点坐标(目前为双沟镇政府)
     map.centerAndZoom(point, 15);                       // 初始化地图，设置中心点坐标和地图级别
 
@@ -32,6 +60,17 @@ function initMap(containerID) {
     map.addControl(new BMap.ScaleControl());        // 添加比例尺控件
     map.addControl(new BMap.OverviewMapControl());  //添加缩略地图控件
     return map;
+}
+
+// 自定义地图点击事件
+MachMap.prototype.enableMapClick = function () {
+    this.map.addEventListener("click", function (e) {
+        alert(e.point.lng + "," + e.point.lat);
+    });
+}
+
+MachMap.prototype.clearAll = function () {
+    this.map.clearOverlays();
 }
 
 //跳转到徐州双沟镇
@@ -69,8 +108,14 @@ function goCurrentPosition() {
     //BMAP_STATUS_TIMEOUT	超时。对应数值“8”。(自 1.1 新增)
 }
 
-//清除覆盖物
-function clearAll() {
-    map.clearOverlays();
+
+function getGpsRecords(conditions) {
+    var apiUrl = API_URL + '/api/gpsRecords';
+
+    $.get(apiUrl, {startID: "", endID: "", name: ""}, function (result) {
+        // console.log(result);
+    });
+
 }
+
 
