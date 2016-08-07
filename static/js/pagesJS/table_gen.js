@@ -23,7 +23,7 @@ TableGen.prototype.validates;
 TableGen.prototype.bind = function () {
     this.createOrUpdate();
     window.onload = this.init();
-    setTable(this.table);
+    this.setTable(this.table);
 }
 
 //初始化Table的主函数

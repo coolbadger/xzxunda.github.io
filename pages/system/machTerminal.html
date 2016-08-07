@@ -10,43 +10,45 @@ layout: base_page
     tableGen.editFields = new Array('id', 'machCode', 'terminalCode', 'startTime', 'endTime');
 
     tableGen.validates = {machCode: "notEmpty", terminalCode: "notEmpty", startTime: "notEmpty"};
-    tableGen.settings = {
-        height: $(window).height(),
-        columns: [{
-            field: 'state',
-            checkbox: true,
-            align: 'center',
-            valign: 'middle'
-        }, {
-            title: 'ID',
-            field: 'id',
-            align: 'center',
-            sortable: true,
-        }, {
-            title: '农机号',
-            field: 'machCode',
-            align: 'center',
-        }, {
-            title: '终端号',
-            field: 'terminalCode',
-            align: 'center',
-        }, {
-            title: '绑定时间',
-            field: 'startTime',
-            align: 'center',
-        }, {
-            title: '取消时间',
-            field: 'endTime',
-            align: 'center',
-        }, {
-            title: '操作',
-            field: 'operate',
-            align: 'center',
-            valign: 'middle',
-            formatter: tableGen.operateFormatter,
-            events: this.operateEvents
-        }]
-    };
+    tableGen.setTable = function (inTable) {
+        inTable.bootstrapTable({
+            height: $(window).height(),
+            columns: [{
+                field: 'state',
+                checkbox: true,
+                align: 'center',
+                valign: 'middle'
+            }, {
+                title: 'ID',
+                field: 'id',
+                align: 'center',
+                sortable: true,
+            }, {
+                title: '农机号',
+                field: 'machCode',
+                align: 'center',
+            }, {
+                title: '终端号',
+                field: 'terminalCode',
+                align: 'center',
+            }, {
+                title: '绑定时间',
+                field: 'startTime',
+                align: 'center',
+            }, {
+                title: '取消时间',
+                field: 'endTime',
+                align: 'center',
+            }, {
+                title: '操作',
+                field: 'operate',
+                align: 'center',
+                valign: 'middle',
+                formatter: tableGen.operateFormatter,
+                events: operateEvents
+            }]
+        });
+    }
 
     window.operateEvents = tableGen.operationEvent();
 

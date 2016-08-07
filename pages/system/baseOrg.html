@@ -10,6 +10,7 @@ layout: base_page
     tableGen.editFields = new Array('id', 'orgCode', 'orgName', 'orgContact', 'orgAddress', 'orgTell', 'orgFax', 'orgEmail', 'notes');
 
     tableGen.validates = {orgCode: "notEmpty", orgName: "notEmpty", orgContact: "notEmpty"};
+
     tableGen.setTable = function (inTable) {
         inTable.bootstrapTable({
             height: $(window).height(),
@@ -61,7 +62,7 @@ layout: base_page
                 align: 'center',
                 valign: 'middle',
                 formatter: tableGen.operateFormatter,
-                events: this.operateEvents
+                events: operateEvents
             }]
         });
     }
