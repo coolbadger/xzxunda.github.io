@@ -13,10 +13,22 @@ title: 农机跟踪
                 <div id="map_container"></div>
             </div>
             <div class="row map_bottom ">
-                <div id="operation">
-                    <input type="button" value="跳转到当前位置" onclick="goCurrentPosition()"/>
-                    <input type="button" value="跳转到双沟镇" onclick="goShuangGou()"/>
-                    <input type="button" value="清除所有覆盖物" onclick="clearAll()"/>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div id="operation">
+                            <input type="button" value="跳转到当前位置" onclick="goCurrentPosition()"/>
+                            <input type="button" value="跳转到双沟镇" onclick="goShuangGou()"/>
+                            <input type="button" value="清除所有覆盖物" onclick="clearAll()"/>
+                            <input type="button" value="清除所有线" onclick="cleanLines()"/>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <p class="bg-primary">...</p>
+                        <p class="bg-success">...</p>
+                        <p class="bg-info">...</p>
+                        <p class="bg-warning">...</p>
+                        <p class="bg-danger">...</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -25,7 +37,8 @@ title: 农机跟踪
                 <div class="col-md-12">
                     {% include temp/datetime.html id='dtp_start' text='开始时间:' %}
                     {% include temp/datetime.html id='dtp_end' text='结束时间:' %}
-                    {% include temp/textbox.html id='dtp_car' text='车牌号:' placeholder='请输入车牌号' showButton = true %}
+                    {% include temp/textbox.html id='dtp_car' text='车牌号:' placeholder='请输入车牌号' showButton = true
+                    onclick='onSearchClick()' onTextChange='onAutoSearch(value)' %}
                     {% include temp/simple_table.html %}
                 </div>
             </div>
@@ -34,16 +47,16 @@ title: 农机跟踪
 </div>
 
 <script type="text/javascript">
-    var map = initMap('map_container');
-
+    // 新建地图
+    var machMap = new MachMap();
     var simpleTableGen = new SimpleTableGen();
+    var gpsRecord = new GpsRecord();
+
+    var map = machMap.map;
+    var apiObjUrl = API_URL + '/api/gpsRecords';
+
     var settings = new Object();
     settings.columns = [{
-        field: 'state',
-        checkbox: true,
-        align: 'center',
-        valign: 'middle'
-    }, {
         field: 'machCode',
         title: '车号',
         align: 'center',
@@ -53,25 +66,108 @@ title: 农机跟踪
         align: 'center',
     }];
 
-    settings.url = API_URL + '/api/gpsRecords';
+    settings.url = apiObjUrl;
 
+    settings.onDblClickRow = function (row, $element) {
+//        console.log(row);
+        if ($element.attr('class')) {
+            $element.removeClass('success');
+        }
+        else {
+            $element.addClass('success');
+            getGpsRecords(row);
 
-    settings.onCheckAll = function (rows) {
-        clearAll();
-        var points = new Array();
-        rows.forEach(function (row) {
-            var point = new BMap.Point(row.lng, row.lat);
-            points.push(point);
-        });
-        console.log(points);
-        var polyline = new BMap.Polyline(points,
-                {strokeColor: "blue", strokeWeight: 6, strokeOpacity: 0.5});
-        map.addOverlay(polyline);
+            var points = new Array();
+            simpleTableGen.table.bootstrapTable('getData').forEach(function (item) {
+                var point = new BMap.Point(item.lng, item.lat);
+                points.push(point);
+            });
+            var points = gpsRecord.addRecords(simpleTableGen.table.bootstrapTable('getData'));
+            console.log(points);
+            var polyLine = new BMap.Polyline(points);
+            map.addOverlay(polyLine);
+        }
     }
 
-    //    clickMapShowLocation();
+    var overLays = new Array();
+    //    settings.onCheckAll = function (rows) {
+    //        overLays.forEach(function (overLay) {
+    //            map.removeOverlay(overLay);
+    //        });
+    //        overLays = [];
+    //        var points = new Array();
+    //        rows.forEach(function (row) {
+    //            var point = new BMap.Point(row.lng, row.lat);
+    //            points.push(point);
+    //        });
+    //        console.log(map.getOverlays());
+    //        var polyline = new BMap.Polyline(points,
+    //                {strokeColor: "red", strokeWeight: 6, strokeOpacity: 0.5});
+    //        overLays.push(polyline);
+    //        map.addOverlay(polyline);
+    //    }
 
     simpleTableGen.settings = settings;
     simpleTableGen.bind();
+
+    function cleanLines() {
+        overLays.forEach(function (overLay) {
+            map.removeOverlay(overLay);
+        });
+        overLays = [];
+    }
+
+    //跳转到徐州双沟镇
+    function goShuangGou() {
+        var sgPoint = new BMap.Point(117.606257, 34.042178);
+        var mk = new BMap.Marker(sgPoint);//添加标记点
+        machMap.map.addOverlay(mk);
+        machMap.map.panTo(sgPoint);
+        machMap.map.setCenter(sgPoint);
+    }
+
+    //清除覆盖物
+    function clearAll() {
+        machMap.clearAll();
+    }
+
+    var fullData = null;
+
+    function onAutoSearch(value) {
+        if (fullData == null) {
+            fullData = simpleTableGen.table.bootstrapTable('getData');
+        }
+        var newData = new Array();
+        fullData.forEach(function (item) {
+            if (item.lng == '117.606257') {
+                newData.push(item);
+            }
+        });
+//        console.log(fullData);
+//        console.log(value.length);
+        if (value.length > 0) {
+            simpleTableGen.table.bootstrapTable('load', newData);
+        }
+        else {
+            simpleTableGen.table.bootstrapTable('load', fullData);
+        }
+    }
+
+    function onSearchClick() {
+//        fullData = null;
+        var startTime = $("#dtp_start").val();
+        var endTime = $("#dtp_end").val();
+        var carInfo = $("#dtp_car").val();
+
+
+        var requestUrl = apiObjUrl + "/st=" + startTime + "&et=" + endTime + "&car=" + carInfo;
+        console.log(encodeURI(requestUrl));
+        $.get(apiObjUrl, function (result) {
+            fullData = result;
+            simpleTableGen.table.bootstrapTable('load', result);
+        });
+
+    }
+
 
 </script>
