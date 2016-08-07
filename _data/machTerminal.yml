@@ -1,0 +1,12 @@
+- name: ID
+  id: id
+  visible: false
+  placeholder:
+
+- name: 农机号
+  id: machCode
+  placeholder: 请输入农机号
+
+- name: 终端号
+  id: terminalCode
+  placeholder: 请输入终端号
