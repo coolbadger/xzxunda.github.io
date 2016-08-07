@@ -21,7 +21,6 @@ SimpleTableGen.prototype.bind = function () {
 //初始化Table的主函数
 SimpleTableGen.prototype.init = function () {
     this.table = $('#' + this.tableID);
-    console.log(this.tableID);
     var selections = [];
     this.table.bootstrapTable(this.settings);
 }

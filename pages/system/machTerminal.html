@@ -3,7 +3,6 @@ layout: base_page
 ---
 
 {% include temp/table.html inData = site.data.machTerminal apiName = 'machTerminals' terminal = 'terminals' disableModal='true' %}
-{% include tamp/simple_table.html tableId='machTerminalTable'%}
 <script type="text/javascript">
 
     var tableGen = new TableGen();
@@ -65,42 +64,5 @@ layout: base_page
 
     window.operateEvents = tableGen.operationEvent();
     tableGen.bind();
-
-    var simpleTableGen = new SimpleTableGen();
-    simpleTableGen.tableID = 'machTerminalTable';
-    var settings = new Object();
-    settings.columns = [{
-        field: 'state',
-        checkbox: true,
-        align: 'center',
-        valign: 'middle'
-    }, {
-        title: 'ID',
-        field: 'id',
-        align: 'center',
-        sortable: true,
-    }, {
-        title: '终端号',
-        field: 'terminalCode',
-        align: 'center',
-    }, {
-        title: '终端名称',
-        field: 'terminalName',
-        align: 'center',
-    }, {
-        title: '手机号码',
-        field: 'callNo',
-        align: 'center',
-    }, {
-        title: '状态',
-        field: 'state',
-        align: 'center',
-    }, {
-        title: '备注',
-        field: 'notes',
-        align: 'center',
-    }];
-    simpleTableGen.settings = settings;
-    simpleTableGen.bind();
 
 </script>

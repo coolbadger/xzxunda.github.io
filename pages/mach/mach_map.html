@@ -23,11 +23,15 @@ title: 农机跟踪
                         </div>
                     </div>
                     <div class="col-md-8">
-                        <p class="bg-primary">...</p>
-                        <p class="bg-success">...</p>
-                        <p class="bg-info">...</p>
-                        <p class="bg-warning">...</p>
-                        <p class="bg-danger">...</p>
+                        <ul class="list-group">
+                            <li class="list-group-item list-group-item-success">
+                                <span class="badge">14</span>
+                                Dapibus ac facilisis in
+                            </li>
+                            <li class="list-group-item list-group-item-info">Morbi leo risus</li>
+                            <li class="list-group-item list-group-item-warning">Porta ac consectetur ac</li>
+                            <li class="list-group-item list-group-item-danger">Porta ac consectetur ac</li>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -49,11 +53,17 @@ title: 农机跟踪
 <script type="text/javascript">
     // 新建地图
     var machMap = new MachMap();
+    // 新建表格
     var simpleTableGen = new SimpleTableGen();
+    // gps记录
     var gpsRecord = new GpsRecord();
-
     var map = machMap.map;
     var apiObjUrl = API_URL + '/api/gpsRecords';
+
+    // 本地存储上次的查询条件
+    var startTime_local;
+    var endTime_local;
+    var carInfo_local;
 
     var settings = new Object();
     settings.columns = [{
@@ -66,46 +76,13 @@ title: 农机跟踪
         align: 'center',
     }];
 
-    settings.url = apiObjUrl;
+    //    settings.url = apiObjUrl;
 
     settings.onDblClickRow = function (row, $element) {
-//        console.log(row);
-        if ($element.attr('class')) {
-            $element.removeClass('success');
-        }
-        else {
-            $element.addClass('success');
-            getGpsRecords(row);
-
-            var points = new Array();
-            simpleTableGen.table.bootstrapTable('getData').forEach(function (item) {
-                var point = new BMap.Point(item.lng, item.lat);
-                points.push(point);
-            });
-            var points = gpsRecord.addRecords(simpleTableGen.table.bootstrapTable('getData'));
-            console.log(points);
-            var polyLine = new BMap.Polyline(points);
-            map.addOverlay(polyLine);
-        }
+        onRowDbClick(row, $element);
     }
 
     var overLays = new Array();
-    //    settings.onCheckAll = function (rows) {
-    //        overLays.forEach(function (overLay) {
-    //            map.removeOverlay(overLay);
-    //        });
-    //        overLays = [];
-    //        var points = new Array();
-    //        rows.forEach(function (row) {
-    //            var point = new BMap.Point(row.lng, row.lat);
-    //            points.push(point);
-    //        });
-    //        console.log(map.getOverlays());
-    //        var polyline = new BMap.Polyline(points,
-    //                {strokeColor: "red", strokeWeight: 6, strokeOpacity: 0.5});
-    //        overLays.push(polyline);
-    //        map.addOverlay(polyline);
-    //    }
 
     simpleTableGen.settings = settings;
     simpleTableGen.bind();
@@ -133,19 +110,19 @@ title: 农机跟踪
 
     var fullData = null;
 
+    // 自动查询本地缓存结果
     function onAutoSearch(value) {
         if (fullData == null) {
             fullData = simpleTableGen.table.bootstrapTable('getData');
         }
         var newData = new Array();
         fullData.forEach(function (item) {
-            if (item.lng == '117.606257') {
+            if (item.machCode.indexOf(value) > 0 || item.machName.indexOf(value) > 0) {
                 newData.push(item);
             }
         });
-//        console.log(fullData);
-//        console.log(value.length);
-        if (value.length > 0) {
+        var checkCondition = value.length > carInfo_local.length && value.indexOf(carInfo_local) > 0 || (carInfo_local.length == 0 && value.length > 0);
+        if (checkCondition) {
             simpleTableGen.table.bootstrapTable('load', newData);
         }
         else {
@@ -153,21 +130,44 @@ title: 农机跟踪
         }
     }
 
+    // 查询农机列表
     function onSearchClick() {
-//        fullData = null;
-        var startTime = $("#dtp_start").val();
-        var endTime = $("#dtp_end").val();
-        var carInfo = $("#dtp_car").val();
+        fullData = null;
+        startTime_local = $("#dtp_start").val();
+        endTime_local = $("#dtp_end").val();
+        carInfo_local = $("#dtp_car").val();
 
 
-        var requestUrl = apiObjUrl + "/st=" + startTime + "&et=" + endTime + "&car=" + carInfo;
-        console.log(encodeURI(requestUrl));
-        $.get(apiObjUrl, function (result) {
+        var requestUrl = encodeURI(apiObjUrl + "?st=" + startTime_local + "&et=" + endTime_local + "&car=" + carInfo_local);
+        console.log(requestUrl);
+        $.get(requestUrl, function (result) {
             fullData = result;
             simpleTableGen.table.bootstrapTable('load', result);
         });
 
     }
+    // 双击选中行事件
+    function onRowDbClick(row, $element) {
+        if ($element.attr('class')) {
+            $element.removeClass('success');
+        }
+        else {
+            $element.addClass('success');
+            getGpsRecords(row);
 
+            var points = new Array();
+            simpleTableGen.table.bootstrapTable('getData').forEach(function (item) {
+                var point = new BMap.Point(item.lng, item.lat);
+                points.push(point);
+            });
+            var points = gpsRecord.addRecords(simpleTableGen.table.bootstrapTable('getData'));
+            console.log(points);
+            var polyLine = new BMap.Polyline(points);
+            map.addOverlay(polyLine);
+        }
+    }
+
+
+    onSearchClick()
 
 </script>
