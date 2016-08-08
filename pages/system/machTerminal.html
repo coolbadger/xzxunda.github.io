@@ -60,7 +60,7 @@ layout: base_page
 
     tableGen.operateFormatter = function (value, row, index) {
         return [
-            '<button class="btn btn-primary" style="font-size: 12px" title="绑定终端">',
+            '<button class="bind btn btn-primary" style="font-size: 12px" title="绑定终端">',
             '<i class="glyphicon glyphicon-cog"></i> 绑定',
             '</button>'
         ].join('');
@@ -69,11 +69,16 @@ layout: base_page
     tableGen.operationEvent = function () {
         var $modal = $('#machTerminalModal');
         window.operateEvents = {
-            'click .btn': function (e, value, row, index) {
-                console.log("machTerminalId:" + row.id + ",machId:" + row.machId);
-                $("#id").val(row.id);
-                $("#machId").val(row.machId);
-                $modal.modal('show');
+            'click .bind': function (e, value, row, index) {
+                if(row.id != null) {
+                    console.log("machTerminalId:" + row.id + ",machId:" + row.machId);
+                    alertTip('info');
+                } else {
+                    console.log("machTerminalId:" + row.id + ",machId:" + row.machId);
+                    $("#id").val(row.id);
+                    $("#machId").val(row.machId);
+                    $modal.modal('show');
+                }
             }
         };
         return window.operateEvents;
