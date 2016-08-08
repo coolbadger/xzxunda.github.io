@@ -2,13 +2,13 @@
  * Created by Badger on 16/7/25.
  */
 
-function GpsRecord() {
+function GpsRecordLine(mach_terminal) {
+    this.mach_terminal_info = mach_terminal;
 }
-GpsRecord.prototype.fullLine;
-GpsRecord.prototype.activelines;
-GpsRecord.prototype.mach_terminal;
+GpsRecordLine.prototype.mach_terminal_info;
+GpsRecordLine.prototype.line;
 
-GpsRecord.prototype.addRecords = function (records) {
+GpsRecordLine.prototype.addRecords = function (records) {
     var points = new Array();
     // 现根据预定义规则进行排序
     var jsonData = records;
@@ -18,27 +18,26 @@ GpsRecord.prototype.addRecords = function (records) {
         var point = new BMap.Point(item.lng, item.lat);
         points.push(point);
     }
-    this.fullLine = new BMap.Polyline(points,
-        {strokeColor: "red", strokeWeight: 6, strokeOpacity: 0.5});
-    return points;
+    this.line = new BMap.Polyline(points);
+    return this.line;
 }
+
 
 // 排序规则
 function Sorts(a, b) {
     // GPS时间类型忽略毫秒
-    var aDate = new Date(Date.parse(a.gpsTime.substring(0, 19).replace(/-/g, "/")));
-    var bDate = new Date(Date.parse(b.gpsTime.substring(0, 19).replace(/-/g, "/")));
+    var aDate = new Date(Date.parse(a.gpsTime));
+    var bDate = new Date(Date.parse(b.gpsTime));
 
     return aDate - bDate;
 }
-
 
 function MachMap() {
     this.map = this.initMap(this.containerId);
 }
 MachMap.prototype.containerId = "map_container";
 MachMap.prototype.map;
-MachMap.prototype.overLays = new Array();
+MachMap.prototype.gpsRecordLines = new Map();
 
 // 根据地图容器的ID,初始化地图
 MachMap.prototype.initMap = function (containerID) {
@@ -65,13 +64,53 @@ MachMap.prototype.initMap = function (containerID) {
 // 自定义地图点击事件
 MachMap.prototype.enableMapClick = function () {
     this.map.addEventListener("click", function (e) {
-        alert(e.point.lng + "," + e.point.lat);
+        alert(e.point.lng + "\n" + e.point.lat);
     });
 }
 
+// 清楚所有图层
 MachMap.prototype.clearAll = function () {
     this.map.clearOverlays();
 }
+
+
+//根据选择行,请求GPS记录,并向Map中添加一条记录线
+MachMap.prototype.addGpsRecords = function (row) {
+    var gpsRecordLine = new GpsRecordLine(row);
+    var ref_id = row.reMachTerminalId;
+    var startTime = row.gpsStartTime;
+    var endTime = row.gpsEndTime;
+
+    var apiUrl = API_URL + '/api/gpsRecords/refMachTerminal/' + ref_id;
+    $.ajax({
+        type: "get",
+        url: apiUrl,
+        data: "startTime=" + startTime + "&endTime=" + endTime,
+        async: false,//取消异步
+        success: function (result) {
+            gpsRecordLine.addRecords(result);
+        }
+    });
+    this.gpsRecordLines.set(ref_id, gpsRecordLine);
+    this.map.addOverlay(gpsRecordLine.line)
+}
+// 移除一条记录线
+MachMap.prototype.removeGpsRecords = function (row) {
+    var ref_id = row.reMachTerminalId;
+    var line = this.gpsRecordLines.get(ref_id).line;
+    this.gpsRecordLines.delete(ref_id);
+    this.map.removeOverlay(line);
+}
+// 清楚所有记录线
+MachMap.prototype.clearGpsRecords = function () {
+    var lines = new Array();
+    this.gpsRecordLines.forEach(function (item) {
+        lines.push(item.line);
+    });
+    this.gpsRecordLines.clear();
+    return lines;
+}
+
 
 //跳转到徐州双沟镇
 function goShuangGou() {
@@ -106,16 +145,6 @@ function goCurrentPosition() {
     //BMAP_STATUS_PERMISSION_DENIED	没有权限。对应数值“6”。(自 1.1 新增)
     //BMAP_STATUS_SERVICE_UNAVAILABLE	服务不可用。对应数值“7”。(自 1.1 新增)
     //BMAP_STATUS_TIMEOUT	超时。对应数值“8”。(自 1.1 新增)
-}
-
-
-function getGpsRecords(conditions) {
-    var apiUrl = API_URL + '/api/gpsRecords';
-
-    $.get(apiUrl, {startID: "", endID: "", name: ""}, function (result) {
-        // console.log(result);
-    });
-
 }
 
 

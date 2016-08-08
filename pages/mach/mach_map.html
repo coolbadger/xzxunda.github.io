@@ -8,22 +8,40 @@ title: 农机跟踪
 
 <div class="main_container">
     <div class="row full_height">
-        <div class="col-md-9 map_part ">
-            <div class="row map_top ">
+        <div class="col-md-9 map_part">
+            <div class="row map_top">
                 <div id="map_container"></div>
             </div>
-            <div class="row map_bottom ">
-                <div class="row">
+            <div class="row map_bottom border">
+                <div class="row ">
                     <div class="col-md-4">
                         <div id="operation">
-                            <input type="button" value="跳转到当前位置" onclick="goCurrentPosition()"/>
+
+                            <button type="button" class="btn btn-default" onclick="goShuangGou()">跳转双沟</button>
+                            <div class="btn-group" role="group" aria-label="...">
+                                <button type="button" class="btn btn-default" onclick="goShuangGou()">跳转双沟</button>
+                                <button type="button" class="btn btn-default">Middle</button>
+                                <button type="button" class="btn btn-default">Right</button>
+                            </div>
+
+                            <span class="label label-success">
+                                <a onclick="goCurrentPosition()">跳转到当前位置</a>
+                            </span>
+                            <input type="button" class="btn btn-info btn-mini" value="跳转到当前位置s"
+                                   onclick="goCurrentPosition()"/>
                             <input type="button" value="跳转到双沟镇" onclick="goShuangGou()"/>
                             <input type="button" value="清除所有覆盖物" onclick="clearAll()"/>
                             <input type="button" value="清除所有线" onclick="cleanLines()"/>
                         </div>
+
+                        <div class="widget-content">
+                            <p>
+                                <button class="btn btn-info btn-mini">Button</button>
+                            </p>
+                        </div>
                     </div>
                     <div class="col-md-8">
-                        <ul class="list-group">
+                        <ul class="list-group map_info">
                             <li class="list-group-item list-group-item-success">
                                 <span class="badge">14</span>
                                 Dapibus ac facilisis in
@@ -40,7 +58,7 @@ title: 农机跟踪
             <div class="row">
                 <div class="col-md-12">
                     {% include temp/datetime.html id='dtp_start' text='开始时间:' %}
-                    {% include temp/datetime.html id='dtp_end' text='结束时间:' %}
+                    {% include temp/datetime.html id='dtp_end' addDays='1' text='结束时间:' %}
                     {% include temp/textbox.html id='dtp_car' text='车牌号:' placeholder='请输入车牌号' showButton = true
                     onclick='onSearchClick()' onTextChange='onAutoSearch(value)' %}
                     {% include temp/simple_table.html %}
@@ -56,7 +74,7 @@ title: 农机跟踪
     // 新建表格
     var simpleTableGen = new SimpleTableGen();
     // gps记录
-    var gpsRecord = new GpsRecord();
+    var gpsRecordLine = new GpsRecordLine();
     var map = machMap.map;
     var apiObjUrl = API_URL + '/api/gpsRecords';
 
@@ -74,9 +92,17 @@ title: 农机跟踪
         field: 'machName',
         title: '车型',
         align: 'center',
+    }, {
+        field: 'gpsStartTime',
+        title: '开始时间',
+        formatter: simpleTableGen.shortDateFormatter,
+        align: 'center',
+    }, {
+        field: 'gpsEndTime',
+        title: '结束时间',
+        formatter: simpleTableGen.shortDateFormatter,
+        align: 'center',
     }];
-
-    //    settings.url = apiObjUrl;
 
     settings.onDblClickRow = function (row, $element) {
         onRowDbClick(row, $element);
@@ -138,8 +164,7 @@ title: 农机跟踪
         carInfo_local = $("#dtp_car").val();
 
 
-        var requestUrl = encodeURI(apiObjUrl + "?st=" + startTime_local + "&et=" + endTime_local + "&car=" + carInfo_local);
-        console.log(requestUrl);
+        var requestUrl = encodeURI(apiObjUrl + "?startTime=" + startTime_local + "&endTime=" + endTime_local + "&machCode=" + carInfo_local);
         $.get(requestUrl, function (result) {
             fullData = result;
             simpleTableGen.table.bootstrapTable('load', result);
@@ -150,24 +175,16 @@ title: 农机跟踪
     function onRowDbClick(row, $element) {
         if ($element.attr('class')) {
             $element.removeClass('success');
+            machMap.removeGpsRecords(row);
         }
         else {
             $element.addClass('success');
-            getGpsRecords(row);
-
-            var points = new Array();
-            simpleTableGen.table.bootstrapTable('getData').forEach(function (item) {
-                var point = new BMap.Point(item.lng, item.lat);
-                points.push(point);
-            });
-            var points = gpsRecord.addRecords(simpleTableGen.table.bootstrapTable('getData'));
-            console.log(points);
-            var polyLine = new BMap.Polyline(points);
-            map.addOverlay(polyLine);
+            machMap.addGpsRecords(row);
         }
     }
 
 
-    onSearchClick()
+    onSearchClick();
+    //    machMap.enableMapClick();
 
 </script>

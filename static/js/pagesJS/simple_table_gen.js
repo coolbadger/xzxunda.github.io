@@ -25,5 +25,8 @@ SimpleTableGen.prototype.init = function () {
     this.table.bootstrapTable(this.settings);
 }
 
+SimpleTableGen.prototype.shortDateFormatter = function (value, row, index) {
+    return value.substring(8, 19);
+}
 
 
