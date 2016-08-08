@@ -97,9 +97,20 @@ TableGen.prototype.init = function () {
     }
 
     //未绑定农机筛选按钮
-    $("#unBind").click(function() {
+    $("#unBind").click(function () {
+        $("#all").removeClass("hidden");
+        $("#unBind").addClass("hidden");
         var $table = $('#' + TableGen.prototype.tableID);
         var url = apiObjUrl + '?isBind=false';
+        $table.bootstrapTable('refresh', {url: url});
+    });
+
+    //显示全部农机绑定情况按钮
+    $("#all").click(function () {
+        $("#unBind").removeClass("hidden");
+        $("#all").addClass("hidden");
+        var $table = $('#' + TableGen.prototype.tableID);
+        var url = apiObjUrl;
         $table.bootstrapTable('refresh', {url: url});
     });
 
@@ -158,7 +169,7 @@ TableGen.prototype.createOrUpdate = function () {
             var rules = val;
             new validate({
                 rules: rules,
-                focusInvalid : false,
+                focusInvalid: false,
                 submitFun: function () {
                     var params = '';
                     for (var item in fields) {

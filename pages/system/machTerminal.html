@@ -60,20 +60,67 @@ layout: base_page
 
     tableGen.operateFormatter = function (value, row, index) {
         return [
-            '<button class="btn btn-primary" style="font-size: 12px" title="绑定终端">',
+            '<a class="bind" href="javascript:void(0)" style="font-size: 12px; text-decoration: none" title="绑定终端">',
             '<i class="glyphicon glyphicon-cog"></i> 绑定',
-            '</button>'
+            '</a>&nbsp;&nbsp;',
+            '<a class="unBind" href="javascript:void(0)" style="font-size: 12px; text-decoration: none" title="解除绑定">',
+            '<i class="glyphicon glyphicon-off"></i> 解除',
+            '</a>'
         ].join('');
     }
 
     tableGen.operationEvent = function () {
         var $modal = $('#machTerminalModal');
         window.operateEvents = {
-            'click .btn': function (e, value, row, index) {
-                console.log("machTerminalId:" + row.id + ",machId:" + row.machId);
-                $("#id").val(row.id);
-                $("#machId").val(row.machId);
-                $modal.modal('show');
+            'click .bind': function (e, value, row, index) {
+                if (row.id != null && row.terminalId != null) {
+                    console.log("machTerminalId:" + row.id + ",machId:" + row.machId);
+                    alertInfoTip('info', '对不起!', '该农机已绑定，请先解除。');
+                } else {
+                    console.log("machTerminalId:" + row.id + ",machId:" + row.machId);
+                    $("#id").val(row.id);
+                    $("#machId").val(row.machId);
+                    $modal.modal('show');
+                }
+            },
+            'click .unBind': function (e, value, row, index) {
+                var id = row.id;
+                var machId = row.machId;
+                if (id != null && row.terminalId != null) {
+                    console.log("machTerminalId:" + id + ", machId:" + machId);
+                    bootbox.setLocale("zh_CN");
+                    bootbox.confirm({
+                        size: 'small',
+                        message: "确认解除该农机绑定的终端吗？",
+                        callback: function (result) {
+                            if (result) {
+                                var url = apiObjUrl + '/' + id;
+                                $.ajax({
+                                    url: url,
+                                    type: 'PUT',
+                                    data: '{"id":"' + id + '", "machId":"' + machId + '", "terminalId":""}',
+                                    dataType: 'json',
+                                    contentType: 'application/json',
+                                    success: function (result, status) {
+                                        console.log("状态：" + status);
+                                        //console.log("返回创建的对象："+JSON.stringify(result));
+                                        if (status == 'success') {
+                                            $('#table').bootstrapTable('refresh', {url: apiObjUrl});
+                                            alertTip('success');
+                                        }
+                                    },
+                                    error: function (result) {
+                                        alertTip('error');
+                                        console.log("error info:" + JSON.stringify(result));
+                                    }
+                                });
+                            }
+                        }
+                    });
+                } else {
+                    console.log("machTerminalId:" + row.id + ",machId:" + row.machId);
+                    alertInfoTip('info', '对不起！', '该农机未被绑定。');
+                }
             }
         };
         return window.operateEvents;

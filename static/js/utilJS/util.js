@@ -26,7 +26,16 @@ function transformParams(params) {
 
 function alertTip(alertId) {
     var $alert = $('#' + alertId);
-    $alert.css('z-index','999');
+    $alert.css('z-index', '999');
     $alert.show();
     $alert.delay(1000).hide(0);
+}
+
+function alertInfoTip(id, title, info) {
+    var $alert = $('#' + id);
+    $alert.empty();
+    $alert.append("<strong>" + title + "&nbsp;</strong>&nbsp;" + info);
+    $alert.css('z-index', '999');
+    $alert.show();
+    $alert.delay(1200).hide(0);
 }
