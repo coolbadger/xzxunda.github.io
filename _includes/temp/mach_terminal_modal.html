@@ -85,31 +85,27 @@
         var machId = $("#machId").val();
         var terminalId = row.id;
         console.log("machTerminalId:" + id + ",machId:" + machId);
-        if (id != "") {
-            var url = apiObjUrl;
-        } else {
-            var url = apiObjUrl;
-            $.ajax({
-                url: url,
-                type: 'POST',
-                data: '{"id":"' + id + '", "machId":"' + machId + '", "terminalId":"' + terminalId + '"}',
-                dataType: 'json',
-                contentType: 'application/json',
-                success: function (result, state) {
-                    console.log("状态：" + state);
-                    //console.log("返回创建的对象："+JSON.stringify(result));
-                    if (state == 'success') {
-                        $('#machTerminalModal').modal('hide');
-                        $('#table').bootstrapTable('refresh', {url: apiObjUrl});
-                        alertTip('success');
-                    }
-                },
-                error: function (result) {
-                    alertTip('error');
-                    console.log("error info:" + result);
+        var url = apiObjUrl;
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: '{"id":"' + id + '", "machId":"' + machId + '", "terminalId":"' + terminalId + '"}',
+            dataType: 'json',
+            contentType: 'application/json',
+            success: function (result, state) {
+                console.log("状态：" + state);
+                //console.log("返回创建的对象："+JSON.stringify(result));
+                if (state == 'success') {
+                    $('#machTerminalModal').modal('hide');
+                    $('#table').bootstrapTable('refresh', {url: apiObjUrl});
+                    alertTip('success');
                 }
-            });
-        }
+            },
+            error: function (result) {
+                alertTip('error');
+                console.log("error info:" + result);
+            }
+        });
     }
 
 
