@@ -14,49 +14,41 @@ title: 农机跟踪
             </div>
             <div class="row map_bottom border">
                 <div class="row ">
-                    <div class="col-md-4">
+                    <div class="col-md-4 map_operation">
                         <div id="operation">
-
-                            <button type="button" class="btn btn-default" onclick="goShuangGou()">跳转双沟</button>
-                            <div class="btn-group" role="group" aria-label="...">
-                                <button type="button" class="btn btn-default" onclick="goShuangGou()">跳转双沟</button>
-                                <button type="button" class="btn btn-default">Middle</button>
-                                <button type="button" class="btn btn-default">Right</button>
-                            </div>
-
-                            <span class="label label-success">
-                                <a onclick="goCurrentPosition()">跳转到当前位置</a>
-                            </span>
-                            <input type="button" class="btn btn-info btn-mini" value="跳转到当前位置s"
-                                   onclick="goCurrentPosition()"/>
-                            <input type="button" value="跳转到双沟镇" onclick="goShuangGou()"/>
-                            <input type="button" value="清除所有覆盖物" onclick="clearAll()"/>
-                            <input type="button" value="清除所有线" onclick="cleanLines()"/>
-                        </div>
-
-                        <div class="widget-content">
                             <p>
-                                <button class="btn btn-info btn-mini">Button</button>
+                                <input type="button" class="btn btn-info btn-mini" value="跳到当前位置"
+                                       onclick="goCurrentPosition()"/>
+                                <input type="button" class="btn btn-info btn-mini" value="跳转到双沟镇"
+                                       onclick="goShuangGou()"/>
+                            </p>
+                            <p>
+                                <input type="button" class="btn btn-info btn-mini" value="清除所有标记"
+                                       onclick="clearAll()"/>
+
+                                <input id="mapClickButton" type="button" class="btn btn-info btn-mini" value="启用点击坐标"
+                                       onclick="shiftMapClick()"/>
                             </p>
                         </div>
+
                     </div>
                     <div class="col-md-8">
                         <ul class="list-group map_info">
-                            <li id="" class="list-group-item list-group-item-success">
+                            <li id="successInfo" class="list-group-item list-group-item-success">
                                 <span id="successNumber" class="badge">0</span>
-                                <label id="successInfo"></label>
+                                <label></label>
                             </li>
-                            <li class="list-group-item list-group-item-info">
+                            <li id="infoInfo" class="list-group-item list-group-item-info">
                                 <span id="infoNumber" class="badge">0</span>
-                                <label id="infoInfo"></label>
+                                <label></label>
                             </li>
-                            <li class="list-group-item list-group-item-warning">
+                            <li id="warningInfo" class="list-group-item list-group-item-warning">
                                 <span id="warningNumber" class="badge">0</span>
-                                <label id="warningInfo"></label>
+                                <label></label>
                             </li>
-                            <li class="list-group-item list-group-item-danger">
+                            <li id="dangerInfo" class="list-group-item list-group-item-danger">
                                 <span id="dangerNumber" class="badge">0</span>
-                                <label id="dangerInfo"></label>
+                                <label></label>
                             </li>
                         </ul>
                     </div>
@@ -196,8 +188,8 @@ title: 农机跟踪
             if (machMap.gpsRecordLines.size < 4) {
                 cssClass = cssRemain.pop();
                 $element.addClass(cssClass);
-                var counts = machMap.addGpsRecords(row, cssClass);
-                writeInfo(row, cssClass, counts);
+                var gpsLine = machMap.addGpsRecords(row, cssClass);
+                writeInfo(row, cssClass, gpsLine);
             }
             else {
                 alert("超过最大可选数!");
@@ -207,22 +199,29 @@ title: 农机跟踪
     function clearInfo(cssClass) {
         writeInfo('', cssClass, '0');
     }
-    function writeInfo(info, cssClass, counts) {
-        var itemNumber = $("#" + cssClass + "Number");
+    function writeInfo(info, cssClass, gpsLine) {
         var itemInfo = $("#" + cssClass + "Info");
-        if (info == '') {
-            itemInfo.html('');
+
+        var countStr = '<span class="badge">' + gpsLine.records.length + '</span>'
+        var infoStr = '<label></label>';
+        if (info != '') {
+            infoStr = info.machName + "\t" + info.machCode;
         }
-        else {
-            var infoStr = info.machName+"\t"+info.machCode;
-            console.log(info);
-            itemInfo.html(infoStr);
-        }
-        itemNumber.html(counts);
+        itemInfo.html(countStr + infoStr);
     }
 
-
     onSearchClick();
-    //    machMap.enableMapClick();
+    goShuangGou();
+    var enableMapClick = false;
+    function shiftMapClick() {
+        enableMapClick = !enableMapClick;
+        machMap.enableMapClick(enableMapClick);
+        var mapClickButton = $("#mapClickButton");
+        if (enableMapClick) {
+            mapClickButton.val("取消点击坐标");
+        } else {
+            mapClickButton.val("启用点击坐标");
+        }
+    }
 
 </script>

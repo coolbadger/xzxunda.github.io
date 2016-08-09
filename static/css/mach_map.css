@@ -59,6 +59,7 @@ html, body, .full_height, .map_part {
     height: 100%;
 }
 
-.color-success{
-    color: #efd6d6;
+.map_operation  input {
+    margin-left: 15px;
+    margin-top: 15px;
 }

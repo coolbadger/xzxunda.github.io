@@ -6,9 +6,11 @@ function GpsRecordLine(mach_terminal) {
     this.mach_terminal_info = mach_terminal;
 }
 GpsRecordLine.prototype.mach_terminal_info;
+GpsRecordLine.prototype.records;
 GpsRecordLine.prototype.line;
 
 GpsRecordLine.prototype.addRecords = function (records) {
+    this.records = records;
     var points = new Array();
     // 现根据预定义规则进行排序
     var jsonData = records;
@@ -45,11 +47,6 @@ MachMap.prototype.initMap = function (containerID) {
     var point = new BMap.Point(117.606257, 34.042178);  // 创建点坐标(目前为双沟镇政府)
     map.centerAndZoom(point, 15);                       // 初始化地图，设置中心点坐标和地图级别
 
-    var mk = new BMap.Marker(point);//添加标记点
-    mk.setIcon(null);
-    map.addOverlay(mk);
-    map.panTo(point);
-
     map.enableScrollWheelZoom(true);                //鼠标滑动轮子可以滚动
     map.enableKeyboard(true);                       //启用键盘操作
     map.setMapType(BMAP_HYBRID_MAP);                //设置为卫星图
@@ -61,11 +58,16 @@ MachMap.prototype.initMap = function (containerID) {
     return map;
 }
 
+function mapClick(e) {
+    alert(e.point.lng + ", " + e.point.lat);
+}
 // 自定义地图点击事件
-MachMap.prototype.enableMapClick = function () {
-    this.map.addEventListener("click", function (e) {
-        alert(e.point.lng + "\n" + e.point.lat);
-    });
+MachMap.prototype.enableMapClick = function (enableClick) {
+    if (enableClick == true) {
+        this.map.addEventListener("click", mapClick);
+    } else {
+        this.map.removeEventListener("click", mapClick);
+    }
 }
 
 // 清楚所有图层
@@ -81,7 +83,6 @@ MachMap.prototype.addGpsRecords = function (row, cssClass) {
     var ref_id = row.reMachTerminalId;
     var startTime = row.gpsStartTime;
     var endTime = row.gpsEndTime;
-    var recordCounts = 0;
     var colorStr = "";
 
     switch (cssClass) {
@@ -109,14 +110,13 @@ MachMap.prototype.addGpsRecords = function (row, cssClass) {
         data: "startTime=" + startTime + "&endTime=" + endTime,
         async: false,//取消异步
         success: function (result) {
-            recordCounts = result.length;
             gpsRecordLine.addRecords(result);
         }
     });
     this.gpsRecordLines.set(ref_id, gpsRecordLine);
     gpsRecordLine.line.setStrokeColor(colorStr);
     this.map.addOverlay(gpsRecordLine.line)
-    return recordCounts;
+    return gpsRecordLine;
 }
 // 移除一条记录线
 MachMap.prototype.removeGpsRecords = function (row) {
