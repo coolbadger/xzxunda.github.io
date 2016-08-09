@@ -42,13 +42,22 @@ title: 农机跟踪
                     </div>
                     <div class="col-md-8">
                         <ul class="list-group map_info">
-                            <li class="list-group-item list-group-item-success">
-                                <span class="badge">14</span>
-                                Dapibus ac facilisis in
+                            <li id="" class="list-group-item list-group-item-success">
+                                <span id="successNumber" class="badge">0</span>
+                                <label id="successInfo"></label>
                             </li>
-                            <li class="list-group-item list-group-item-info">Morbi leo risus</li>
-                            <li class="list-group-item list-group-item-warning">Porta ac consectetur ac</li>
-                            <li class="list-group-item list-group-item-danger">Porta ac consectetur ac</li>
+                            <li class="list-group-item list-group-item-info">
+                                <span id="infoNumber" class="badge">0</span>
+                                <label id="infoInfo"></label>
+                            </li>
+                            <li class="list-group-item list-group-item-warning">
+                                <span id="warningNumber" class="badge">0</span>
+                                <label id="warningInfo"></label>
+                            </li>
+                            <li class="list-group-item list-group-item-danger">
+                                <span id="dangerNumber" class="badge">0</span>
+                                <label id="dangerInfo"></label>
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -57,7 +66,7 @@ title: 农机跟踪
         <div class="col-md-3 info_part ">
             <div class="row">
                 <div class="col-md-12">
-                    {% include temp/datetime.html id='dtp_start' text='开始时间:' %}
+                    {% include temp/datetime.html id='dtp_start' addDays='-2' text='开始时间:' %}
                     {% include temp/datetime.html id='dtp_end' addDays='1' text='结束时间:' %}
                     {% include temp/textbox.html id='dtp_car' text='车牌号:' placeholder='请输入车牌号' showButton = true
                     onclick='onSearchClick()' onTextChange='onAutoSearch(value)' %}
@@ -154,6 +163,7 @@ title: 农机跟踪
         else {
             simpleTableGen.table.bootstrapTable('load', fullData);
         }
+        machMap.clearAll();
     }
 
     // 查询农机列表
@@ -169,18 +179,46 @@ title: 农机跟踪
             fullData = result;
             simpleTableGen.table.bootstrapTable('load', result);
         });
-
+        machMap.clearAll();
     }
+
+    var cssRemain = ['danger', 'warning', 'info', 'success'];
     // 双击选中行事件
     function onRowDbClick(row, $element) {
-        if ($element.attr('class')) {
-            $element.removeClass('success');
+        var cssClass = $element.attr('class');
+        if (cssClass) {
+            $element.removeClass(cssClass);
+            clearInfo(cssClass);
+            cssRemain.push(cssClass);
             machMap.removeGpsRecords(row);
         }
         else {
-            $element.addClass('success');
-            machMap.addGpsRecords(row);
+            if (machMap.gpsRecordLines.size < 4) {
+                cssClass = cssRemain.pop();
+                $element.addClass(cssClass);
+                var counts = machMap.addGpsRecords(row, cssClass);
+                writeInfo(row, cssClass, counts);
+            }
+            else {
+                alert("超过最大可选数!");
+            }
         }
+    }
+    function clearInfo(cssClass) {
+        writeInfo('', cssClass, '0');
+    }
+    function writeInfo(info, cssClass, counts) {
+        var itemNumber = $("#" + cssClass + "Number");
+        var itemInfo = $("#" + cssClass + "Info");
+        if (info == '') {
+            itemInfo.html('');
+        }
+        else {
+            var infoStr = info.machName+"\t"+info.machCode;
+            console.log(info);
+            itemInfo.html(infoStr);
+        }
+        itemNumber.html(counts);
     }
 
 

@@ -58,3 +58,7 @@ html, body, .full_height, .map_part {
     margin-top: 10px;
     height: 100%;
 }
+
+.color-success{
+    color: #efd6d6;
+}

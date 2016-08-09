@@ -70,16 +70,37 @@ MachMap.prototype.enableMapClick = function () {
 
 // 清楚所有图层
 MachMap.prototype.clearAll = function () {
+    this.gpsRecordLines.clear();
     this.map.clearOverlays();
 }
 
 
 //根据选择行,请求GPS记录,并向Map中添加一条记录线
-MachMap.prototype.addGpsRecords = function (row) {
+MachMap.prototype.addGpsRecords = function (row, cssClass) {
     var gpsRecordLine = new GpsRecordLine(row);
     var ref_id = row.reMachTerminalId;
     var startTime = row.gpsStartTime;
     var endTime = row.gpsEndTime;
+    var recordCounts = 0;
+    var colorStr = "";
+
+    switch (cssClass) {
+        case 'success':
+            colorStr = '#d4e9cc';
+            break;
+        case 'info':
+            colorStr = '#d1e8f4';
+            break;
+        case 'warning':
+            colorStr = '#fbf7dc';
+            break;
+        case 'danger':
+            colorStr = '#efd6d6';
+            break;
+        default:
+            colorStr = '#d4e9cc';
+            break;
+    }
 
     var apiUrl = API_URL + '/api/gpsRecords/refMachTerminal/' + ref_id;
     $.ajax({
@@ -88,11 +109,14 @@ MachMap.prototype.addGpsRecords = function (row) {
         data: "startTime=" + startTime + "&endTime=" + endTime,
         async: false,//取消异步
         success: function (result) {
+            recordCounts = result.length;
             gpsRecordLine.addRecords(result);
         }
     });
     this.gpsRecordLines.set(ref_id, gpsRecordLine);
+    gpsRecordLine.line.setStrokeColor(colorStr);
     this.map.addOverlay(gpsRecordLine.line)
+    return recordCounts;
 }
 // 移除一条记录线
 MachMap.prototype.removeGpsRecords = function (row) {
