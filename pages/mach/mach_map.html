@@ -155,7 +155,7 @@ title: 农机跟踪
         else {
             simpleTableGen.table.bootstrapTable('load', fullData);
         }
-        machMap.clearAll();
+        cleanAllInfo();
     }
 
     // 查询农机列表
@@ -171,10 +171,15 @@ title: 农机跟踪
             fullData = result;
             simpleTableGen.table.bootstrapTable('load', result);
         });
-        machMap.clearAll();
+        cleanAllInfo();
     }
 
-    var cssRemain = ['danger', 'warning', 'info', 'success'];
+    var cssList = ['danger', 'warning', 'info', 'success'];
+    var cssRemain = cssList.slice(0);
+    function sortCss(a, b) {
+        var result = cssList.indexOf(a) - cssList.indexOf(b);
+        return cssList.indexOf(a) - cssList.indexOf(b);
+    }
     // 双击选中行事件
     function onRowDbClick(row, $element) {
         var cssClass = $element.attr('class');
@@ -182,11 +187,13 @@ title: 农机跟踪
             $element.removeClass(cssClass);
             clearInfo(cssClass);
             cssRemain.push(cssClass);
+            cssRemain.sort(sortCss);
             machMap.removeGpsRecords(row);
         }
         else {
             if (machMap.gpsRecordLines.size < 4) {
                 cssClass = cssRemain.pop();
+                cssRemain.sort(sortCss);
                 $element.addClass(cssClass);
                 var gpsLine = machMap.addGpsRecords(row, cssClass);
                 writeInfo(row, cssClass, gpsLine);
@@ -236,6 +243,13 @@ title: 农机跟踪
         }
     }
 
+    function cleanAllInfo() {
+        machMap.clearAll();
+        cssList.forEach(function (css) {
+            clearInfo(css);
+        });
+        cssRemain = cssList.slice(0);
+    }
 
     onSearchClick();
     goShuangGou();
