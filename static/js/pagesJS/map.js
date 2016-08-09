@@ -7,20 +7,21 @@ function GpsRecordLine(mach_terminal) {
 }
 GpsRecordLine.prototype.mach_terminal_info;
 GpsRecordLine.prototype.records;
+GpsRecordLine.prototype.points;
 GpsRecordLine.prototype.line;
 
 GpsRecordLine.prototype.addRecords = function (records) {
     this.records = records;
-    var points = new Array();
+    this.points = new Array();
     // 现根据预定义规则进行排序
     var jsonData = records;
     jsonData.sort(Sorts);
     for (var i = 0; i < jsonData.length; i++) {
         var item = jsonData[i];
         var point = new BMap.Point(item.lng, item.lat);
-        points.push(point);
+        this.points.push(point);
     }
-    this.line = new BMap.Polyline(points);
+    this.line = new BMap.Polyline(this.points);
     return this.line;
 }
 

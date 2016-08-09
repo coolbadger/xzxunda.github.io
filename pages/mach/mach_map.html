@@ -201,17 +201,29 @@ title: 农机跟踪
     }
     function writeInfo(info, cssClass, gpsLine) {
         var itemInfo = $("#" + cssClass + "Info");
-
-        var countStr = '<span class="badge">' + gpsLine.records.length + '</span>'
+        var countStr;
         var infoStr = '<label></label>';
+        var gpsCount = 0;
+
         if (info != '') {
-            infoStr = info.machName + "\t" + info.machCode;
+            var totalLength = 0;
+            var oldPoint = null;
+            gpsLine.points.forEach(function (point) {
+                if (oldPoint == null) {
+                    oldPoint = point;
+                }
+                else {
+                    totalLength += machMap.map.getDistance(point, oldPoint);
+                    oldPoint = point;
+                }
+            });
+            gpsCount = gpsLine.records.length;
+            infoStr = info.machName + "\t" + info.machCode + ",总路长:" + totalLength.toFixed(2) + "米";
         }
+        countStr = '<span class="badge">' + gpsCount + '</span>'
         itemInfo.html(countStr + infoStr);
     }
 
-    onSearchClick();
-    goShuangGou();
     var enableMapClick = false;
     function shiftMapClick() {
         enableMapClick = !enableMapClick;
@@ -223,5 +235,9 @@ title: 农机跟踪
             mapClickButton.val("启用点击坐标");
         }
     }
+
+
+    onSearchClick();
+    goShuangGou();
 
 </script>
