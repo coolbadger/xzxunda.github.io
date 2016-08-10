@@ -203,14 +203,18 @@ title: 农机跟踪
             }
         }
     }
+    // 清除页面GPS信息框
     function clearInfo(cssClass) {
         writeInfo('', cssClass, '0');
     }
+    // 写入页面GPS信息
     function writeInfo(info, cssClass, gpsLine) {
         var itemInfo = $("#" + cssClass + "Info");
         var countStr;
         var infoStr = '<label></label>';
         var gpsCount = 0;
+        var co = 0.0015;
+        var width = 3;
 
         if (info != '') {
             var totalLength = 0;
@@ -225,12 +229,13 @@ title: 农机跟踪
                 }
             });
             gpsCount = gpsLine.records.length;
-            infoStr = info.machName + "\t" + info.machCode + ",总路长:" + totalLength.toFixed(2) + "米";
+            infoStr = info.machName + "\t" + info.machCode + ",总路长:" + totalLength.toFixed(2) + "米,作业宽度:" + width + ",作业面积:" + (totalLength * width * co).toFixed(2) + "亩";
         }
         countStr = '<span class="badge">' + gpsCount + '</span>'
         itemInfo.html(countStr + infoStr);
     }
 
+    // 是否启用页面点击事件
     var enableMapClick = false;
     function shiftMapClick() {
         enableMapClick = !enableMapClick;
@@ -243,6 +248,7 @@ title: 农机跟踪
         }
     }
 
+    // 清除界面上所有GPS信息,并充值css列表
     function cleanAllInfo() {
         machMap.clearAll();
         cssList.forEach(function (css) {

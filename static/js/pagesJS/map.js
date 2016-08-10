@@ -9,17 +9,35 @@ GpsRecordLine.prototype.mach_terminal_info;
 GpsRecordLine.prototype.records;
 GpsRecordLine.prototype.points;
 GpsRecordLine.prototype.line;
+GpsRecordLine.prototype.workingLins;
 
 GpsRecordLine.prototype.addRecords = function (records) {
     this.records = records;
+    this.workingLins = new Array();
     this.points = new Array();
     // 现根据预定义规则进行排序
-    var jsonData = records;
-    jsonData.sort(Sorts);
-    for (var i = 0; i < jsonData.length; i++) {
-        var item = jsonData[i];
+    records.sort(Sorts);
+    for (var i = 0; i < records.length; i++) {
+        var item = records[i];
         var point = new BMap.Point(item.lng, item.lat);
         this.points.push(point);
+
+        // 记录工作点
+        var workingPoints = new Array();
+        if (i > 0 && records[i].sensor1 == '1') {
+            var lastTime = new Date(Date.parse(records[i - 1].gpsTime.replace(/-/g, "/")));
+            var thisTime = new Date(Date.parse(item.gpsTime.replace(/-/g, "/")));
+
+            var spanTime = thisTime - lastTime;
+            // GPS间隔在5分钟以内,作为同一批次作业
+            if (spanTime <= 5 * 1000 * 60) {
+                workingPoints.push(point);
+            }
+        }
+        else if(records[i].sensor1 == '1'){
+            workingPoints.push(point);
+        }
+
     }
     this.line = new BMap.Polyline(this.points);
     return this.line;
@@ -29,8 +47,8 @@ GpsRecordLine.prototype.addRecords = function (records) {
 // 排序规则
 function Sorts(a, b) {
     // GPS时间类型忽略毫秒
-    var aDate = new Date(Date.parse(a.gpsTime));
-    var bDate = new Date(Date.parse(b.gpsTime));
+    var aDate = new Date(Date.parse(a.gpsTime.replace(/-/g, "/")));
+    var bDate = new Date(Date.parse(b.gpsTime.replace(/-/g, "/")));
 
     return aDate - bDate;
 }
