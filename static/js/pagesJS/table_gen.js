@@ -104,7 +104,8 @@ TableGen.prototype.init = function () {
         $("#unBind").addClass("hidden");
         var $table = $('#' + TableGen.prototype.tableID);
         var url = apiObjUrl + '?isBind=false';
-        $table.bootstrapTable('refresh', {url: url});
+        //$table.bootstrapTable('refresh', {url: url});
+        refreshData(url);
     });
 
     //显示全部农机绑定情况按钮
@@ -113,7 +114,8 @@ TableGen.prototype.init = function () {
         $("#all").addClass("hidden");
         var $table = $('#' + TableGen.prototype.tableID);
         var url = apiObjUrl;
-        $table.bootstrapTable('refresh', {url: url});
+        //$table.bootstrapTable('refresh', {url: url});
+        refreshData(url);
     });
 
 };
@@ -212,18 +214,35 @@ TableGen.prototype.loadData = function () {
     });
 }
 
+//刷新数据的方法
+function refreshData(url) {
+    $.ajax({
+        url: url,
+        type: 'GET',
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader("Authorization", $.cookie('author_code'));
+        },
+        success: function (data) {
+            tableGen.table.bootstrapTable('load', data);
+        },
+        error: function (err) {
+        }
+    });
+}
+
 //创建一条记录的方法
 function saveItem(url, params, $http) {
     var $table = $('#' + TableGen.prototype.tableID);
     //$http.defaults.headers.post['Content-Type'] = 'application/json';
+    $http.defaults.headers.common = {'Authorization': $.cookie('author_code')};
     $http.post(url, params, {
-        'Content-Type': "application/json"
+        'Content-Type': "application/json",
     }).success(function (data, state) {
         console.log(data);
         console.log(state);
         if (state == '201') {
             alertTip(TableGen.prototype.success);
-            $table.bootstrapTable('refresh', {url: apiObjUrl});
+            refreshData(apiObjUrl);
         } else {
             alertTip(TableGen.prototype.error);
         }
@@ -236,6 +255,7 @@ function saveItem(url, params, $http) {
 //修改一条记录的方法
 function updateItem(url, params, $http) {
     var $table = $('#' + TableGen.prototype.tableID);
+    $http.defaults.headers.common = {'Authorization': $.cookie('author_code')};
     $http.put(url, params, {
         'Content-Type': "application/json",
         "X-HTTP-Method-Override": "PUT"
@@ -244,7 +264,8 @@ function updateItem(url, params, $http) {
         console.log("success result:" + data);
         if (state == '205') {
             alertTip(TableGen.prototype.success);
-            $table.bootstrapTable('refresh', {url: apiObjUrl});
+            //$table.bootstrapTable('refresh', {url: apiObjUrl});
+            refreshData(apiObjUrl);
         } else {
             alertTip(TableGen.prototype.error);
         }

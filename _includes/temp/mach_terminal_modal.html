@@ -30,7 +30,6 @@
                        data-pagination="true"
                        data-id-field="id"
                        data-page-list="[10, 25, 50, 100, ALL]"
-                       data-url="{{ site.apiurl }}/api/{{ include.terminal }}?isBind=false"
                        datatype="json"
                        data-local="zh-US"
                         >
@@ -48,6 +47,9 @@
 <script type="text/javascript">
     var simpleTableGen = new SimpleTableGen();
     simpleTableGen.tableID = 'machTerminalTable';
+
+    simpleTableGen.apiName = 'terminals';
+
     var settings = new Object();
     settings.columns = [{
         title: 'ID',
@@ -108,6 +110,23 @@
         });
     }
 
+    //刷新数据的方法
+    function refreshData(url) {
+        $.ajax({
+            url: url,
+            type: 'GET',
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("Authorization", $.cookie('author_code'));
+            },
+            success: function (data) {
+                return data;
+            },
+            error: function (err) {
+                return null;
+            }
+        });
+    }
+    settings.data = refreshData('{{ site.apiurl }}/api/{{ include.terminal }}?isBind=false');
 
     simpleTableGen.settings = settings;
 
