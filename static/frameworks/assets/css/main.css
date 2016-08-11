@@ -90,7 +90,7 @@ iframe {
 .dl-title {
   float: left;
   color: #c1d5ec;
-  font-family: "Microsoft YaHei";
+  /*font-family: "Microsoft YaHei";*/
   margin-left: 12px;
   font-size: 18px;
   line-height: 36px;

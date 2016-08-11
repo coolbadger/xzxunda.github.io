@@ -1,0 +1,8 @@
+<div class="panel panel-default">
+    {% if(include.heading != null )%}
+    <div class="panel-heading">{{ include.heading }}</div>
+    {% endif %}
+    <div class="panel-body">
+        <div id="{{ include.id }}" style="height: 250px; width: 100%;"></div>
+    </div>
+</div>
