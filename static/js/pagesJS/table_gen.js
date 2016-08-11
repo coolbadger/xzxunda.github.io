@@ -14,6 +14,7 @@ TableGen.prototype.tableID = 'table';
 TableGen.prototype.modalName = 'myModal';
 TableGen.prototype.editFields = new Array();
 TableGen.prototype.settings = new Object();
+TableGen.prototype.apiName = '';
 TableGen.prototype.table;
 
 TableGen.prototype.validates;
@@ -27,6 +28,7 @@ TableGen.prototype.bind = function () {
     this.createOrUpdate();
     window.onload = this.init();
     this.setTable(this.table);
+    this.loadData();
 }
 
 //初始化Table的主函数
@@ -191,6 +193,21 @@ TableGen.prototype.createOrUpdate = function () {
                     $modal.modal('hide');
                 }
             })
+        }
+    });
+}
+
+TableGen.prototype.loadData = function () {
+    $.ajax({
+        url: API_URL + "/api/" + this.apiName,
+        type: 'GET',
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader("Authorization", $.cookie('author_code'));
+        },
+        success: function (data) {
+            tableGen.table.bootstrapTable('load', data);
+        },
+        error: function (err) {
         }
     });
 }

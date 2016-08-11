@@ -123,11 +123,15 @@ MachMap.prototype.addGpsRecords = function (row, cssClass) {
     }
 
     var apiUrl = API_URL + '/api/gpsRecords/refMachTerminal/' + ref_id;
+
     $.ajax({
         type: "get",
         url: apiUrl,
         data: "startTime=" + startTime + "&endTime=" + endTime,
         async: false,//取消异步
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader("Authorization", $.cookie('author_code'));
+        },
         success: function (result) {
             gpsRecordLine.addRecords(result);
         }

@@ -167,10 +167,19 @@ title: 农机跟踪
 
 
         var requestUrl = encodeURI(apiObjUrl + "?startTime=" + startTime_local + "&endTime=" + endTime_local + "&machCode=" + carInfo_local);
-        $.get(requestUrl, function (result) {
-            fullData = result;
-            simpleTableGen.table.bootstrapTable('load', result);
+        $.ajax({
+            url: requestUrl,
+            type: 'GET',
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("Authorization", $.cookie('author_code'));
+            },
+            success: function (data) {
+                simpleTableGen.table.bootstrapTable('load', data);
+            },
+            error: function (err) {
+            }
         });
+
         cleanAllInfo();
     }
 
