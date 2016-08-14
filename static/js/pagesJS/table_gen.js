@@ -283,6 +283,9 @@ function deleteItem(apiUrl, id) {
     $.ajax({
         url: url,
         type: 'DELETE',
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader("Authorization", $.cookie('author_code'));
+        },
         success: function (result, state) {
             console.log("状态：" + state);
             //console.log("返回删除对象："+JSON.stringify(result));

@@ -101,11 +101,14 @@ layout: base_page
                                     data: '{"id":"' + id + '", "machId":"' + machId + '", "terminalId":""}',
                                     dataType: 'json',
                                     contentType: 'application/json',
+                                    beforeSend: function (xhr) {
+                                        xhr.setRequestHeader("Authorization", $.cookie('author_code'));
+                                    },
                                     success: function (result, status) {
                                         console.log("状态：" + status);
                                         //console.log("返回创建的对象："+JSON.stringify(result));
                                         if (status == 'success') {
-                                            $('#table').bootstrapTable('refresh', {url: apiObjUrl});
+                                            refreshData(apiObjUrl);
                                             alertTip('success');
                                         }
                                     },

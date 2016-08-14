@@ -14,6 +14,8 @@ SimpleTableGen.prototype.table = $('#' + this.tableID);
 SimpleTableGen.prototype.settings = new Object();
 SimpleTableGen.prototype.editFields = new Array();
 
+SimpleTableGen.prototype.apiName = '';
+
 SimpleTableGen.prototype.bind = function () {
     window.onload = this.init();
 }
@@ -22,7 +24,8 @@ SimpleTableGen.prototype.bind = function () {
 SimpleTableGen.prototype.init = function () {
     this.table = $('#' + this.tableID);
     var selections = [];
-    this.table.bootstrapTable(this.settings);
+    this.table.bootstrapTable(this.settings)
+
 }
 
 SimpleTableGen.prototype.shortDateFormatter = function (value, row, index) {

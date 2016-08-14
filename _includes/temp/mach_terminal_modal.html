@@ -94,12 +94,15 @@
             data: '{"id":"' + id + '", "machId":"' + machId + '", "terminalId":"' + terminalId + '"}',
             dataType: 'json',
             contentType: 'application/json',
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("Authorization", $.cookie('author_code'));
+            },
             success: function (result, state) {
                 console.log("状态：" + state);
                 //console.log("返回创建的对象："+JSON.stringify(result));
                 if (state == 'success') {
                     $('#machTerminalModal').modal('hide');
-                    $('#table').bootstrapTable('refresh', {url: apiObjUrl});
+                    refreshData(apiObjUrl);
                     alertTip('success');
                 }
             },
@@ -110,8 +113,8 @@
         });
     }
 
-    //刷新数据的方法
-    function refreshData(url) {
+    //加载数据
+    function loadData(url) {
         $.ajax({
             url: url,
             type: 'GET',
@@ -119,14 +122,17 @@
                 xhr.setRequestHeader("Authorization", $.cookie('author_code'));
             },
             success: function (data) {
-                return data;
+                $('#machTerminalTable').bootstrapTable('load', data);
             },
             error: function (err) {
-                return null;
+
             }
         });
     }
-    settings.data = refreshData('{{ site.apiurl }}/api/{{ include.terminal }}?isBind=false');
+
+    var url = '{{ site.apiurl }}/api/{{ include.terminal }}?isBind=false';
+
+    window.onload = loadData(url);
 
     simpleTableGen.settings = settings;
 
