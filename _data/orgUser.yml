@@ -11,6 +11,7 @@
 - name: 密码
   id: password
   span: 1
+  type: password
   placeholder: 请输入密码
 
 - name: 联系电话

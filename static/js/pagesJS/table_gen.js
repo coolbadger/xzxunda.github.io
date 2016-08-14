@@ -132,6 +132,17 @@ TableGen.prototype.operateFormatter = function (value, row, index) {
     ].join('');
 };
 
+//密码隐藏显示方法
+TableGen.prototype.pwdFormatter = function (value, row, index) {
+    var curAuthorCode = $.cookie('author_code');
+    var lineAuthorCode = "Basic " + btoa(row.userName + ":" + row.password);
+    if(curAuthorCode == lineAuthorCode) {
+        return row.password;
+    } else {
+        return ['<i class="fa fa-key fa-fw"></i>'].join('');
+    }
+}
+
 // 预设编辑事件方法
 TableGen.prototype.operationEvent = function () {
     var $modal = $('#' + this.modalName);
@@ -159,6 +170,38 @@ TableGen.prototype.operationEvent = function () {
     };
     return window.operateEvents;
 };
+
+
+TableGen.prototype.loadData = function () {
+    $.ajax({
+        url: API_URL + "/api/" + this.apiName,
+        type: 'GET',
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader("Authorization", $.cookie('author_code'));
+        },
+        success: function (data) {
+            tableGen.table.bootstrapTable('load', data);
+        },
+        error: function (err) {
+        }
+    });
+}
+
+//刷新数据的方法
+function refreshData(url) {
+    $.ajax({
+        url: url,
+        type: 'GET',
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader("Authorization", $.cookie('author_code'));
+        },
+        success: function (data) {
+            tableGen.table.bootstrapTable('load', data);
+        },
+        error: function (err) {
+        }
+    });
+}
 
 //angular提交创建记录或修改记录的方法
 TableGen.prototype.createOrUpdate = function () {
@@ -195,37 +238,6 @@ TableGen.prototype.createOrUpdate = function () {
                     $modal.modal('hide');
                 }
             })
-        }
-    });
-}
-
-TableGen.prototype.loadData = function () {
-    $.ajax({
-        url: API_URL + "/api/" + this.apiName,
-        type: 'GET',
-        beforeSend: function (xhr) {
-            xhr.setRequestHeader("Authorization", $.cookie('author_code'));
-        },
-        success: function (data) {
-            tableGen.table.bootstrapTable('load', data);
-        },
-        error: function (err) {
-        }
-    });
-}
-
-//刷新数据的方法
-function refreshData(url) {
-    $.ajax({
-        url: url,
-        type: 'GET',
-        beforeSend: function (xhr) {
-            xhr.setRequestHeader("Authorization", $.cookie('author_code'));
-        },
-        success: function (data) {
-            tableGen.table.bootstrapTable('load', data);
-        },
-        error: function (err) {
         }
     });
 }

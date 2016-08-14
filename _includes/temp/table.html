@@ -72,11 +72,12 @@
                     {% if item.span == 1 %}
                     <!--判断上一个标签是否完结-->
                     {% if isFinished %}
-                    <div class="form-group {% if item.visible == false %} hidden {% endif %}">
+                    <div class="form-group {% if item.visible == false %}hidden{% endif %}">
                         <label for="{{ item.id }}" class="col-sm-2 control-label">{{ item.name }}</label>
 
                         <div class="col-sm-4">
-                            <input type="text" class="form-control" id="{{ item.id }}" name="{{ item.id }}"
+                            <input type="{% if item.type == 'password' %}password{% else %}text{% endif %}"
+                                   class="form-control" id="{{ item.id }}" name="{{ item.id }}"
                                    placeholder="{{ item.placeholder }}">
                         </div>
                         {% assign isFinished = false %}
@@ -84,7 +85,8 @@
                         <label for="{{ item.id }}" class="col-sm-2 control-label">{{ item.name }}</label>
 
                         <div class="col-sm-4">
-                            <input type="text" class="form-control" id="{{ item.id }}" name="{{ item.id }}"
+                            <input type="{% if item.type == 'password' %}password{% else %}text{% endif %}"
+                                   class="form-control" id="{{ item.id }}" name="{{ item.id }}"
                                    placeholder="{{ item.placeholder }}">
                         </div>
                     </div>
@@ -98,7 +100,8 @@
                         <label for="{{ item.id }}" class="col-sm-2 control-label">{{ item.name }}</label>
 
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" id="{{ item.id }}" name="{{ item.id }}"
+                            <input type="{% if item.type == 'password' %}password{% else %}text{% endif %}"
+                                   class="form-control" id="{{ item.id }}" name="{{ item.id }}"
                                    placeholder="{{ item.placeholder }}">
                         </div>
                     </div>
@@ -108,7 +111,8 @@
                     <label for="{{ item.id }}" class="col-sm-2 control-label">{{ item.name }}</label>
 
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" id="{{ item.id }}" name="{{ item.id }}"
+                        <input type="{% if item.type == 'password' %}password{% else %}text{% endif %}"
+                               class="form-control" id="{{ item.id }}" name="{{ item.id }}"
                                placeholder="{{ item.placeholder }}">
                     </div>
                 </div>

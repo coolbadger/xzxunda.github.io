@@ -10,6 +10,7 @@
                 <h4 class="modal-title" id="myModalLabel1">绑定农机终端</h4>
             </div>
             <div class="modal-body">
+                <div class="container-fluid">
                 <div id="toolbar1">
                     <input type="text" class="hidden" id="id">
                     <input type="text" class="hidden" id="machId">
@@ -34,6 +35,7 @@
                        data-local="zh-US"
                         >
                 </table>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" data-dismiss="modal">
@@ -80,6 +82,7 @@
 
     settings.height = $(window).height() - 350;
 
+    var terminalDataURL = '{{ site.apiurl }}/api/{{ include.terminal }}?isBind=false';
 
     settings.onDblClickRow = function (row, $element) {
         console.log("terminalId:" + row.id);
@@ -102,6 +105,7 @@
                 //console.log("返回创建的对象："+JSON.stringify(result));
                 if (state == 'success') {
                     $('#machTerminalModal').modal('hide');
+                    loadTerminalData(terminalDataURL);
                     refreshData(apiObjUrl);
                     alertTip('success');
                 }
@@ -114,7 +118,7 @@
     }
 
     //加载数据
-    function loadData(url) {
+    function loadTerminalData(url) {
         $.ajax({
             url: url,
             type: 'GET',
@@ -130,9 +134,7 @@
         });
     }
 
-    var url = '{{ site.apiurl }}/api/{{ include.terminal }}?isBind=false';
-
-    window.onload = loadData(url);
+    window.onload = loadTerminalData(terminalDataURL);
 
     simpleTableGen.settings = settings;
 

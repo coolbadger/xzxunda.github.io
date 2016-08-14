@@ -109,6 +109,7 @@ layout: base_page
                                         //console.log("返回创建的对象："+JSON.stringify(result));
                                         if (status == 'success') {
                                             refreshData(apiObjUrl);
+                                            loadTerminalData(terminalDataURL);
                                             alertTip('success');
                                         }
                                     },
