@@ -85,11 +85,10 @@
     var terminalDataURL = '{{ site.apiurl }}/api/{{ include.terminal }}?isBind=false';
 
     settings.onDblClickRow = function (row, $element) {
-        console.log("terminalId:" + row.id);
         var id = $("#id").val();
         var machId = $("#machId").val();
         var terminalId = row.id;
-        console.log("machTerminalId:" + id + ",machId:" + machId);
+        console.log("machTerminalId:" + id + ", machId:" + machId + ", terminalId:" + terminalId);
         var url = apiObjUrl;
         $.ajax({
             url: url,
@@ -100,9 +99,9 @@
             beforeSend: function (xhr) {
                 xhr.setRequestHeader("Authorization", $.cookie('author_code'));
             },
-            success: function (result, state) {
-                console.log("状态：" + state);
-                //console.log("返回创建的对象："+JSON.stringify(result));
+            success: function (data, state, result) {
+                console.log("state: " + state + ", status:" + result.status + ", statusText:" + result.statusText);
+                console.log("success data:" + JSON.stringify(data));
                 if (state == 'success') {
                     $('#machTerminalModal').modal('hide');
                     loadTerminalData(terminalDataURL);
@@ -110,9 +109,9 @@
                     alertTip('success');
                 }
             },
-            error: function (result) {
+            error: function (result, state) {
                 alertTip('error');
-                console.log("error info:" + result);
+                console.log("state: " + state + ", status: " + result.status + ", statusText: " + result.statusText);
             }
         });
     }

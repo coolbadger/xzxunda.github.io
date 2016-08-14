@@ -136,7 +136,7 @@ TableGen.prototype.operateFormatter = function (value, row, index) {
 TableGen.prototype.pwdFormatter = function (value, row, index) {
     var curAuthorCode = $.cookie('author_code');
     var lineAuthorCode = "Basic " + btoa(row.userName + ":" + row.password);
-    if(curAuthorCode == lineAuthorCode) {
+    if (curAuthorCode == lineAuthorCode) {
         return row.password;
     } else {
         return ['<i class="fa fa-key fa-fw"></i>'].join('');
@@ -176,6 +176,8 @@ TableGen.prototype.loadData = function () {
     $.ajax({
         url: API_URL + "/api/" + this.apiName,
         type: 'GET',
+        dataType: 'json',
+        contentType: 'application/json',
         beforeSend: function (xhr) {
             xhr.setRequestHeader("Authorization", $.cookie('author_code'));
         },
@@ -192,6 +194,8 @@ function refreshData(url) {
     $.ajax({
         url: url,
         type: 'GET',
+        dataType: 'json',
+        contentType: 'application/json',
         beforeSend: function (xhr) {
             xhr.setRequestHeader("Authorization", $.cookie('author_code'));
         },
@@ -207,8 +211,8 @@ function refreshData(url) {
 TableGen.prototype.createOrUpdate = function () {
     var module = this.module;
     var ctrl = this.ctrl;
-    var $modal = $('#' + this.modalName);
     var app = angular.module(module, []);
+    var $modal = $('#' + this.modalName);
     var fields = this.editFields;
     var val = this.validates;
     app.controller(ctrl, function ($scope, $http) {
@@ -225,9 +229,9 @@ TableGen.prototype.createOrUpdate = function () {
                     params = params.substring(0, params.length - 1);
                     params = "{" + params + "}";
                     params = JSON.parse(params);
-                    var id = $('#id').val();//取得隐藏id控件的值，用来判断saveOrg方法是创建记录，还是还是修改记录
+                    var id = $('#id').val();//取得隐藏id控件的值，用来判断saveObj方法是创建记录，还是还是修改记录
                     console.log("id:" + id);
-                    console.log("传入的参数：" + params);
+                    console.log("input json object:" + JSON.stringify(params));
                     if (id != "") {  //修改
                         var url = apiObjUrl + '/' + id;
                         updateItem(url, params, $http);
@@ -250,8 +254,8 @@ function saveItem(url, params, $http) {
     $http.post(url, params, {
         'Content-Type': "application/json",
     }).success(function (data, state) {
-        console.log(data);
-        console.log(state);
+        console.log("state:" + state);
+        console.log("success result:" + JSON.stringify(data));
         if (state == '201') {
             alertTip(TableGen.prototype.success);
             refreshData(apiObjUrl);
@@ -259,7 +263,7 @@ function saveItem(url, params, $http) {
             alertTip(TableGen.prototype.error);
         }
     }).error(function (data) {
-        console.log("err result:" + JSON.stringify(data));
+        console.log("error result:" + JSON.stringify(data));
         alertTip(TableGen.prototype.error);
     });
 }
@@ -272,8 +276,8 @@ function updateItem(url, params, $http) {
         'Content-Type': "application/json",
         "X-HTTP-Method-Override": "PUT"
     }).success(function (data, state) {
-        console.log(state);
-        console.log("success result:" + data);
+        console.log("state:" + state);
+        console.log("success result:" + JSON.stringify(data));
         if (state == '205') {
             alertTip(TableGen.prototype.success);
             //$table.bootstrapTable('refresh', {url: apiObjUrl});
@@ -282,7 +286,7 @@ function updateItem(url, params, $http) {
             alertTip(TableGen.prototype.error);
         }
     }).error(function (data) {
-        console.log("err result:" + JSON.stringify(data));
+        console.log("error result:" + JSON.stringify(data));
         alertTip(TableGen.prototype.error);
     });
 }
@@ -298,9 +302,9 @@ function deleteItem(apiUrl, id) {
         beforeSend: function (xhr) {
             xhr.setRequestHeader("Authorization", $.cookie('author_code'));
         },
-        success: function (result, state) {
-            console.log("状态：" + state);
-            //console.log("返回删除对象："+JSON.stringify(result));
+        success: function (data, state, result) {
+            console.log("state: " + state + ", status:" + result.status + ", statusText:" + result.statusText);
+            console.log("success data:" + JSON.stringify(data));
             if (state == 'success') {
                 alertTip(TableGen.prototype.success);
                 $table.bootstrapTable('remove', {
@@ -309,9 +313,9 @@ function deleteItem(apiUrl, id) {
                 });
             }
         },
-        error: function (result) {
+        error: function (result, state) {
+            console.log("state: " + state + ", status: " + result.status + ", statusText: " + result.statusText);
             alertTip(TableGen.prototype.error);
-            console.log(result);
         }
     });
 }
