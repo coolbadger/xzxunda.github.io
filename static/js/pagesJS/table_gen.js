@@ -134,13 +134,7 @@ TableGen.prototype.operateFormatter = function (value, row, index) {
 
 //密码隐藏显示方法
 TableGen.prototype.pwdFormatter = function (value, row, index) {
-    var curAuthorCode = $.cookie('author_code');
-    var lineAuthorCode = "Basic " + btoa(row.userName + ":" + row.password);
-    if (curAuthorCode == lineAuthorCode) {
-        return row.password;
-    } else {
-        return ['<i class="fa fa-key fa-fw"></i>'].join('');
-    }
+    return ['<i class="fa fa-key fa-fw"></i>'].join('');
 }
 
 // 预设编辑事件方法
