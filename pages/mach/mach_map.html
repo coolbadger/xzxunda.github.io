@@ -123,7 +123,9 @@ title: 农机跟踪
 
     //跳转到徐州双沟镇
     function goShuangGou() {
+//        var sgPoint = new BMap.Point(118.752403, 32.077680);
         var sgPoint = new BMap.Point(117.606257, 34.042178);
+//        var sgPoint = new BMap.Point(117.60409658736, 34.041406811961);
         var mk = new BMap.Marker(sgPoint);//添加标记点
         machMap.map.addOverlay(mk);
         machMap.map.panTo(sgPoint);
@@ -259,6 +261,7 @@ title: 农机跟踪
 
     // 清除界面上所有GPS信息,并充值css列表
     function cleanAllInfo() {
+
         machMap.clearAll();
         cssList.forEach(function (css) {
             clearInfo(css);
@@ -266,7 +269,33 @@ title: 农机跟踪
         cssRemain = cssList.slice(0);
     }
 
+    function addItems() {
+        var point = new BMap.Point(117.611063, 34.040473);
+        map.centerAndZoom(point, 18);
+        var label = new BMap.Label('A001收割机');
+        label.setStyle({ color : "red", fontSize : "12px" })
+        label.setPosition(point);
+        map.addOverlay(label);
+    }
+
     onSearchClick();
     goShuangGou();
+    addItems();
 
+    function testConvert() {
+        var apiUrl = API_URL + '/api/gpsRecords/convert';
+
+        $.ajax({
+            type: "get",
+            url: apiUrl,
+            async: false,//取消异步
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("Authorization", $.cookie('author_code'));
+            },
+            success: function (result) {
+                console.log(result);
+            }
+        });
+    }
+    testConvert();
 </script>

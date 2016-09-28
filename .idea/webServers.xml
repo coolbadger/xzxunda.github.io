@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="e7f5c54b-db8c-4f6a-9f7a-4bb716c47355" name="XundaTech" url="http://server.xunda.tech">
+        <fileTransfer host="server.xunda.tech" port="22" rootFolder="/home/ftp/webroot/client" accessType="SFTP">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" />
+          </advancedOptions>
+          <option name="port" value="22" />
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

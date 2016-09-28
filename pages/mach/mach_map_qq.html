@@ -1,0 +1,112 @@
+---
+layout: base_page
+title: 农机跟踪
+---
+
+{% include mapScript.html %}
+{% include temp/control_head.html %}
+
+<script charset="utf-8" src="http://map.qq.com/api/js?v=2.exp&key=MN7BZ-IQQ36-LJ4S5-MKQUS-4HH6K-IQFGH"></script>
+<div class="main_container">
+    <div class="row full_height">
+        <div class="col-md-9 map_part">
+            <div class="row map_top">
+                <div id="map_container"></div>
+            </div>
+            <div class="row map_bottom border">
+                <div class="row ">
+                    <div class="col-md-4 map_operation">
+                        <div id="operation">
+                            <p>
+                                <input type="button" class="btn btn-info btn-mini" value="跳到当前位置"
+                                       onclick="goCurrentPosition()"/>
+                                <input type="button" class="btn btn-info btn-mini" value="跳转到双沟镇"
+                                       onclick="goShuangGou()"/>
+                            </p>
+                            <p>
+                                <input type="button" class="btn btn-info btn-mini" value="清除所有标记"
+                                       onclick="clearAll()"/>
+
+                                <input id="mapClickButton" type="button" class="btn btn-info btn-mini" value="启用点击坐标"
+                                       onclick="shiftMapClick()"/>
+                            </p>
+                        </div>
+
+                    </div>
+                    <div class="col-md-8">
+                        <ul class="list-group map_info">
+                            <li id="successInfo" class="list-group-item list-group-item-success">
+                                <span id="successNumber" class="badge">0</span>
+                                <label></label>
+                            </li>
+                            <li id="infoInfo" class="list-group-item list-group-item-info">
+                                <span id="infoNumber" class="badge">0</span>
+                                <label></label>
+                            </li>
+                            <li id="warningInfo" class="list-group-item list-group-item-warning">
+                                <span id="warningNumber" class="badge">0</span>
+                                <label></label>
+                            </li>
+                            <li id="dangerInfo" class="list-group-item list-group-item-danger">
+                                <span id="dangerNumber" class="badge">0</span>
+                                <label></label>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 info_part ">
+            <div class="row">
+                <div class="col-md-12">
+                    {% include temp/datetime.html id='dtp_start' addDays='-100' text='开始时间:' %}
+                    {% include temp/datetime.html id='dtp_end' addDays='1' text='结束时间:' %}
+                    {% include temp/textbox.html id='dtp_car' text='车牌号:' placeholder='请输入车牌号' showButton = true
+                    onclick='onSearchClick()' onTextChange='onAutoSearch(value)' %}
+                    {% include temp/simple_table.html %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var apiObjUrl = API_URL + '/api/gpsRecords';
+
+    // 查询农机列表
+    function onSearchClick() {
+        fullData = null;
+        startTime_local = $("#dtp_start").val();
+        endTime_local = $("#dtp_end").val();
+        carInfo_local = $("#dtp_car").val();
+
+
+        var requestUrl = encodeURI(apiObjUrl + "?startTime=" + startTime_local + "&endTime=" + endTime_local + "&machCode=" + carInfo_local);
+        $.ajax({
+            url: requestUrl,
+            type: 'GET',
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("Authorization", $.cookie('author_code'));
+            },
+            success: function (data) {
+                simpleTableGen.table.bootstrapTable('load', data);
+            },
+            error: function (err) {
+            }
+        });
+
+    }
+    //初始化地图函数  自定义函数名init
+    function init() {
+        //定义map变量 调用 qq.maps.Map() 构造函数   获取地图显示容器
+        var map = new qq.maps.Map(document.getElementById("map_container"), {
+            center: new qq.maps.LatLng(39.916527,116.397128),      // 地图的中心地理坐标。
+            zoom:8                                                 // 地图的中心地理坐标。
+        });
+    }
+
+    //调用初始化函数地图
+    init();
+
+    onSearchClick();
+</script>

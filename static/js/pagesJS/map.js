@@ -19,7 +19,8 @@ GpsRecordLine.prototype.addRecords = function (records) {
     records.sort(Sorts);
     for (var i = 0; i < records.length; i++) {
         var item = records[i];
-        var point = new BMap.Point(item.lng, item.lat);
+        var point = new BMap.Point(item.lngFixed, item.latFixed);
+        console.log(point);
         this.points.push(point);
 
         // 记录工作点
