@@ -208,11 +208,17 @@ title: 农机跟踪
                 $element.addClass(cssClass);
                 var gpsLine = machMap.addGpsRecords(row, cssClass);
                 writeInfo(row, cssClass, gpsLine);
+                //跳转到线路开始点位
+                gotoPosition(gpsLine.points[0]);
             }
             else {
                 alert("超过最大可选数!");
             }
         }
+    }
+    //跳转到点
+    function gotoPosition(point) {
+        machMap.map.setCenter(point);
     }
     // 清除页面GPS信息框
     function clearInfo(cssClass) {
@@ -282,20 +288,4 @@ title: 农机跟踪
     goShuangGou();
     addItems();
 
-    function testConvert() {
-        var apiUrl = API_URL + '/api/gpsRecords/convert';
-
-        $.ajax({
-            type: "get",
-            url: apiUrl,
-            async: false,//取消异步
-            beforeSend: function (xhr) {
-                xhr.setRequestHeader("Authorization", $.cookie('author_code'));
-            },
-            success: function (result) {
-                console.log(result);
-            }
-        });
-    }
-    testConvert();
 </script>

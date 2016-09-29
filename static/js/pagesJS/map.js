@@ -20,7 +20,6 @@ GpsRecordLine.prototype.addRecords = function (records) {
     for (var i = 0; i < records.length; i++) {
         var item = records[i];
         var point = new BMap.Point(item.lngFixed, item.latFixed);
-        console.log(point);
         this.points.push(point);
 
         // 记录工作点
@@ -107,7 +106,7 @@ MachMap.prototype.addGpsRecords = function (row, cssClass) {
 
     switch (cssClass) {
         case 'success':
-            colorStr = '#d4e9cc';
+            colorStr = '#000000';
             break;
         case 'info':
             colorStr = '#d1e8f4';
