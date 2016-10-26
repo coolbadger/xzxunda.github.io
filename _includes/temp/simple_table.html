@@ -3,5 +3,22 @@
     </table>
 </div>
 
+<div  id="process" class="rs-overlay"/>
+<!--<button onclick="onProcessIn()" type="button">In</button>-->
+<!--<button onclick="onProcessOut()" type="button">Out</button>-->
+<!--<div id="process" class="process">-->
+    <!--<img src="/static/images/loading.gif">-->
+<!--</div>-->
+
 
 <script type="text/javascript" src="/static/js/pagesJS/simple_table_gen.js" charset="utf-8"></script>
+<script type="text/javascript">
+    function onProcessIn() {
+        $("#process").fadeIn('fast',function () {
+            
+        });
+    }
+    function onProcessOut() {
+        $("#process").fadeOut('fast');
+    }
+</script>

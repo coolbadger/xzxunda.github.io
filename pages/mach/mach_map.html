@@ -62,6 +62,10 @@ title: 农机跟踪
                     {% include temp/datetime.html id='dtp_end' addDays='1' text='结束时间:' %}
                     {% include temp/textbox.html id='dtp_car' text='车牌号:' placeholder='请输入车牌号' showButton = true
                     onclick='onSearchClick()' onTextChange='onAutoSearch(value)' %}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
                     {% include temp/simple_table.html %}
                 </div>
             </div>
@@ -106,7 +110,11 @@ title: 农机跟踪
     }];
 
     settings.onDblClickRow = function (row, $element) {
-        onRowDbClick(row, $element);
+
+        $("#process").fadeIn('fast', function () {
+            onRowDbClick(row, $element);
+        });
+        $("#process").fadeOut();
     }
 
     var overLays = new Array();
@@ -162,11 +170,11 @@ title: 农机跟踪
 
     // 查询农机列表
     function onSearchClick() {
+
         fullData = null;
         startTime_local = $("#dtp_start").val();
         endTime_local = $("#dtp_end").val();
         carInfo_local = $("#dtp_car").val();
-
 
         var requestUrl = encodeURI(apiObjUrl + "?startTime=" + startTime_local + "&endTime=" + endTime_local + "&machCode=" + carInfo_local);
         $.ajax({
@@ -208,8 +216,8 @@ title: 农机跟踪
                 $element.addClass(cssClass);
                 var gpsLine = machMap.addGpsRecords(row, cssClass);
                 writeInfo(row, cssClass, gpsLine);
-                //跳转到线路开始点位
-                gotoPosition(gpsLine.points[0]);
+                //跳转到线路最后一个点位
+                gotoPosition(gpsLine.points[gpsLine.points.length - 1]);
             }
             else {
                 alert("超过最大可选数!");
@@ -279,7 +287,7 @@ title: 农机跟踪
         var point = new BMap.Point(117.611063, 34.040473);
         map.centerAndZoom(point, 18);
         var label = new BMap.Label('A001收割机');
-        label.setStyle({ color : "red", fontSize : "12px" })
+        label.setStyle({color: "red", fontSize: "12px"})
         label.setPosition(point);
         map.addOverlay(label);
     }

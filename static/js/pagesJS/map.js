@@ -123,7 +123,7 @@ MachMap.prototype.addGpsRecords = function (row, cssClass) {
     }
 
     var apiUrl = API_URL + '/api/gpsRecords/refMachTerminal/' + ref_id;
-
+    var defer = $.Deferred();
     $.ajax({
         type: "get",
         url: apiUrl,

@@ -1,4 +1,4 @@
-/*自定义空间类型样式表*/
+/* 自定义空间类型样式表 */
 
 .lab_padding {
     padding: 8px;
@@ -10,4 +10,26 @@
 
 .row_focus{
     background-color: #2aabd2;
+}
+
+/* 弹出处理中蒙层样式 */
+
+.process{
+    display: none;
+}
+
+.rs-overlay{
+    background:url(/static/images/loading.gif) no-repeat center center;;
+    border-radius: 5px;
+    width: auto;
+    height: auto;
+    opacity:.3;
+    filter: alpha(opacity=50);
+    position: absolute;
+    z-index: 2;
+    top:0;
+    bottom:0;
+    left:15px;
+    right:15px;
+    display: none;
 }
