@@ -112,9 +112,13 @@ title: 农机跟踪
     settings.onDblClickRow = function (row, $element) {
 
         $("#process").fadeIn('fast', function () {
-            onRowDbClick(row, $element);
+            $.when(onRowDbClick(row, $element)).done(
+                    function () {
+                        $("#process").fadeOut();
+
+                    }
+            );
         });
-        $("#process").fadeOut();
     }
 
     var overLays = new Array();
@@ -166,6 +170,7 @@ title: 农机跟踪
             simpleTableGen.table.bootstrapTable('load', fullData);
         }
         cleanAllInfo();
+
     }
 
     // 查询农机列表
@@ -175,7 +180,7 @@ title: 农机跟踪
         startTime_local = $("#dtp_start").val();
         endTime_local = $("#dtp_end").val();
         carInfo_local = $("#dtp_car").val();
-
+       // alert(startTime_local+endTime_local+carInfo_local);
         var requestUrl = encodeURI(apiObjUrl + "?startTime=" + startTime_local + "&endTime=" + endTime_local + "&machCode=" + carInfo_local);
         $.ajax({
             url: requestUrl,
@@ -201,6 +206,7 @@ title: 农机跟踪
     }
     // 双击选中行事件
     function onRowDbClick(row, $element) {
+        var defer = $.Deferred();
         var cssClass = $element.attr('class');
         if (cssClass) {
             $element.removeClass(cssClass);
@@ -208,21 +214,101 @@ title: 农机跟踪
             cssRemain.push(cssClass);
             cssRemain.sort(sortCss);
             machMap.removeGpsRecords(row);
+
+
+
+            defer.resolve();
         }
         else {
             if (machMap.gpsRecordLines.size < 4) {
+
                 cssClass = cssRemain.pop();
                 cssRemain.sort(sortCss);
                 $element.addClass(cssClass);
                 var gpsLine = machMap.addGpsRecords(row, cssClass);
-                writeInfo(row, cssClass, gpsLine);
-                //跳转到线路最后一个点位
-                gotoPosition(gpsLine.points[gpsLine.points.length - 1]);
+                $.when(machMap.addGpsRecords(row, cssClass)).done(
+                        function (id,line) {
+                            var gpsLine = line;
+                            machMap.gpsRecordLines.set(id, gpsLine);
+                            machMap.map.addOverlay(gpsLine.line);
+                            writeInfo(row, cssClass, gpsLine);
+                            //跳转到线路最后一个点位
+                            gotoPosition(gpsLine.points[gpsLine.points.length - 1]);
+
+
+
+                            /**
+                             * 我需要做的地方  路线定位
+                             */
+                            var last_point=gpsLine.points[gpsLine.points.length - 1];
+
+
+                            var dateLength=gpsLine.records.length;//取出数据的长度
+                            var dataFirst=gpsLine.records[0].gpsTime;//取第一个时间
+
+                            var  strFirst=dataFirst.toString();
+                            strFirst =  strFirst.replace(/-/g,"/");
+                            var oDate1First = new Date(strFirst);
+                            var dataFirst_getTime=oDate1First.getTime();//时间戳
+                            var  custom_getTime=1000*60*60*2;//2小时时间戳
+
+                            for(var i=0;i<dateLength;i++){
+
+                               var next_getTime=gpsLine.records[i].gpsTime;
+                                var  strNext=next_getTime.toString();
+                                strNext =  strNext.replace(/-/g,"/");
+                                var oDate1Next = new Date(strNext);
+                                var dataNext_getTime=oDate1Next.getTime();//时间戳
+                                var poor=dataNext_getTime-dataFirst_getTime;
+                                var dataPoor=poor-custom_getTime;
+
+                                   if(dataPoor>=0){
+                                       dataFirst_getTime=dataNext_getTime;
+                                        console.log("dataFirst_getTime"+dataFirst_getTime);
+                                       var point = new BMap.Point(gpsLine.points[i].lng,gpsLine.points[i].lat);
+                                       map.centerAndZoom(point, 15);
+                                       var marker = new BMap.Marker(point);  // 创建标注
+                                       map.addOverlay(marker);               // 将标注添加到地图中
+                                       marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
+                                   }
+
+
+
+
+
+                            }
+                            var point = new BMap.Point(last_point.lng,last_point.lat);
+                            map.centerAndZoom(point, 15);
+                            var marker = new BMap.Marker(point);  // 创建标注
+                            map.addOverlay(marker);              // 将标注添加到地图中
+
+
+                            var opts = {
+                                position : point,    // 指定文本标注所在的地理位置
+                                offset   : new BMap.Size(30, -30)    //设置文本偏移量
+                            }
+                            var label = new BMap.Label(row.machCode+row.machName, opts);  // 创建文本标注对象
+                            label.setStyle( {
+                                color : "red",
+                                fontSize : "12px",
+                                height : "20px",
+                                width:"none",
+                                wrap:"break-word",
+                                break :"break-all",
+                                lineHeight : "20px",
+                                fontFamily:"微软雅黑",
+
+                            });
+                            map.addOverlay(label);
+                            defer.resolve();
+                        }
+                )
             }
             else {
                 alert("超过最大可选数!");
             }
         }
+        return defer.promise();
     }
     //跳转到点
     function gotoPosition(point) {
@@ -232,6 +318,14 @@ title: 农机跟踪
     function clearInfo(cssClass) {
         writeInfo('', cssClass, '0');
     }
+
+
+    /**
+     *
+     * @param info
+     * @param cssClass
+     * @param gpsLine
+     */
     // 写入页面GPS信息
     function writeInfo(info, cssClass, gpsLine) {
         var itemInfo = $("#" + cssClass + "Info");

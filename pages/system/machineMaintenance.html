@@ -1,0 +1,62 @@
+---
+layout: base_page
+---
+
+{% include temp/table.html inData = site.data.machine apiName = 'baseOrgs' %}
+
+<script type="text/javascript">
+
+    var tableGen = new TableGen();
+    tableGen.editFields = new Array('id', 'orgCode', 'orgContact', 'orgAddress', 'orgTell', 'orgFax');
+
+    tableGen.validates = {machCode: "notEmpty", machName: "notEmpty", workingType: "notEmpty"};
+    tableGen.setTable = function (inTable) {
+        inTable.bootstrapTable({
+            height: $(window).height(),
+            columns: [{
+                field: 'state',
+                checkbox: true,
+                align: 'center',
+                valign: 'middle'
+            }, {
+                title: 'ID',
+                field: 'id',
+                align: 'center',
+                sortable: true,
+            }, {
+                title: '车牌号',
+                field: 'orgCode',
+                align: 'center',
+            }, {
+                title: '农机名称',
+                field: 'orgContact',
+                align: 'center',
+            }, {
+                title: '农机类型',
+                field: 'orgAddress',
+                align: 'center',
+            }, {
+                title: '状态',
+                field: 'orgTell',
+                align: 'center',
+            }, {
+                title: '备注',
+                field: 'orgFax',
+                align: 'center',
+            }, {
+                title: '操作',
+                field: 'operate',
+                align: 'center',
+                valign: 'middle',
+                formatter: tableGen.operateFormatter,
+                events: operateEvents
+            }]
+        });
+    }
+
+    window.operateEvents = tableGen.operationEvent();
+
+    tableGen.apiName = 'baseOrgs';
+    tableGen.bind();
+
+</script>
