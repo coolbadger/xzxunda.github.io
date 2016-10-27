@@ -144,9 +144,14 @@ MachMap.prototype.addGpsRecords = function (row, cssClass) {
 // 移除一条记录线
 MachMap.prototype.removeGpsRecords = function (row) {
     var ref_id = row.reMachTerminalId;
-    var line = this.gpsRecordLines.get(ref_id).line;
-    this.gpsRecordLines.delete(ref_id);
-    this.map.removeOverlay(line);
+    try {
+        var line = this.gpsRecordLines.get(ref_id).line;
+        this.gpsRecordLines.delete(ref_id);
+        this.map.removeOverlay(line);
+    }
+    catch(e) {
+
+    }
 }
 // 清楚所有记录线
 MachMap.prototype.clearGpsRecords = function () {

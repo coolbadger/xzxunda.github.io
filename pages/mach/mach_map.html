@@ -207,12 +207,12 @@ title: 农机跟踪
         var defer = $.Deferred();
         var cssClass = $element.attr('class');
         if (cssClass) {
+            defer.resolve();
             $element.removeClass(cssClass);
             clearInfo(cssClass);
             cssRemain.push(cssClass);
             cssRemain.sort(sortCss);
             machMap.removeGpsRecords(row);
-            defer.resolve();
         }
         else {
             if (machMap.gpsRecordLines.size < 4) {

@@ -19,7 +19,8 @@
 }
 
 .rs-overlay{
-    background:url(/static/images/loading.gif) no-repeat center center;;
+    background:url(/static/images/loading.gif) no-repeat center center;
+    /*background:#000000;*/
     border-radius: 5px;
     width: auto;
     height: auto;
