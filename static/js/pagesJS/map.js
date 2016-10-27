@@ -128,18 +128,18 @@ MachMap.prototype.addGpsRecords = function (row, cssClass) {
         type: "get",
         url: apiUrl,
         data: "startTime=" + startTime + "&endTime=" + endTime,
-        async: false,//取消异步
+        // async: false,//取消异步
         beforeSend: function (xhr) {
             xhr.setRequestHeader("Authorization", $.cookie('author_code'));
         },
         success: function (result) {
             gpsRecordLine.addRecords(result);
+            gpsRecordLine.line.setStrokeColor(colorStr);
+            defer.resolve(ref_id,gpsRecordLine);
         }
     });
-    this.gpsRecordLines.set(ref_id, gpsRecordLine);
-    gpsRecordLine.line.setStrokeColor(colorStr);
-    this.map.addOverlay(gpsRecordLine.line)
-    return gpsRecordLine;
+
+    return defer.promise();
 }
 // 移除一条记录线
 MachMap.prototype.removeGpsRecords = function (row) {
