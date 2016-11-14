@@ -127,7 +127,7 @@
         <div class="content-iframe" style="overflow: hidden;" id="homeinner">
 
             <div class="mainContent" id="content-main" style="margin: 10px; margin-bottom: 0px; padding: 0;">
-                <iframe class="LRADMS_iframe" width="100%" height="100%" src="default.html" frameborder="0" data-id="default.html" id="one"  style="display: none;"></iframe>
+                <iframe class="LRADMS_iframe" width="100%" height="100%" src="default.html" frameborder="0" data-id="default.html" id="one"></iframe>
 
 
             </div>
@@ -143,6 +143,14 @@
 
 
 </div>
+
+
+<!--<style>
+    .selected{
+        border-bottom: 10px solid red;
+        margin-bottom: 50px;
+    }
+</style>-->
 
 <script type="text/javascript">
 
@@ -202,9 +210,11 @@
     function universal(){
 
         if($("#weizhi").length>0){
-
+            //ceshi();
         }else{
-            $("#pingtai").css("background","#fafafa");
+   /*         $("#pingtai").css("background","#fafafa");
+            $("#pingtai").css("color","#475059");
+            $("#pingtai").addClass('selected');*/
             var a="未知的东西";
             var button=" <a href='javascript:;' class='active menuTab'  onclick='ceshi()' style='padding-right: 15px;' id='weizhi'>"+a+"<i class='fa fa-remove'  onclick='ceshi_i()'></i></a>";
             $("#divs").append(button);
@@ -228,19 +238,11 @@
     }
 
 
-    function ceshi_i(){
+    function ceshi_i() {
         $("#weizhi").removeAttr("onclick");
     }
-
-
-
-
-
-
-
-
-
 </script>
+
 
 
 <script src="../text/js/jquery/jQuery-2.2.0.min.js"></script>
