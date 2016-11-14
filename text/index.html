@@ -100,7 +100,7 @@
             </button>
             <nav class="page-tabs menuTabs">
                 <div class="page-tabs-content" style="margin-left: 0px;"  id="divs">
-                    <a href="#" class="menuTab active" onclick="home()" id="333">欢迎首页</a>
+                    <a href="#" class="menuTab" onclick="home()" id="333">欢迎首页</a>
                     <a href="#" class="menuTab"  onclick="introduce()" style="padding-right: 15px;" id="pingtai">平台介绍</a>
                     <input type="hidden" id="universal " onclick="universal()">
 
@@ -145,42 +145,18 @@
 </div>
 
 
-<!--<style>
-    .selected{
-        border-bottom: 10px solid red;
-        margin-bottom: 50px;
-    }
-</style>-->
-
 <script type="text/javascript">
 
     window.onload = function (){
-
-
 
     } ;
 
     var id=null;
 
     function home(){
-       /* var iframeize=$("#content-main iframe").size();
-        console.log("abc"+iframeize);
-
-        var iframeizeone=$("#iframeizeone").size;
-
-        if(iframeizeone<2){
-            var iframes = "<iframe class='LRADMS_iframe' width='100%' height='100%' src='3Html.html' frameborder='0' data-id='4Html.html' id='iframeizeone'></iframe>"
-            $("#content-main").append(iframes);
-        }else {
-
-
-        }*/
-
-            var i=$("#divs a").size();
-
+        var i=$("#divs a").size();
          if(i>2){
          $("#one").css('display','block');
-
          }else{
          $("#one").css('display','block');
          }
@@ -189,14 +165,7 @@
 
 
     function introduce(){
-
-/*
-            var iframes = "<iframe class='LRADMS_iframe' width='100%' height='100%' src='default.html' frameborder='0' data-id='4Html.html' id='iframeizetwo'></iframe>"
-            $("#content-main").append(iframes);
-
-*/
         var i=$("#divs a").size();
-
          if(i>2){
          $("#one").css('display','block');
          }else{
@@ -208,27 +177,20 @@
 
 
     function universal(){
-
         if($("#weizhi").length>0){
-            //ceshi();
         }else{
-   /*         $("#pingtai").css("background","#fafafa");
-            $("#pingtai").css("color","#475059");
-            $("#pingtai").addClass('selected');*/
             var a="未知的东西";
-            var button=" <a href='javascript:;' class='active menuTab'  onclick='ceshi()' style='padding-right: 15px;' id='weizhi'>"+a+"<i class='fa fa-remove'  onclick='ceshi_i()'></i></a>";
+            var button=" <a href='javascript:;' class='menuTab'  onclick='ceshi()' style='padding-right: 15px;' id='weizhi'>"+a+"<i class='fa fa-remove'  onclick='ceshi_i()'></i></a>";
             $("#divs").append(button);
             document.getElementById('one').src = "3Html.html";
+            $('#weizhi').trigger('click');
         }
-
-
     }
 
 
 
     function ceshi(){
         var i=$("#divs a").size();
-
         if(i>2){
             $("#one").css('display','block');
             document.getElementById('one').src = "3Html.html";
