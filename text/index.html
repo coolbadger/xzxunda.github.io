@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>LeaRun敏捷开发框架</title>
+    <title>AMM农机管理信息系统</title>
     <link rel="stylesheet" href="../text/js/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="../text/css/font-awesome.min.css">
     <link rel="stylesheet" href="../text/css/index.css">
@@ -14,9 +14,9 @@
 <div class="wrapper">
     <!--头部信息-->
     <header class="main-header">
-        <a href="http://www.learun.cn/adms/index.html" target="_blank" class="logo">
-            <span class="logo-mini">LR</span>
-            <span class="logo-lg">learun<strong>敏捷框架</strong></span>
+        <a href="javascript:void();" target="_blank" class="logo">
+            <span class="logo-mini">AMM</span>
+            <span class="logo-lg"><strong>AMM农机管理信息系统</strong></span>
         </a>
         <nav class="navbar navbar-static-top">
             <a class="sidebar-toggle">
@@ -100,8 +100,8 @@
             </button>
             <nav class="page-tabs menuTabs">
                 <div class="page-tabs-content" style="margin-left: 0px;"  id="divs">
-                    <a href="#" class="menuTab" onclick="home()" id="333">欢迎首页</a>
-                    <a href="#" class="menuTab"  onclick="introduce()" style="padding-right: 15px;" id="pingtai">平台介绍</a>
+                    <a href="#" class="menuTab" onclick="AMT()" id="333">农机跟踪</a>
+                    <a href="#" class="menuTab"  onclick="Adate()" style="padding-right: 15px;" id="pingtai">数据分析</a>
                     <input type="hidden" id="universal " onclick="universal()">
 
                 </div>
@@ -127,7 +127,7 @@
         <div class="content-iframe" style="overflow: hidden;" id="homeinner">
 
             <div class="mainContent" id="content-main" style="margin: 10px; margin-bottom: 0px; padding: 0;">
-                <iframe class="LRADMS_iframe" width="100%" height="100%" src="default.html" frameborder="0" data-id="default.html" id="one"></iframe>
+                <iframe class="LRADMS_iframe" width="100%" height="100%" src="../pages/mach/mach_map.html" frameborder="0" data-id="default.html" id="one"></iframe>
 
 
             </div>
@@ -153,31 +153,32 @@
 
     var id=null;
 
-    function home(){
+    function AMT(){
         var i=$("#divs a").size();
          if(i>2){
          $("#one").css('display','block');
          }else{
          $("#one").css('display','block');
          }
-         document.getElementById('one').src = "default.html";
+         document.getElementById('one').src = "../pages/mach/mach_map.html";
     }
 
 
-    function introduce(){
+    function Adate(){
         var i=$("#divs a").size();
          if(i>2){
          $("#one").css('display','block');
          }else{
          $("#one").css('display','block');
          }
-         document.getElementById('one').src = "danjuHtml.html";
+         document.getElementById('one').src = "../pages/mach/data_chart.html";
     }
 
 
 
     function universal(){
         if($("#weizhi").length>0){
+            $('#weizhi').trigger('click');
         }else{
             var a="未知的东西";
             var button=" <a href='javascript:;' class='menuTab'  onclick='ceshi()' style='padding-right: 15px;' id='weizhi'>"+a+"<i class='fa fa-remove'  onclick='ceshi_i()'></i></a>";
@@ -193,7 +194,7 @@
         var i=$("#divs a").size();
         if(i>2){
             $("#one").css('display','block');
-            document.getElementById('one').src = "3Html.html";
+            document.getElementById('one').src = "default.html";
         }else{
             document.getElementById('one').src = "default.html";
         }
