@@ -320,9 +320,9 @@
 						"F_CreateDate" : null,
 						"F_CreateUserId" : null,
 						"F_CreateUserName" : null,
-						"F_ModifyDate" : "2015-11-17 11:22:46",
+						"F_ModifyDate" : "",
 						"F_ModifyUserId" : "System",
-						"F_ModifyUserName" : "超级管理员"
+						"F_ModifyUserName" : ""
 					},
 					{
 						"F_ModuleId" : "8",
@@ -344,9 +344,9 @@
 						"F_CreateDate" : null,
 						"F_CreateUserId" : null,
 						"F_CreateUserName" : null,
-						"F_ModifyDate" : "2016-04-29 11:55:28",
+						"F_ModifyDate" : "",
 						"F_ModifyUserId" : "System",
-						"F_ModifyUserName" : "超级管理员"
+						"F_ModifyUserName" : ""
 					},
 					{
 						"F_ModuleId" : "7ae94059-9aa5-48eb-8330-4e2a6565b193",
@@ -364,13 +364,13 @@
 						"F_SortCode" : 1,
 						"F_DeleteMark" : 0,
 						"F_EnabledMark" : 1,
-						"F_Description" : "行政区域管理",
-						"F_CreateDate" : "2015-11-12 14:38:20",
+						"F_Description" : "",
+						"F_CreateDate" : "",
 						"F_CreateUserId" : "System",
-						"F_CreateUserName" : "超级管理员",
+						"F_CreateUserName" : "",
 						"F_ModifyDate" : "2016-04-29 14:05:33",
 						"F_ModifyUserId" : "System",
-						"F_ModifyUserName" : "超级管理员"
+						"F_ModifyUserName" : ""
 					},
 
 
@@ -397,10 +397,10 @@
 						"F_Description" : null,
 						"F_CreateDate" : "2015-11-23 22:13:21",
 						"F_CreateUserId" : "System",
-						"F_CreateUserName" : "超级管理员",
-						"F_ModifyDate" : "2016-03-19 16:15:15",
+						"F_CreateUserName" : "",
+						"F_ModifyDate" : "",
 						"F_ModifyUserId" : "24a055d6-5924-44c5-be52-3715cdd68011",
-						"F_ModifyUserName" : "陈彬彬"
+						"F_ModifyUserName" : ""
 					},
 					{
 						"F_ModuleId" : "9",
@@ -422,9 +422,9 @@
 						"F_CreateDate" : null,
 						"F_CreateUserId" : null,
 						"F_CreateUserName" : null,
-						"F_ModifyDate" : "2016-04-29 11:57:20",
+						"F_ModifyDate" : "2",
 						"F_ModifyUserId" : "System",
-						"F_ModifyUserName" : "超级管理员"
+						"F_ModifyUserName" : ""
 					},
 					{
 						"F_ModuleId" : "2",
@@ -446,9 +446,9 @@
 						"F_CreateDate" : null,
 						"F_CreateUserId" : null,
 						"F_CreateUserName" : null,
-						"F_ModifyDate" : "2016-03-11 11:02:06",
+						"F_ModifyDate" : "",
 						"F_ModifyUserId" : "0f36148c-719f-41e0-8c8c-16ffbc40d0e0",
-						"F_ModifyUserName" : "佘赐雄"
+						"F_ModifyUserName" : ""
 					},
 
 					{
@@ -471,9 +471,9 @@
 						"F_CreateDate" : null,
 						"F_CreateUserId" : null,
 						"F_CreateUserName" : null,
-						"F_ModifyDate" : "2016-04-11 10:21:44",
+						"F_ModifyDate" : "",
 						"F_ModifyUserId" : "System",
-						"F_ModifyUserName" : "超级管理员"
+						"F_ModifyUserName" : ""
 					},
 
 
@@ -498,10 +498,10 @@
 						"F_Description" : null,
 						"F_CreateDate" : "2015-11-23 22:13:39",
 						"F_CreateUserId" : "System",
-						"F_CreateUserName" : "超级管理员",
-						"F_ModifyDate" : "2016-03-23 18:07:42",
+						"F_CreateUserName" : "",
+						"F_ModifyDate" : "",
 						"F_ModifyUserId" : "24a055d6-5924-44c5-be52-3715cdd68011",
-						"F_ModifyUserName" : "陈彬彬"
+						"F_ModifyUserName" : ""
 					},
 
 
@@ -524,12 +524,12 @@
 						"F_DeleteMark" : 0,
 						"F_EnabledMark" : 1,
 						"F_Description" : null,
-						"F_CreateDate" : "2015-11-23 22:14:03",
+						"F_CreateDate" : "",
 						"F_CreateUserId" : "System",
-						"F_CreateUserName" : "超级管理员",
-						"F_ModifyDate" : "2016-03-25 11:39:51",
+						"F_CreateUserName" : "",
+						"F_ModifyDate" : "",
 						"F_ModifyUserId" : "System",
-						"F_ModifyUserName" : "超级管理员"
+						"F_ModifyUserName" : ""
 					},
 
 
