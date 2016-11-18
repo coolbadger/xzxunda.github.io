@@ -167,13 +167,16 @@ TableGen.prototype.operationEvent = function () {
 
 
 TableGen.prototype.loadData = function () {
+    console.log("xytguhjkl");
     $.ajax({
         url: API_URL + "/api/" + this.apiName,
         type: 'GET',
         dataType: 'json',
         contentType: 'application/json',
+
         beforeSend: function (xhr) {
             xhr.setRequestHeader("Authorization", $.cookie('author_code'));
+
         },
         success: function (data) {
             tableGen.table.bootstrapTable('load', data);
@@ -181,6 +184,7 @@ TableGen.prototype.loadData = function () {
         error: function (err) {
         }
     });
+
 }
 
 //刷新数据的方法

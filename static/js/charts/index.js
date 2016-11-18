@@ -532,6 +532,30 @@
 						"F_ModifyUserName" : ""
 					},
 
+                            {
+                                "F_ModuleId" : "923f7d65-e307-45f7-8f96-73ecbf23b324",
+                                "F_ParentId" : "5",
+                                "F_EnCode" : "农机维护",
+                                "F_FullName" : "农机维护",
+                                "F_Icon" : "fa fa-flag",
+                                "F_UrlAddress" : "../pages/system/machineMaintenance.html",
+                                "F_Target" : "iframe",
+                                "F_IsMenu" : 1,
+                                "F_AllowExpand" : 1,
+                                "F_IsPublic" : 0,
+                                "F_AllowEdit" : null,
+                                "F_AllowDelete" : null,
+                                "F_SortCode" : 5,
+                                "F_DeleteMark" : 0,
+                                "F_EnabledMark" : 1,
+                                "F_Description" : null,
+                                "F_CreateDate" : "",
+                                "F_CreateUserId" : "System",
+                                "F_CreateUserName" : "",
+                                "F_ModifyDate" : "",
+                                "F_ModifyUserId" : "System",
+                                "F_ModifyUserName" : ""
+                            },
 
 
 

@@ -2,12 +2,12 @@
 layout: base_page
 ---
 
-{% include temp/table.html inData = site.data.machine apiName = 'baseOrgs' %}
+{% include temp/table.html inData = site.data.Maintainrecord apiName = 'MaintainRecor' %}
 
 <script type="text/javascript">
 
     var tableGen = new TableGen();
-    tableGen.editFields = new Array('id', 'orgCode', 'orgContact', 'orgAddress', 'orgTell', 'orgFax');
+    tableGen.editFields = new Array('id', 'machCode', 'machName', 'workingType', 'maintainInfo');
 
     tableGen.validates = {machCode: "notEmpty", machName: "notEmpty", workingType: "notEmpty"};
     tableGen.setTable = function (inTable) {
@@ -25,23 +25,19 @@ layout: base_page
                 sortable: true,
             }, {
                 title: '车牌号',
-                field: 'orgCode',
+                field: 'machCode',
                 align: 'center',
             }, {
                 title: '农机名称',
-                field: 'orgContact',
+                field: 'machName',
                 align: 'center',
             }, {
                 title: '农机类型',
-                field: 'orgAddress',
+                field: 'workingType',
                 align: 'center',
-            }, {
-                title: '状态',
-                field: 'orgTell',
-                align: 'center',
-            }, {
-                title: '备注',
-                field: 'orgFax',
+            },  {
+                title: '原因',
+                field: 'maintainInfo',
                 align: 'center',
             }, {
                 title: '操作',
@@ -56,7 +52,7 @@ layout: base_page
 
     window.operateEvents = tableGen.operationEvent();
 
-    tableGen.apiName = 'baseOrgs';
+    tableGen.apiName = 'MaintainRecor';
     tableGen.bind();
 
 </script>
