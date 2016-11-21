@@ -167,7 +167,7 @@ TableGen.prototype.operationEvent = function () {
 
 
 TableGen.prototype.loadData = function () {
-    console.log("xytguhjkl");
+
     $.ajax({
         url: API_URL + "/api/" + this.apiName,
         type: 'GET',
