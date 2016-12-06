@@ -7,7 +7,7 @@ layout: base_page
 <script type="text/javascript">
 
     var tableGen = new TableGen();
-    tableGen.editFields = new Array('id', 'machCode', 'machName', 'workingType', 'maintainInfo');
+    tableGen.editFields = new Array('id', 'machId','machCode', 'machName', 'workingType', 'maintainInfo');
 
     tableGen.validates = {machCode: "notEmpty", machName: "notEmpty", workingType: "notEmpty"};
     tableGen.setTable = function (inTable) {
@@ -24,6 +24,11 @@ layout: base_page
                 align: 'center',
                 sortable: true,
             }, {
+                               title: '所属编号',
+                               field: 'machId',
+                               align: 'center',
+                           },
+                           {
                 title: '车牌号',
                 field: 'machCode',
                 align: 'center',

@@ -245,23 +245,26 @@ title: 农机跟踪
 
                             var dateLength=gpsLine.records.length;//取出数据的长度
                             var dataFirst=gpsLine.records[0].gpsTime;//取第一个时间
-
+                            console.log("dataFirst="+dataFirst)
                             var  strFirst=dataFirst.toString();
                             strFirst =  strFirst.replace(/-/g,"/");
                             var oDate1First = new Date(strFirst);
                             var dataFirst_getTime=oDate1First.getTime();//时间戳
-                            var  custom_getTime=1000*60*60*2;//2小时时间戳
-
+                            var  custom_getTime=1000*60*60;//相隔时间定点时间戳
+                            console.log("dataFirst_getTime="+dataFirst_getTime)
                             for(var i=0;i<dateLength;i++){
-
-                               var next_getTime=gpsLine.records[i].gpsTime;
+                                var next_getTime=gpsLine.records[i].gpsTime;
                                 var  strNext=next_getTime.toString();
                                 strNext =  strNext.replace(/-/g,"/");
                                 var oDate1Next = new Date(strNext);
                                 var dataNext_getTime=oDate1Next.getTime();//时间戳
+
                                 var poor=dataNext_getTime-dataFirst_getTime;
+                                //console.log("poor="+poor)
                                 var dataPoor=poor-custom_getTime;
 
+
+                                console.log("dataPoor="+dataPoor)
                                    if(dataPoor>=0){
                                        dataFirst_getTime=dataNext_getTime;
                                         console.log("dataFirst_getTime"+dataFirst_getTime);

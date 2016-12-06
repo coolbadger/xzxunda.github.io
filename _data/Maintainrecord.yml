@@ -8,3 +8,6 @@
   placeholder: 请输入原因
 
 
+- name: 所属编号
+  id: machId
+  placeholder: 请输入所属编号
