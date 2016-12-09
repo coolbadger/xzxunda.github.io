@@ -198,9 +198,31 @@ layout: home_pages
     }
     
     function sexit() {
-        var strCookie = document.cookie;
+
         $.cookie("islogin",null);
         $.cookie("author_code",null);
+        var strCookie = document.cookie;
+        console.log(strCookie);
+        alert(strCookie);
+        window.close();
+
+
+
+  /*      var strCookie = document.cookie;
+        var arrCookie = strCookie.split(";");
+        for(var i = 0; i < arrCookie.length; i++){
+            var arr = arrCookie[i].split("=");
+            console.log(arr[0])
+
+            console.log(arr)
+
+            if("ltype" == arr[0]){
+                return arr[1];
+
+            }
+        }
+
+        alert(strCookie);*/
 
 
     }
