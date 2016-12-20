@@ -139,7 +139,7 @@ title: 农机跟踪
         var sgPoint = new BMap.Point(117.606257, 34.042178);
 //        var sgPoint = new BMap.Point(117.60409658736, 34.041406811961);
         var mk = new BMap.Marker(sgPoint);//添加标记点
-        machMap.map.addOverlay(mk);
+//        machMap.map.addOverlay(mk);
         machMap.map.panTo(sgPoint);
         machMap.map.setCenter(sgPoint);
     }
@@ -297,7 +297,7 @@ title: 农机跟踪
                             var dataFirst_getTime=oDate1First.getTime();//时间戳
                             var  custom_getTime=1000*60*60*3;//相隔时间定点时间戳
                             //console.log("dataFirst_getTime="+dataFirst_getTime)
-                            for(var i=0;i<dateLength;i++){
+/*                            for(var i=0;i<dateLength;i++){
                                 var next_getTime=gpsLine.records[i].gpsTime;
                                 var  strNext=next_getTime.toString();
                                 strNext =  strNext.replace(/-/g,"/");
@@ -325,11 +325,12 @@ title: 农机跟踪
 
 
 
-                            }
+                            }*/
                             var point = new BMap.Point(last_point.lng,last_point.lat);
                             map.centerAndZoom(point, 15);
-                            var marker = new BMap.Marker(point);  // 创建标注
-                            map.addOverlay(marker);              // 将标注添加到地图中
+                            var myIcon = new BMap.Icon("/static/images/image4.png", new BMap.Size(16,15));
+                            var marker2 = new BMap.Marker(point,{icon:myIcon});  // 创建标注
+                            map.addOverlay(marker2);
 
 
                             var opts = {
@@ -348,7 +349,7 @@ title: 农机跟踪
                                 fontFamily:"微软雅黑",
 
                             });
-                            map.addOverlay(label);
+                            //map.addOverlay(label);
                             defer.resolve();
                         }
                 )
@@ -426,17 +427,9 @@ title: 农机跟踪
         cssRemain = cssList.slice(0);
     }
 
-    function addItems() {
-        var point = new BMap.Point(117.611063, 34.040473);
-        map.centerAndZoom(point, 18);
-        var label = new BMap.Label('A001收割机');
-        label.setStyle({color: "red", fontSize: "12px"})
-        label.setPosition(point);
-        map.addOverlay(label);
-    }
+
 
     onSearchClick();
     goShuangGou();
-    addItems();
 
 </script>

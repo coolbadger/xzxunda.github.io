@@ -10,6 +10,7 @@ GpsRecordLine.prototype.mach_terminal_info;
 GpsRecordLine.prototype.records;
 GpsRecordLine.prototype.points;
 GpsRecordLine.prototype.line;
+GpsRecordLine.prototype.lines;
 GpsRecordLine.prototype.workingLins;
 
 GpsRecordLine.prototype.addRecords = function (records) {
@@ -17,6 +18,7 @@ GpsRecordLine.prototype.addRecords = function (records) {
     console.log(records.length)
     this.workingLins = new Array();
     this.points = new Array();
+    this.lines= new Array();
     // 现根据预定义规则进行排序
     records.sort(Sorts);
     for (var i = 0; i < records.length; i++) {
@@ -44,8 +46,13 @@ GpsRecordLine.prototype.addRecords = function (records) {
             workingPoints.push(point);
         }
     }
+
     this.line = new BMap.Polyline(this.points);
+    this.lines.push(new BMap.Polyline(this.points));
     return this.line;
+}
+GpsRecordLine.prototype.setLineColor = function (linecolor) {
+
 }
 
 
@@ -141,6 +148,7 @@ MachMap.prototype.addGpsRecords = function (row, cssClass) {
 
             var markers=gpsRecordLine.addRecords(result);
             gpsRecordLine.line.setStrokeColor("red");
+            gpsRecordLine.setLineColor("red");
             defer.resolve(ref_id,gpsRecordLine);
 
             markers.addEventListener("click",clickattribute);
