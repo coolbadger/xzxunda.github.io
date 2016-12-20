@@ -150,8 +150,6 @@ MachMap.prototype.addGpsRecords = function (row, cssClass) {
             gpsRecordLine.setLineColor("red");
             defer.resolve(ref_id,gpsRecordLine);
 
-
-
             markers.addEventListener("onmouseover",overattribute);
             function overattribute() {
                 gpsRecordLine.line.setStrokeColor("#000000");
