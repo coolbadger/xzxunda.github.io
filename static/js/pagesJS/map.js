@@ -61,7 +61,6 @@ function Sorts(a, b) {
     // GPS时间类型忽略毫秒
     var aDate = new Date(Date.parse(a.gpsTime.replace(/-/g, "/")));
     var bDate = new Date(Date.parse(b.gpsTime.replace(/-/g, "/")));
-
     return aDate - bDate;
 }
 
@@ -151,24 +150,19 @@ MachMap.prototype.addGpsRecords = function (row, cssClass) {
             gpsRecordLine.setLineColor("red");
             defer.resolve(ref_id,gpsRecordLine);
 
-            markers.addEventListener("click",clickattribute);
 
-            function  clickattribute() {
+
+            markers.addEventListener("onmouseover",overattribute);
+            function overattribute() {
+                gpsRecordLine.line.setStrokeColor("#000000");
                 var opts = {
                     width : 250,     // 信息窗口宽度
                     height: 100,     // 信息窗口高度
                     title : "Hello"  // 信息窗口标题
                 }
                 var infoWindow = new BMap.InfoWindow("World", opts);  // 创建信息窗口对象
-                map.openInfoWindow(infoWindow, map.getCenter());      // 打开信息窗口
-
-            }
-
-
-            markers.addEventListener("onmouseover",overattribute);
-            function overattribute() {
-                gpsRecordLine.line.setStrokeColor("#ffffff");
-
+                var pts = new BMap.Point(result[1].lngFixed,result[1].latFixed);
+                map.openInfoWindow(infoWindow, pts);      // 打开信息窗口
             }
 
             markers.addEventListener("onmouseout",outattribute);
