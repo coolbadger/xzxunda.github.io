@@ -143,10 +143,26 @@ MachMap.prototype.addGpsRecords = function (row, cssClass) {
             gpsRecordLine.line.setStrokeColor("red");
             defer.resolve(ref_id,gpsRecordLine);
 
+            markers.addEventListener("click",clickattribute);
+
+            function  clickattribute() {
+                var opts = {
+                    width : 250,     // 信息窗口宽度
+                    height: 100,     // 信息窗口高度
+                    title : "Hello"  // 信息窗口标题
+                }
+                var infoWindow = new BMap.InfoWindow("World", opts);  // 创建信息窗口对象
+                map.openInfoWindow(infoWindow, map.getCenter());      // 打开信息窗口
+
+            }
+
+
             markers.addEventListener("onmouseover",overattribute);
             function overattribute() {
                 gpsRecordLine.line.setStrokeColor("#ffffff");
+
             }
+
             markers.addEventListener("onmouseout",outattribute);
             function outattribute() {
                 gpsRecordLine.line.setStrokeColor("red");
