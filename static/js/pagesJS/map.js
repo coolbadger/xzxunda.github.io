@@ -14,6 +14,7 @@ GpsRecordLine.prototype.workingLins;
 
 GpsRecordLine.prototype.addRecords = function (records) {
     this.records = records;
+    console.log(records.length)
     this.workingLins = new Array();
     this.points = new Array();
     // 现根据预定义规则进行排序
@@ -24,7 +25,6 @@ GpsRecordLine.prototype.addRecords = function (records) {
          * 利用prototype共用数据
          * @type {BMap.Point}
          */
-        //console.log(item);
         var point = new BMap.Point(item.lngFixed, item.latFixed);
         this.points.push(point);
 
@@ -43,7 +43,6 @@ GpsRecordLine.prototype.addRecords = function (records) {
         else if(records[i].sensor1 == '1'){
             workingPoints.push(point);
         }
-
     }
     this.line = new BMap.Polyline(this.points);
     return this.line;
@@ -139,9 +138,19 @@ MachMap.prototype.addGpsRecords = function (row, cssClass) {
             xhr.setRequestHeader("Authorization", $.cookie('author_code'));
         },
         success: function (result) {
-            gpsRecordLine.addRecords(result);
-            gpsRecordLine.line.setStrokeColor(colorStr);
+
+            var markers=gpsRecordLine.addRecords(result);
+            gpsRecordLine.line.setStrokeColor("red");
             defer.resolve(ref_id,gpsRecordLine);
+
+            markers.addEventListener("onmouseover",overattribute);
+            function overattribute() {
+                gpsRecordLine.line.setStrokeColor("#ffffff");
+            }
+            markers.addEventListener("onmouseout",outattribute);
+            function outattribute() {
+                gpsRecordLine.line.setStrokeColor("red");
+            }
         }
     });
 
@@ -179,15 +188,19 @@ function goShuangGou() {
     map.setCenter(sgPoint);
 }
 
+
+
 // 跳转到当前位置,并添加标记点
 function goCurrentPosition() {
     var geolocation = new BMap.Geolocation();
     geolocation.getCurrentPosition(function (position) {
         if (this.getStatus() == BMAP_STATUS_SUCCESS) {
             var mk = new BMap.Marker(position.point);//添加标记点
+            console.log(position.point)
             map.addOverlay(mk);
             map.panTo(position.point);
             map.setCenter(position.point);
+
         }
         else {
             alert('无法定位到当前位置:' + this.getStatus());
@@ -205,4 +218,46 @@ function goCurrentPosition() {
     //BMAP_STATUS_TIMEOUT	超时。对应数值“8”。(自 1.1 新增)
 }
 
+
+/*
+//百度地图获取坐标
+
+function goCurrentPosition() {
+    var geolocation = new BMap.Geolocation();
+    var pt;
+    geolocation.getCurrentPosition(function (r) {
+        if (this.getStatus() == BMAP_STATUS_SUCCESS) {
+            alert(r.point.lng + " ， " + r.point.lat);
+            pt = r;
+            showPosition(pt);
+        }
+
+    });
+
+}
+//百度地图WebAPI 坐标转地址
+
+function showPosition(r) {
+    // ak = appkey 访问次数流量有限制
+    var url = 'http://api.map.baidu.com/geocoder/v2/?ak=7b788c5ea45cc4b3ac6331a4b0643d5b&callback=?&location=' + r.point.lat + ',' + r.point.lng + '&output=json&pois=1';
+    $.getJSON(url, function (res) {
+        $("#msg").html(url);
+        alert(res.result.addressComponent.city);
+    });
+}
+//百度地图JS API 坐标转地址，没有加载地图时获取不到rs,总是null
+
+function getLocation(myGeo,pt,rs) {
+    // 根据坐标得到地址描述
+    myGeo.getLocation(pt, function (rs) {
+        if (rs) {
+            var addComp = rs.addressComponents;
+            window.clearInterval(interval);
+            alert(addComp);
+        }
+        return rs;
+    });
+}
+
+*/
 

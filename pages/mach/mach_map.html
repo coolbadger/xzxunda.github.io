@@ -146,6 +146,7 @@ title: 农机跟踪
 
     //清除覆盖物
     function clearAll() {
+
         machMap.clearAll();
     }
 
@@ -216,6 +217,15 @@ title: 农机跟踪
             machMap.removeGpsRecords(row);
 
 
+            //清除坐标
+            var allOverlay = map.getOverlays();
+
+            for (var i = 0; i < allOverlay.length -1; i++){
+                console.log("allOverlay="+allOverlay.length)
+                    map.removeOverlay(allOverlay[i]);
+                    return false;
+            }
+
 
             defer.resolve();
         }
@@ -235,6 +245,41 @@ title: 农机跟踪
                             //跳转到线路最后一个点位
                             gotoPosition(gpsLine.points[gpsLine.points.length - 1]);
 
+/*
+
+                            var num_list=0;
+                            var num_lists=0;
+                            var list=new Array();
+                            var lists=new Array();
+                            for(var i=0;i<gpsLine.records.length;i++){
+                                var  sensor1=gpsLine.records[i];
+                               if(sensor1.sensor1==0){
+                                   if(lists.length!=0){
+                                      /!* 工作状态*!/
+                                               console.log("工作范围点="+(num_list+num_lists)+"-"+(num_lists+num_list+lists.length))
+
+                                               num_lists=num_lists+lists.length;
+                                   }
+                                    list.push(sensor1);
+                                    lists.length=0;
+                                }else if(sensor1.sensor1==1){
+                                    if(list.length!=0){
+                                        /!*未工作状态*!/
+                                        console.log("未工作范围点="+(num_list+num_lists)+"-"+(num_lists+num_list+list.length))
+                                        num_list=num_list+list.length;
+                                    }
+                                    lists.push(sensor1);
+                                    list.length=0;
+                                }
+                            }
+                            if(list.length!=0){
+                                /!*工作状态*!/
+                                console.log("工作范围点="+(num_list+num_lists)+"-"+(num_lists+num_list+list.length))
+                            }
+                            if(lists.length!=0){
+                                console.log("未工作范围点="+(num_list+num_lists)+"-"+(num_lists+num_list+lists.length))
+                            }
+*/
 
 
                             /**
@@ -245,13 +290,13 @@ title: 农机跟踪
 
                             var dateLength=gpsLine.records.length;//取出数据的长度
                             var dataFirst=gpsLine.records[0].gpsTime;//取第一个时间
-                            console.log("dataFirst="+dataFirst)
+                            //console.log("dataFirst="+dataFirst)
                             var  strFirst=dataFirst.toString();
                             strFirst =  strFirst.replace(/-/g,"/");
                             var oDate1First = new Date(strFirst);
                             var dataFirst_getTime=oDate1First.getTime();//时间戳
-                            var  custom_getTime=1000*60*60;//相隔时间定点时间戳
-                            console.log("dataFirst_getTime="+dataFirst_getTime)
+                            var  custom_getTime=1000*60*60*3;//相隔时间定点时间戳
+                            //console.log("dataFirst_getTime="+dataFirst_getTime)
                             for(var i=0;i<dateLength;i++){
                                 var next_getTime=gpsLine.records[i].gpsTime;
                                 var  strNext=next_getTime.toString();
@@ -264,15 +309,16 @@ title: 农机跟踪
                                 var dataPoor=poor-custom_getTime;
 
 
-                                console.log("dataPoor="+dataPoor)
+                                //console.log("dataPoor="+dataPoor)
                                    if(dataPoor>=0){
                                        dataFirst_getTime=dataNext_getTime;
-                                        console.log("dataFirst_getTime"+dataFirst_getTime);
+                                       // console.log("dataFirst_getTime"+dataFirst_getTime);
                                        var point = new BMap.Point(gpsLine.points[i].lng,gpsLine.points[i].lat);
                                        map.centerAndZoom(point, 15);
-                                       var marker = new BMap.Marker(point);  // 创建标注
-                                       map.addOverlay(marker);               // 将标注添加到地图中
-                                       marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
+                                       var myIcon = new BMap.Icon("/static/images/image4.png", new BMap.Size(16,15));
+                                       var marker2 = new BMap.Marker(point,{icon:myIcon});  // 创建标注
+                                       map.addOverlay(marker2);              // 将标注添加到地图中
+                                       //marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
                                    }
 
 
