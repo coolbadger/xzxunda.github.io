@@ -15,7 +15,6 @@ GpsRecordLine.prototype.workingLins;
 
 GpsRecordLine.prototype.addRecords = function (records) {
     this.records = records;
-    console.log(records.length)
     this.workingLins = new Array();
     this.points = new Array();
     this.lines= new Array();
@@ -110,6 +109,7 @@ MachMap.prototype.clearAll = function () {
 
 //根据选择行,请求GPS记录,并向Map中添加一条记录线
 MachMap.prototype.addGpsRecords = function (row, cssClass) {
+    //console.log(row)
     var gpsRecordLine = new GpsRecordLine(row);
     var ref_id = row.reMachTerminalId;
     var startTime = row.gpsStartTime;
@@ -145,61 +145,53 @@ MachMap.prototype.addGpsRecords = function (row, cssClass) {
             xhr.setRequestHeader("Authorization", $.cookie('author_code'));
         },
         success: function (result) {
-
-
-
-
             var markers=gpsRecordLine.addRecords(result);
             gpsRecordLine.line.setStrokeColor("red");
             gpsRecordLine.setLineColor("red");
             defer.resolve(ref_id,gpsRecordLine);
             var arr=new Array();
+            var temp=new Array();
             for(var  i=0;i<result.length;i++){
                 var lat=result[i].latFixed;
                 var lng=result[i].lngFixed;
                 if(result[i].sensor1=='1'){
                     var point1= new BMap.Point(lng, lat);
                     arr.push(point1);
+                    temp.push(result[i])
                 }else{
                     if(arr.length>0){
-                        num=num+1;
-                        var flightPath= new BMap.Polyline(arr, { strokeColor: "#000000", strokeOpacity: 1.0, strokeWeight: 3 });
+                        var flightPath= new BMap.Polyline(arr, { strokeColor: "#000000", strokeOpacity: 1.0, strokeWeight: 9 });
                         map.addOverlay(flightPath);
+
                         flightPath.addEventListener("click",clickattribute)
                         function  clickattribute() {
+                            console.log(flightPath)
                             var opts = {
                                 width : 250,    // 信息窗口宽度
                                 height: 100,    // 信息窗口高度
-                                title : "Hello"// 信息窗口标题
+                                title : row.machCode+row.machName// 信息窗口标题
                             }
                             var infoWindow = new BMap.InfoWindow("World", opts);  // 创建信息窗口对象
-                            var pts = new BMap.Point(result[result.length-1].lngFixed,result[result.length-1].latFixed);
+                            console.log(temp.length)
+                            var pts = new BMap.Point(temp[temp.length-1].lngFixed,temp[temp.length-1].latFixed);
+
                             map.openInfoWindow(infoWindow, pts);      // 打开信息窗口
                             flightPath.setStrokeColor("#000000");
                         }
-                        flightPath.addEventListener("mouseover",overattribute);
-                        function overattribute() {
-                            flightPath.setStrokeColor("#ffffff");
-                        }
-                        flightPath.addEventListener("mouseout",outattribute);
-                        function outattribute() {
-                            flightPath.setStrokeColor("#000000");
-                        }
+                        // flightPath.addEventListener("mouseover",overattribute);
+                        // function overattribute() {
+                        //     flightPath.setStrokeColor("#ffffff");
+                        // }
+                        // flightPath.addEventListener("mouseout",outattribute);
+                        // function outattribute() {
+                        //     flightPath.setStrokeColor("#000000");
+                        // }
 
                     }
                     arr.length=0;
+                    //temp.length=0;
                 }
             }
-
-
-
-
-
-
-
-
-
-
 
         }
     });
