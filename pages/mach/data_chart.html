@@ -17,7 +17,7 @@ title: 农机跟踪
     </div>
 <div id="row">
       <div class="col-md-8">
-            {% include temp/chart.html id='bubbleChart' heading='泡泡图'%}
+            {% include temp/chart.html id='bubbleChart' heading=''%}
         </div>
     <div class="col-md-4" id="columnChart-box">
         {% include temp/chart.html id='columnChart' heading='柱形图'%}
@@ -58,46 +58,7 @@ title: 农机跟踪
     document.getElementById("bubbleChart").style.height="400px"
 
     function bubbleChart() {
-
-        var chart = new CanvasJS.Chart("bubbleChart",
-                {
-                    zoomEnabled: true,
-                    animationEnabled: true,
-                    title:{
-                        text: "Rail Roads Vs Land Area and Population"
-                    },
-                    axisX: {
-                        title:"Land Area (million sq. km)",
-                        valueFormatString: "#0.#",
-                        maximum: 17,
-                        minimum: -.1,
-                        gridThickness: 1,
-                        tickThickness: 1,
-                        gridColor: "lightgrey",
-                        tickColor: "lightgrey",
-                        lineThickness: 0
-                    },
-                    axisY:{
-                        title: "Rail Lines(total route-km)",
-                        gridThickness: 1,
-                        tickThickness: 1,
-                        gridColor: "lightgrey",
-                        tickColor: "lightgrey",
-                        lineThickness: 0,
-                        valueFormatString:"#,##0k,.",
-                        maximum: 250000,
-                        interval: 50000
-                    },
-
-                    data: [
-                        {
-                            type: "bubble",
-                            toolTipContent: "<span style='\"'color: {color};'\"'><strong>{label}</strong></span><br/> <strong>Land Area</strong> {x} mn sq. km <br/> <strong>Rail Road</strong> {y} km<br/> <strong>Population</strong> {z} mn",
-                        }
-                    ]
-                });
-
-        chart.render();
+            document.getElementById("")
     }
 
 /*    document.getElementById("columnChart-box").style.marginLeft="1000px";

@@ -158,11 +158,11 @@ MachMap.prototype.addGpsRecords = function (row, cssClass) {
                 if(result[i].sensor1=='1'){
                     var point1= new BMap.Point(lng, lat);
                     arr.push(point1);
-                    temp.push(result[i])
                 }else{
                     if(arr.length>0){
                         var flightPath= new BMap.Polyline(arr, { strokeColor: "#000000", strokeOpacity: 1.0, strokeWeight: 9 });
                         blocks.push(flightPath);
+                        temp.push(result[i])
                         map.addOverlay(flightPath);
                         console.log(temp.length)
                         // flightPath.addEventListener("click",clickattribute)
@@ -196,17 +196,22 @@ MachMap.prototype.addGpsRecords = function (row, cssClass) {
             }
             console.log("console.log(blocks.length)="+blocks.length)
             for (var i = 0; i < blocks.length; i++) {
-
-                blocks[i].addEventListener("click",function () {
-                    var opts = {
-                        width : 250,    // 信息窗口宽度
-                        height: 100,    // 信息窗口高度
-                        title : row.machCode + row.machName + "-" + i// 信息窗口标题
+                (function(){
+                    var point = temp[i];
+                    var index = i;
+                    blocks[i].addEventListener("click",clickAttribute);
+                    function clickAttribute() {
+                        var opts = {
+                            width : 250,    // 信息窗口宽度
+                            height: 100,    // 信息窗口高度
+                            title : row.machCode + row.machName + "-" + index// 信息窗口标题
+                        };
+                        var infoWindow = new BMap.InfoWindow("作业面积：", opts);  // 创建信息窗口对象
+                        var pts = new BMap.Point(point.lngFixed,point.latFixed);
+                        map.openInfoWindow(infoWindow, pts);      // 打开信息窗口
                     }
-                    var infoWindow = new BMap.InfoWindow("作业面积：", opts);  // 创建信息窗口对象
-                    var pts = new BMap.Point(temp[temp.length-1].lngFixed,temp[temp.length-1].latFixed);
-                    map.openInfoWindow(infoWindow, pts);      // 打开信息窗口
-                });
+                })();
+
             }
 
         }
