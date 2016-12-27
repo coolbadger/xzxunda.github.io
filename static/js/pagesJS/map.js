@@ -151,6 +151,7 @@ MachMap.prototype.addGpsRecords = function (row, cssClass) {
             defer.resolve(ref_id,gpsRecordLine);
             var arr=new Array();
             var temp=new Array();
+            var blocks = [];
             for(var  i=0;i<result.length;i++){
                 var lat=result[i].latFixed;
                 var lng=result[i].lngFixed;
@@ -161,23 +162,24 @@ MachMap.prototype.addGpsRecords = function (row, cssClass) {
                 }else{
                     if(arr.length>0){
                         var flightPath= new BMap.Polyline(arr, { strokeColor: "#000000", strokeOpacity: 1.0, strokeWeight: 9 });
+                        blocks.push(flightPath);
                         map.addOverlay(flightPath);
-
-                        flightPath.addEventListener("click",clickattribute)
-                        function  clickattribute() {
-                            console.log(flightPath)
-                            var opts = {
-                                width : 250,    // 信息窗口宽度
-                                height: 100,    // 信息窗口高度
-                                title : row.machCode+row.machName// 信息窗口标题
-                            }
-                            var infoWindow = new BMap.InfoWindow("World", opts);  // 创建信息窗口对象
-                            console.log(temp.length)
-                            var pts = new BMap.Point(temp[temp.length-1].lngFixed,temp[temp.length-1].latFixed);
-
-                            map.openInfoWindow(infoWindow, pts);      // 打开信息窗口
-                            flightPath.setStrokeColor("#000000");
-                        }
+                        console.log(temp.length)
+                        // flightPath.addEventListener("click",clickattribute)
+                        // function  clickattribute() {
+                        //     console.log(flightPath)
+                        //     var opts = {
+                        //         width : 250,    // 信息窗口宽度
+                        //         height: 100,    // 信息窗口高度
+                        //         title : row.machCode+row.machName// 信息窗口标题
+                        //     }
+                        //     var infoWindow = new BMap.InfoWindow("作业面积：", opts);  // 创建信息窗口对象
+                        //     console.log(temp.length)
+                        //     var pts = new BMap.Point(temp[temp.length-1].lngFixed,temp[temp.length-1].latFixed);
+                        //
+                        //     map.openInfoWindow(infoWindow, pts);      // 打开信息窗口
+                        //     flightPath.setStrokeColor("#000000");
+                        // }
                         // flightPath.addEventListener("mouseover",overattribute);
                         // function overattribute() {
                         //     flightPath.setStrokeColor("#ffffff");
@@ -192,9 +194,24 @@ MachMap.prototype.addGpsRecords = function (row, cssClass) {
                     //temp.length=0;
                 }
             }
+            console.log("console.log(blocks.length)="+blocks.length)
+            for (var i = 0; i < blocks.length; i++) {
+
+                blocks[i].addEventListener("click",function () {
+                    var opts = {
+                        width : 250,    // 信息窗口宽度
+                        height: 100,    // 信息窗口高度
+                        title : row.machCode + row.machName + "-" + i// 信息窗口标题
+                    }
+                    var infoWindow = new BMap.InfoWindow("作业面积：", opts);  // 创建信息窗口对象
+                    var pts = new BMap.Point(temp[temp.length-1].lngFixed,temp[temp.length-1].latFixed);
+                    map.openInfoWindow(infoWindow, pts);      // 打开信息窗口
+                });
+            }
 
         }
     });
+
 
     return defer.promise();
 }

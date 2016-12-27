@@ -2,18 +2,28 @@
 layout: base_page
 title: 农机跟踪
 ---
+
+{% include mapScript.html %}
+{% include temp/control_head.html %}
 {% include common/canvas.html %}
 <div class="chartContent">
-    <div class="row">
-        <div class="col-md-4">
-            {% include temp/chart.html id='columnChart' heading='柱形图'%}
+    <div class="row" style="height: 80px;width: 500px;">
+        <div class="col-md-12">
+            {% include temp/datetime.html id='dtp_start' addDays='-100' text='开始时间:' %}
+            {% include temp/datetime.html id='dtp_end' addDays='1' text='结束时间:' %}
+            {% include temp/textbox.html id='dtp_car' text='合作社:' placeholder='请输入合作社' showButton = true
+            onclick='onSearchClick()' onTextChange='onAutoSearch(value)' %}
         </div>
-        <div class="col-md-8">
+    </div>
+<div id="row">
+      <div class="col-md-8">
             {% include temp/chart.html id='bubbleChart' heading='泡泡图'%}
         </div>
-
+    <div class="col-md-4" id="columnChart-box">
+        {% include temp/chart.html id='columnChart' heading='柱形图'%}
     </div>
-    <div class="row">
+</div>
+<!--    <div class="row">
         <div class="col-md-8">
             {% include temp/chart.html id='rangeChart' heading='范围图'%}
         </div>
@@ -21,34 +31,78 @@ title: 农机跟踪
             {% include temp/chart.html id='pieChart' heading='饼图'%}
         </div>
 
-    </div>
+    </div>-->
 </div>
 
 <script type="text/javascript">
     window.onload = function () {
         columnChart();
-        rangeChart();
-        pieChart();
+        //rangeChart();
+        //pieChart();
         bubbleChart();
     }
     function columnChart() {
         var chart = new CanvasJS.Chart("columnChart");
-        chart.options.title = {text: "title "};
+        chart.options.title = {text: "所有作业面积分析柱形图"};
         chart.options.data = [];
         var series1 = {type: "column", name: "First Quarter"};
 
         chart.options.data.push(series1);
         series1.dataPoints = [
-            {label: "one", y: 100},
-            {label: "two", y: 15},
-            {label: "three", y: 25},
-            {label: "four", y: 30},
-            {label: "five", y: 28},
-            {label: "six", y: 66}
+            {label: "农机工作面积", y: 1000},
+            {label: "农机有效作业面积", y: 15}
         ];
         chart.render();
     }
+    document.getElementById("row").style.marginTop="120px";
+    document.getElementById("bubbleChart").style.height="400px"
 
+    function bubbleChart() {
+
+        var chart = new CanvasJS.Chart("bubbleChart",
+                {
+                    zoomEnabled: true,
+                    animationEnabled: true,
+                    title:{
+                        text: "Rail Roads Vs Land Area and Population"
+                    },
+                    axisX: {
+                        title:"Land Area (million sq. km)",
+                        valueFormatString: "#0.#",
+                        maximum: 17,
+                        minimum: -.1,
+                        gridThickness: 1,
+                        tickThickness: 1,
+                        gridColor: "lightgrey",
+                        tickColor: "lightgrey",
+                        lineThickness: 0
+                    },
+                    axisY:{
+                        title: "Rail Lines(total route-km)",
+                        gridThickness: 1,
+                        tickThickness: 1,
+                        gridColor: "lightgrey",
+                        tickColor: "lightgrey",
+                        lineThickness: 0,
+                        valueFormatString:"#,##0k,.",
+                        maximum: 250000,
+                        interval: 50000
+                    },
+
+                    data: [
+                        {
+                            type: "bubble",
+                            toolTipContent: "<span style='\"'color: {color};'\"'><strong>{label}</strong></span><br/> <strong>Land Area</strong> {x} mn sq. km <br/> <strong>Rail Road</strong> {y} km<br/> <strong>Population</strong> {z} mn",
+                        }
+                    ]
+                });
+
+        chart.render();
+    }
+
+/*    document.getElementById("columnChart-box").style.marginLeft="1000px";
+    document.getElementById("columnChart-box").style.marginTop="150px";*/
+/*
     function rangeChart() {
         var chart = new CanvasJS.Chart("rangeChart",
                 {
@@ -151,7 +205,9 @@ title: 农机跟踪
                 });
         chart.render();
     }
+*/
 
+/*
     function pieChart() {
         var chart = new CanvasJS.Chart("pieChart",
                 {
@@ -187,67 +243,69 @@ title: 农机跟踪
                 });
         chart.render();
     }
-    
-    function bubbleChart() {
-        var chart = new CanvasJS.Chart("bubbleChart",
-                {
-                    zoomEnabled: true,
-                    animationEnabled: true,
-                    title:{
-                        text: "Rail Roads Vs Land Area and Population"
-                    },
-                    axisX: {
-                        title:"Land Area (million sq. km)",
-                        valueFormatString: "#0.#",
-                        maximum: 17,
-                        minimum: -.1,
-                        gridThickness: 1,
-                        tickThickness: 1,
-                        gridColor: "lightgrey",
-                        tickColor: "lightgrey",
-                        lineThickness: 0
-                    },
-                    axisY:{
-                        title: "Rail Lines(total route-km)",
-                        gridThickness: 1,
-                        tickThickness: 1,
-                        gridColor: "lightgrey",
-                        tickColor: "lightgrey",
-                        lineThickness: 0,
-                        valueFormatString:"#,##0k,.",
-                        maximum: 250000,
-                        interval: 50000
+*/
 
-                    },
+/*    function bubbleChart() {
 
-                    data: [
+                var chart = new CanvasJS.Chart("bubbleChart",
                         {
-                            type: "bubble",
-                            toolTipContent: "<span style='\"'color: {color};'\"'><strong>{label}</strong></span><br/> <strong>Land Area</strong> {x} mn sq. km <br/> <strong>Rail Road</strong> {y} km<br/> <strong>Population</strong> {z} mn",
-                            dataPoints: [
-                                { x: 9.14, y: 228513, z:309.34,  label:"US" },
-                                { x: 16.37, y: 85292, z:141.92,  label:"Russia" },
-                                { x: 9.327, y: 66239, z:1337,  label:"China" },
-                                { x: 9.09, y: 58345, z:34.12,  label:"Canada" },
-                                { x: 8.45, y: 29817, z:194.94,  label:"Brazil" },
-                                { x: 7.68, y: 8615, z:22.29,  label:"Australia" },
-                                { x: 2.97, y: 63974, z:1224.61,  label:"India" },
-                                { x: 2.73, y: 25023, z:40.41,  label:"Argentina" },
-                                { x: 1.94, y: 26704, z:113.42,  label:"Mexico" },
-                                { x: 1.21, y: 22051, z:49.99,  label:"SA" },
-                                { x: .547, y: 33608, z:65.07,  label:"France" },
-                                { x: .241, y: 31471, z:62.23,  label:"U.K" },
-                                { x: .348, y: 33708, z:81.77,  label:"Germany" },
-                                { x: .364, y: 20035, z:127.45,  label:"Japan" },
-                                { x: .995, y: 5195, z:81.12,  label:"Egypt" },
-                                { x: .743, y: 5352, z:17.11,  label:"Chile" }
+                            zoomEnabled: true,
+                            animationEnabled: true,
+                            title:{
+                                text: "Rail Roads Vs Land Area and Population"
+                            },
+                            axisX: {
+                                title:"Land Area (million sq. km)",
+                                valueFormatString: "#0.#",
+                                maximum: 17,
+                                minimum: -.1,
+                                gridThickness: 1,
+                                tickThickness: 1,
+                                gridColor: "lightgrey",
+                                tickColor: "lightgrey",
+                                lineThickness: 0
+                            },
+                            axisY:{
+                                title: "Rail Lines(total route-km)",
+                                gridThickness: 1,
+                                tickThickness: 1,
+                                gridColor: "lightgrey",
+                                tickColor: "lightgrey",
+                                lineThickness: 0,
+                                valueFormatString:"#,##0k,.",
+                                maximum: 250000,
+                                interval: 50000
+
+                            },
+
+                            data: [
+                                {
+                                    type: "bubble",
+                                    toolTipContent: "<span style='\"'color: {color};'\"'><strong>{label}</strong></span><br/> <strong>Land Area</strong> {x} mn sq. km <br/> <strong>Rail Road</strong> {y} km<br/> <strong>Population</strong> {z} mn",
+                                    dataPoints: [
+                                        { x: 9.14, y: 228513, z:309.34,  label:"US" },
+                                        { x: 16.37, y: 85292, z:141.92,  label:"Russia" },
+                                        { x: 9.327, y: 66239, z:1337,  label:"China" },
+                                        { x: 9.09, y: 58345, z:34.12,  label:"Canada" },
+                                        { x: 8.45, y: 29817, z:194.94,  label:"Brazil" },
+                                        { x: 7.68, y: 8615, z:22.29,  label:"Australia" },
+                                        { x: 2.97, y: 63974, z:1224.61,  label:"India" },
+                                        { x: 2.73, y: 25023, z:40.41,  label:"Argentina" },
+                                        { x: 1.94, y: 26704, z:113.42,  label:"Mexico" },
+                                        { x: 1.21, y: 22051, z:49.99,  label:"SA" },
+                                        { x: .547, y: 33608, z:65.07,  label:"France" },
+                                        { x: .241, y: 31471, z:62.23,  label:"U.K" },
+                                        { x: .348, y: 33708, z:81.77,  label:"Germany" },
+                                        { x: .364, y: 20035, z:127.45,  label:"Japan" },
+                                        { x: .995, y: 5195, z:81.12,  label:"Egypt" },
+                                        { x: .743, y: 5352, z:17.11,  label:"Chile" }
 
 
+                                    ]
+                                }
                             ]
-                        }
-                    ]
-                });
+                        });
 
-        chart.render();
-    }
+                chart.render();
+    }*/
 </script>
