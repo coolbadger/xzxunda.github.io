@@ -174,12 +174,10 @@ title: 农机跟踪
 
     // 查询农机列表
     function onSearchClick() {
-
         fullData = null;
         startTime_local = $("#dtp_start").val();
         endTime_local = $("#dtp_end").val();
         carInfo_local = $("#dtp_car").val();
-       // alert(startTime_local+endTime_local+carInfo_local);
         var requestUrl = encodeURI(apiObjUrl + "?startTime=" + startTime_local + "&endTime=" + endTime_local + "&machCode=" + carInfo_local);
         $.ajax({
             url: requestUrl,

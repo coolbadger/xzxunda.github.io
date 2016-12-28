@@ -146,40 +146,45 @@ MachMap.prototype.addGpsRecords = function (row, cssClass) {
         },
         success: function (result) {
             var markers=gpsRecordLine.addRecords(result);
-            gpsRecordLine.line.setStrokeColor("red");
-            gpsRecordLine.setLineColor("red");
+            gpsRecordLine.setLineColor("#a2aea4");
             defer.resolve(ref_id,gpsRecordLine);
+            console.log(result[1])
             var arr=new Array();
             var temp=new Array();
+            var area=new Array();
             var blocks = [];
+            var blocks_area=new Array();
+            var m=0;
+            var temp_area=[];//存入的面积
             for(var  i=0;i<result.length;i++){
                 var lat=result[i].latFixed;
                 var lng=result[i].lngFixed;
                 if(result[i].sensor1=='1'){
+
+                    if(arr.length==0){
+                        temp_area.push(((m*3*15)/10000).toPrecision(2));//计算面积
+                        console.log(m);
+                    }
+
                     var point1= new BMap.Point(lng, lat);
                     arr.push(point1);
+                    area.push(result[i]);
                 }else{
                     if(arr.length>0){
-                        var flightPath= new BMap.Polyline(arr, { strokeColor: "#000000", strokeOpacity: 1.0, strokeWeight: 9 });
+                        for(var a=0;a<area.length;a++){
+                            if(a=='0'){
+                            }else {
+                                var pointA = new BMap.Point(area[a].lngFixed, area[a].latFixed);  // 创建点坐标
+                                var pointB = new BMap.Point(area[a-1].lngFixed, area[a-1].latFixed);  // 创建点坐标
+                                var mm=parseFloat((map.getDistance(pointA,pointB)).toFixed(2));
+                                m=mm+m;//累加距离
+                            }
+                        }
+                        blocks_area.push(area);
+                        var flightPath= new BMap.Polyline(arr, { strokeColor: "#05ab21", strokeOpacity: 1.0, strokeWeight: 9 });
                         blocks.push(flightPath);
                         temp.push(result[i])
                         map.addOverlay(flightPath);
-                        console.log(temp.length)
-                        // flightPath.addEventListener("click",clickattribute)
-                        // function  clickattribute() {
-                        //     console.log(flightPath)
-                        //     var opts = {
-                        //         width : 250,    // 信息窗口宽度
-                        //         height: 100,    // 信息窗口高度
-                        //         title : row.machCode+row.machName// 信息窗口标题
-                        //     }
-                        //     var infoWindow = new BMap.InfoWindow("作业面积：", opts);  // 创建信息窗口对象
-                        //     console.log(temp.length)
-                        //     var pts = new BMap.Point(temp[temp.length-1].lngFixed,temp[temp.length-1].latFixed);
-                        //
-                        //     map.openInfoWindow(infoWindow, pts);      // 打开信息窗口
-                        //     flightPath.setStrokeColor("#000000");
-                        // }
                         // flightPath.addEventListener("mouseover",overattribute);
                         // function overattribute() {
                         //     flightPath.setStrokeColor("#ffffff");
@@ -188,13 +193,14 @@ MachMap.prototype.addGpsRecords = function (row, cssClass) {
                         // function outattribute() {
                         //     flightPath.setStrokeColor("#000000");
                         // }
-
                     }
                     arr.length=0;
-                    //temp.length=0;
+                    area.length=0;
                 }
             }
-            console.log("console.log(blocks.length)="+blocks.length)
+
+
+            console.log("blocks="+blocks.length)
             for (var i = 0; i < blocks.length; i++) {
                 (function(){
                     var point = temp[i];
@@ -206,12 +212,11 @@ MachMap.prototype.addGpsRecords = function (row, cssClass) {
                             height: 100,    // 信息窗口高度
                             title : row.machCode + row.machName + "-" + index// 信息窗口标题
                         };
-                        var infoWindow = new BMap.InfoWindow("作业面积：", opts);  // 创建信息窗口对象
+                        var infoWindow = new BMap.InfoWindow("作业面积："+temp_area[index+1]+"亩", opts);  // 创建信息窗口对象
                         var pts = new BMap.Point(point.lngFixed,point.latFixed);
                         map.openInfoWindow(infoWindow, pts);      // 打开信息窗口
                     }
                 })();
-
             }
 
         }
