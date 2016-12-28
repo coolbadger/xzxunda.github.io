@@ -89,7 +89,7 @@ MachMap.prototype.initMap = function (containerID) {
 }
 
 function mapClick(e) {
-    alert(e.point.lng + ", " + e.point.lat);
+    alert("好好的工作"+e.point.lng + ", " + e.point.lat);
 }
 // 自定义地图点击事件
 MachMap.prototype.enableMapClick = function (enableClick) {
@@ -162,8 +162,7 @@ MachMap.prototype.addGpsRecords = function (row, cssClass) {
                 if(result[i].sensor1=='1'){
 
                     if(arr.length==0){
-                        temp_area.push(((m*3*15)/10000).toPrecision(2));//计算面积
-                        console.log(m);
+                        temp_area.push(((m*3*15)/10000).toPrecision(3));//计算面积
                     }
 
                     var point1= new BMap.Point(lng, lat);
@@ -181,7 +180,7 @@ MachMap.prototype.addGpsRecords = function (row, cssClass) {
                             }
                         }
                         blocks_area.push(area);
-                        var flightPath= new BMap.Polyline(arr, { strokeColor: "#05ab21", strokeOpacity: 1.0, strokeWeight: 9 });
+                        var flightPath= new BMap.Polyline(arr, { strokeColor: "#05ab21", strokeOpacity: 1.0, strokeWeight: 20 });
                         blocks.push(flightPath);
                         temp.push(result[i])
                         map.addOverlay(flightPath);
@@ -200,6 +199,10 @@ MachMap.prototype.addGpsRecords = function (row, cssClass) {
             }
 
 
+
+            temp_area.push(((m*3*15)/10000).toPrecision(3));//计算面积
+            console.log("这个数据是什么？")
+            console.log(m);
             console.log("blocks="+blocks.length)
             for (var i = 0; i < blocks.length; i++) {
                 (function(){
