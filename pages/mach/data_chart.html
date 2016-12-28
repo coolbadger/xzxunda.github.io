@@ -8,38 +8,24 @@ title: 农机跟踪
 {% include common/canvas.html %}
 <div style="height: 100%;width: 100%">
     <div class="row" style="width:50%;height: 100%;float: left;padding-left: 20px;">
-        <div class="col-md-12" style="height: 130px;width: 500px;margin-top: 40px;margin-left: 25px;">
-            {% include temp/datetime.html id='dtp_start' addDays='-100' text='开始时间:' %}
-            {% include temp/datetime.html id='dtp_end' addDays='1' text='结束时间:' %}
-            {% include temp/textbox.html id='dtp_car' text='合作社:' placeholder='请输入合作社' showButton = true
+        <div class="col-md-12" style="width: 300px;height: 80px;margin-top: 40px;margin-left: 25px;">
+            {% include temp/textbox.html id='machCode' text='农机:' placeholder='请输入农机车牌号或类型' showButton = true
             onclick='onSearchClick()' onTextChange='onAutoSearch(value)' %}
         </div>
-
-        <div class="col-md-8" style="width: 80%;height: 600px ;">
+        <div class="col-md-8" style="width: 100%;height: 600px ;">
             {% include temp/simple_table.html %}
-            <!--{% include temp/chart.html id='bubbleChart' heading=''%}-->
         </div>
     </div>
-<!--  <div class="row">
-        <div class="col-md-8">
-            {% include temp/chart.html id='rangeChart' heading='范围图'%}
-        </div>
-        <div class="col-md-4">
-            {% include temp/chart.html id='pieChart' heading='饼图'%}
-        </div>
-
-    </div>-->
 </div>
 
+<div id="row" style="width: 50%;height: 100%;float: right; border: 1px solid red;">
+    <div class="col-md-4" id="columnChart-box" style="width:100%; height: 50%; border:1px solid blue;">
+        {% include temp/chart.html id='columnChart' heading='柱形图'%}
+    </div>
 
-<div id="row" style="width: 50%;height: 100%;float: right" >
-            <div class="col-md-4" id="columnChart-box" style="width:100%;height: 50%;">
-                {% include temp/chart.html id='columnChart' heading='柱形图'%}
-            </div>
-
-            <div class="col-md-4" style="width: 100%;height: 50%;">
-                {% include temp/chart.html id='pieChart' heading='饼图'%}
-            </div>
+    <div class="col-md-4" style="width: 100%;height: 50%; border: 1px solid black;">
+        {% include temp/chart.html id='pieChart' heading='饼图'%}
+    </div>
 </div>
 
 <script type="text/javascript">
@@ -56,28 +42,74 @@ title: 农机跟踪
         title: '车型',
         align: 'center',
     }, {
-        field: 'gpsStartTime',
-        title: '开始时间',
-        formatter: simpleTableGen.shortDateFormatter,
+        field: 'workArea',
+        title: '作业面积',
         align: 'center',
     }, {
-        field: 'gpsEndTime',
-        title: '结束时间',
-        formatter: simpleTableGen.shortDateFormatter,
+        field: 'workTime',
+        title: '作业时间',
         align: 'center',
     }];
 
+    var currentTime = getCurrentDate(1, true);
+    var fullData = null;
+    var machCode = "";
+
     simpleTableGen.settings = settings;
-    simpleTableGen.apiName = "gpsRecords";
+    simpleTableGen.apiName = "";
+    simpleTableGen.url = apiObjUrl + "?startTime=2016-12-04 00:00:00&endTime=" + currentTime + "&machCode=" + machCode;
     simpleTableGen.bind();
     simpleTableGen.loadData();
 
+    // 查询某农机作业信息列表
+    function onSearchClick() {
+        fullData = null;
+        machCode = $("#machCode").val();
+        var requestUrl = encodeURI(apiObjUrl + "?startTime=2016-12-04 00:00:00&endTime=" + currentTime + "&machCode=" + machCode);
+        $.ajax({
+            url: requestUrl,
+            type: 'GET',
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("Authorization", $.cookie('author_code'));
+            },
+            success: function (data) {
+                simpleTableGen.table.bootstrapTable('load', data);
+            },
+            error: function (err) {
+            }
+        });
+
+//        cleanAllInfo();
+    }
+
+    // 自动查询本地缓存结果
+    function onAutoSearch(value) {
+        if (fullData == null) {
+            fullData = simpleTableGen.table.bootstrapTable('getData');
+        }
+        var newData = new Array();
+        fullData.forEach(function (item) {
+            if (item.machCode.indexOf(value) > 0 || item.machName.indexOf(value) > 0) {
+                newData.push(item);
+            }
+        });
+        var checkCondition = value.length > machCode.length && value.indexOf(machCode) > 0 || (machCode.length == 0 && value.length > 0);
+        if (checkCondition) {
+            simpleTableGen.table.bootstrapTable('load', newData);
+        }
+        else {
+            simpleTableGen.table.bootstrapTable('load', fullData);
+        }
+//        cleanAllInfo();
+    }
+
+
+    //以下是加载数据分析表格
     window.onload = function () {
         columnChart();
-        //rangeChart();
         pieChart();
-        //bubbleChart();
     }
+
     function columnChart() {
         var chart = new CanvasJS.Chart("columnChart");
         chart.options.title = {text: "所有作业面积分析柱形图"};
@@ -128,210 +160,210 @@ title: 农机跟踪
         chart.render();
     }
 
-/*
-    function rangeChart() {
-        var chart = new CanvasJS.Chart("rangeChart",
-                {
-                    title: {
-                        text: "Temperature Variation - Ladakh vs Chandigarh",
-                    },
-                    theme: "theme2",
-                    exportEnabled: true,
-                    animationEnabled: true,
-                    axisY: {
-                        includeZero: false,
-                        suffix: "°C",
-                    },
-                    axisX: {
-                        interval: 10,
-                        title: "April 2014",
-                        valueFormatString: "DD",
-                    },
-                    toolTip: {
-                        shared: true,
-                    },
-                    data: [
-                        {
-                            type: "rangeSplineArea",
-                            showInLegend: true,
-                            name: "Ladakh",
-                            yValueFormatString: "#0.## °C",
-                            dataPoints: [   // Y: [Low, High]
-                                {x: new Date(2014, 03, 01), y: [05, 21]},
-                                {x: new Date(2014, 03, 02), y: [07, 15]},
-                                {x: new Date(2014, 03, 03), y: [07, 18]},
-                                {x: new Date(2014, 03, 04), y: [09, 16]},
-                                {x: new Date(2014, 03, 05), y: [10, 17]},
-                                {x: new Date(2014, 03, 06), y: [08, 13]},
-                                {x: new Date(2014, 03, 07), y: [06, 10]},
-                                {x: new Date(2014, 03, 08), y: [06, 15]},
-                                {x: new Date(2014, 03, 09), y: [06, 20]},
-                                {x: new Date(2014, 03, 10), y: [05, 21]},
-                                {x: new Date(2014, 03, 11), y: [06, 21]},
-                                {x: new Date(2014, 03, 12), y: [07, 14]},
-                                {x: new Date(2014, 03, 13), y: [07, 17]},
-                                {x: new Date(2014, 03, 14), y: [05, 20]},
-                                {x: new Date(2014, 03, 15), y: [07, 18]},
-                                {x: new Date(2014, 03, 16), y: [07, 15]},
-                                {x: new Date(2014, 03, 17), y: [08, 15]},
-                                {x: new Date(2014, 03, 18), y: [07, 13]},
-                                {x: new Date(2014, 03, 19), y: [07, 13]},
-                                {x: new Date(2014, 03, 20), y: [07, 18]},
-                                {x: new Date(2014, 03, 21), y: [06, 20]},
-                                {x: new Date(2014, 03, 22), y: [09, 23]},
-                                {x: new Date(2014, 03, 23), y: [09, 24]},
-                                {x: new Date(2014, 03, 24), y: [08, 23]},
-                                {x: new Date(2014, 03, 25), y: [12, 24]},
-                                {x: new Date(2014, 03, 26), y: [10, 21]},
-                                {x: new Date(2014, 03, 27), y: [07, 24]},
-                                {x: new Date(2014, 03, 28), y: [10, 27]},
-                                {x: new Date(2014, 03, 29), y: [10, 26]},
-                                {x: new Date(2014, 03, 30), y: [12, 27]}
-                            ]
-                        },
-                        {
-                            type: "rangeSplineArea",
-                            showInLegend: true,
-                            name: "Chandigarh",
-                            yValueFormatString: "#0.## °C",
-                            dataPoints: [   // Y: [Low, High]
-                                {x: new Date(2014, 03, 01), y: [15, 31]},
-                                {x: new Date(2014, 03, 02), y: [16, 30]},
-                                {x: new Date(2014, 03, 03), y: [14, 30]},
-                                {x: new Date(2014, 03, 04), y: [15, 30]},
-                                {x: new Date(2014, 03, 05), y: [17, 33]},
-                                {x: new Date(2014, 03, 06), y: [19, 35]},
-                                {x: new Date(2014, 03, 07), y: [20, 30]},
-                                {x: new Date(2014, 03, 08), y: [15, 31]},
-                                {x: new Date(2014, 03, 09), y: [16, 32]},
-                                {x: new Date(2014, 03, 10), y: [16, 33]},
-                                {x: new Date(2014, 03, 11), y: [16, 35]},
-                                {x: new Date(2014, 03, 12), y: [17, 36]},
-                                {x: new Date(2014, 03, 13), y: [20, 32]},
-                                {x: new Date(2014, 03, 14), y: [17, 35]},
-                                {x: new Date(2014, 03, 15), y: [18, 36]},
-                                {x: new Date(2014, 03, 16), y: [20, 34]},
-                                {x: new Date(2014, 03, 17), y: [17, 30]},
-                                {x: new Date(2014, 03, 18), y: [19, 29]},
-                                {x: new Date(2014, 03, 19), y: [16, 32]},
-                                {x: new Date(2014, 03, 20), y: [17, 33]},
-                                {x: new Date(2014, 03, 21), y: [16, 35]},
-                                {x: new Date(2014, 03, 22), y: [19, 36]},
-                                {x: new Date(2014, 03, 23), y: [20, 36]},
-                                {x: new Date(2014, 03, 24), y: [21, 37]},
-                                {x: new Date(2014, 03, 25), y: [21, 38]},
-                                {x: new Date(2014, 03, 26), y: [21, 39]},
-                                {x: new Date(2014, 03, 27), y: [22, 39]},
-                                {x: new Date(2014, 03, 28), y: [22, 39]},
-                                {x: new Date(2014, 03, 29), y: [22, 41]},
-                                {x: new Date(2014, 03, 30), y: [23, 42]}
-                            ]
-                        }
-                    ]
-                });
-        chart.render();
-    }
-*/
+    /*
+     function rangeChart() {
+     var chart = new CanvasJS.Chart("rangeChart",
+     {
+     title: {
+     text: "Temperature Variation - Ladakh vs Chandigarh",
+     },
+     theme: "theme2",
+     exportEnabled: true,
+     animationEnabled: true,
+     axisY: {
+     includeZero: false,
+     suffix: "°C",
+     },
+     axisX: {
+     interval: 10,
+     title: "April 2014",
+     valueFormatString: "DD",
+     },
+     toolTip: {
+     shared: true,
+     },
+     data: [
+     {
+     type: "rangeSplineArea",
+     showInLegend: true,
+     name: "Ladakh",
+     yValueFormatString: "#0.## °C",
+     dataPoints: [   // Y: [Low, High]
+     {x: new Date(2014, 03, 01), y: [05, 21]},
+     {x: new Date(2014, 03, 02), y: [07, 15]},
+     {x: new Date(2014, 03, 03), y: [07, 18]},
+     {x: new Date(2014, 03, 04), y: [09, 16]},
+     {x: new Date(2014, 03, 05), y: [10, 17]},
+     {x: new Date(2014, 03, 06), y: [08, 13]},
+     {x: new Date(2014, 03, 07), y: [06, 10]},
+     {x: new Date(2014, 03, 08), y: [06, 15]},
+     {x: new Date(2014, 03, 09), y: [06, 20]},
+     {x: new Date(2014, 03, 10), y: [05, 21]},
+     {x: new Date(2014, 03, 11), y: [06, 21]},
+     {x: new Date(2014, 03, 12), y: [07, 14]},
+     {x: new Date(2014, 03, 13), y: [07, 17]},
+     {x: new Date(2014, 03, 14), y: [05, 20]},
+     {x: new Date(2014, 03, 15), y: [07, 18]},
+     {x: new Date(2014, 03, 16), y: [07, 15]},
+     {x: new Date(2014, 03, 17), y: [08, 15]},
+     {x: new Date(2014, 03, 18), y: [07, 13]},
+     {x: new Date(2014, 03, 19), y: [07, 13]},
+     {x: new Date(2014, 03, 20), y: [07, 18]},
+     {x: new Date(2014, 03, 21), y: [06, 20]},
+     {x: new Date(2014, 03, 22), y: [09, 23]},
+     {x: new Date(2014, 03, 23), y: [09, 24]},
+     {x: new Date(2014, 03, 24), y: [08, 23]},
+     {x: new Date(2014, 03, 25), y: [12, 24]},
+     {x: new Date(2014, 03, 26), y: [10, 21]},
+     {x: new Date(2014, 03, 27), y: [07, 24]},
+     {x: new Date(2014, 03, 28), y: [10, 27]},
+     {x: new Date(2014, 03, 29), y: [10, 26]},
+     {x: new Date(2014, 03, 30), y: [12, 27]}
+     ]
+     },
+     {
+     type: "rangeSplineArea",
+     showInLegend: true,
+     name: "Chandigarh",
+     yValueFormatString: "#0.## °C",
+     dataPoints: [   // Y: [Low, High]
+     {x: new Date(2014, 03, 01), y: [15, 31]},
+     {x: new Date(2014, 03, 02), y: [16, 30]},
+     {x: new Date(2014, 03, 03), y: [14, 30]},
+     {x: new Date(2014, 03, 04), y: [15, 30]},
+     {x: new Date(2014, 03, 05), y: [17, 33]},
+     {x: new Date(2014, 03, 06), y: [19, 35]},
+     {x: new Date(2014, 03, 07), y: [20, 30]},
+     {x: new Date(2014, 03, 08), y: [15, 31]},
+     {x: new Date(2014, 03, 09), y: [16, 32]},
+     {x: new Date(2014, 03, 10), y: [16, 33]},
+     {x: new Date(2014, 03, 11), y: [16, 35]},
+     {x: new Date(2014, 03, 12), y: [17, 36]},
+     {x: new Date(2014, 03, 13), y: [20, 32]},
+     {x: new Date(2014, 03, 14), y: [17, 35]},
+     {x: new Date(2014, 03, 15), y: [18, 36]},
+     {x: new Date(2014, 03, 16), y: [20, 34]},
+     {x: new Date(2014, 03, 17), y: [17, 30]},
+     {x: new Date(2014, 03, 18), y: [19, 29]},
+     {x: new Date(2014, 03, 19), y: [16, 32]},
+     {x: new Date(2014, 03, 20), y: [17, 33]},
+     {x: new Date(2014, 03, 21), y: [16, 35]},
+     {x: new Date(2014, 03, 22), y: [19, 36]},
+     {x: new Date(2014, 03, 23), y: [20, 36]},
+     {x: new Date(2014, 03, 24), y: [21, 37]},
+     {x: new Date(2014, 03, 25), y: [21, 38]},
+     {x: new Date(2014, 03, 26), y: [21, 39]},
+     {x: new Date(2014, 03, 27), y: [22, 39]},
+     {x: new Date(2014, 03, 28), y: [22, 39]},
+     {x: new Date(2014, 03, 29), y: [22, 41]},
+     {x: new Date(2014, 03, 30), y: [23, 42]}
+     ]
+     }
+     ]
+     });
+     chart.render();
+     }
+     */
 
-/*
-    function pieChart() {
-        var chart = new CanvasJS.Chart("pieChart",
-                {
-                    title: {
-                        text: "Gaming Consoles Sold in 2012"
-                    },
-                    animationEnabled: true,
-                    legend: {
-                        verticalAlign: "bottom",
-                        horizontalAlign: "center"
-                    },
-                    data: [
-                        {
-                            indexLabelFontSize: 20,
-                            indexLabelFontFamily: "Monospace",
-                            indexLabelFontColor: "darkgrey",
-                            indexLabelLineColor: "darkgrey",
-                            indexLabelPlacement: "outside",
-                            type: "pie",
-                            showInLegend: true,
-                            toolTipContent: "{y} - <strong>#percent%</strong>",
-                            dataPoints: [
-                                {y: 4181563, legendText: "PS 3", indexLabel: "PlayStation 3"},
-                                {y: 2175498, legendText: "Wii", indexLabel: "Wii"},
-                                {y: 3125844, legendText: "360", exploded: true, indexLabel: "Xbox 360"},
-                                {y: 1176121, legendText: "DS", indexLabel: "Nintendo DS"},
-                                {y: 1727161, legendText: "PSP", indexLabel: "PSP"},
-                                {y: 4303364, legendText: "3DS", indexLabel: "Nintendo 3DS"},
-                                {y: 1717786, legendText: "Vita", indexLabel: "PS Vita"}
-                            ]
-                        }
-                    ]
-                });
-        chart.render();
-    }
-*/
+    /*
+     function pieChart() {
+     var chart = new CanvasJS.Chart("pieChart",
+     {
+     title: {
+     text: "Gaming Consoles Sold in 2012"
+     },
+     animationEnabled: true,
+     legend: {
+     verticalAlign: "bottom",
+     horizontalAlign: "center"
+     },
+     data: [
+     {
+     indexLabelFontSize: 20,
+     indexLabelFontFamily: "Monospace",
+     indexLabelFontColor: "darkgrey",
+     indexLabelLineColor: "darkgrey",
+     indexLabelPlacement: "outside",
+     type: "pie",
+     showInLegend: true,
+     toolTipContent: "{y} - <strong>#percent%</strong>",
+     dataPoints: [
+     {y: 4181563, legendText: "PS 3", indexLabel: "PlayStation 3"},
+     {y: 2175498, legendText: "Wii", indexLabel: "Wii"},
+     {y: 3125844, legendText: "360", exploded: true, indexLabel: "Xbox 360"},
+     {y: 1176121, legendText: "DS", indexLabel: "Nintendo DS"},
+     {y: 1727161, legendText: "PSP", indexLabel: "PSP"},
+     {y: 4303364, legendText: "3DS", indexLabel: "Nintendo 3DS"},
+     {y: 1717786, legendText: "Vita", indexLabel: "PS Vita"}
+     ]
+     }
+     ]
+     });
+     chart.render();
+     }
+     */
 
-/*    function bubbleChart() {
+    /*    function bubbleChart() {
 
-                var chart = new CanvasJS.Chart("bubbleChart",
-                        {
-                            zoomEnabled: true,
-                            animationEnabled: true,
-                            title:{
-                                text: "Rail Roads Vs Land Area and Population"
-                            },
-                            axisX: {
-                                title:"Land Area (million sq. km)",
-                                valueFormatString: "#0.#",
-                                maximum: 17,
-                                minimum: -.1,
-                                gridThickness: 1,
-                                tickThickness: 1,
-                                gridColor: "lightgrey",
-                                tickColor: "lightgrey",
-                                lineThickness: 0
-                            },
-                            axisY:{
-                                title: "Rail Lines(total route-km)",
-                                gridThickness: 1,
-                                tickThickness: 1,
-                                gridColor: "lightgrey",
-                                tickColor: "lightgrey",
-                                lineThickness: 0,
-                                valueFormatString:"#,##0k,.",
-                                maximum: 250000,
-                                interval: 50000
+     var chart = new CanvasJS.Chart("bubbleChart",
+     {
+     zoomEnabled: true,
+     animationEnabled: true,
+     title:{
+     text: "Rail Roads Vs Land Area and Population"
+     },
+     axisX: {
+     title:"Land Area (million sq. km)",
+     valueFormatString: "#0.#",
+     maximum: 17,
+     minimum: -.1,
+     gridThickness: 1,
+     tickThickness: 1,
+     gridColor: "lightgrey",
+     tickColor: "lightgrey",
+     lineThickness: 0
+     },
+     axisY:{
+     title: "Rail Lines(total route-km)",
+     gridThickness: 1,
+     tickThickness: 1,
+     gridColor: "lightgrey",
+     tickColor: "lightgrey",
+     lineThickness: 0,
+     valueFormatString:"#,##0k,.",
+     maximum: 250000,
+     interval: 50000
 
-                            },
+     },
 
-                            data: [
-                                {
-                                    type: "bubble",
-                                    toolTipContent: "<span style='\"'color: {color};'\"'><strong>{label}</strong></span><br/> <strong>Land Area</strong> {x} mn sq. km <br/> <strong>Rail Road</strong> {y} km<br/> <strong>Population</strong> {z} mn",
-                                    dataPoints: [
-                                        { x: 9.14, y: 228513, z:309.34,  label:"US" },
-                                        { x: 16.37, y: 85292, z:141.92,  label:"Russia" },
-                                        { x: 9.327, y: 66239, z:1337,  label:"China" },
-                                        { x: 9.09, y: 58345, z:34.12,  label:"Canada" },
-                                        { x: 8.45, y: 29817, z:194.94,  label:"Brazil" },
-                                        { x: 7.68, y: 8615, z:22.29,  label:"Australia" },
-                                        { x: 2.97, y: 63974, z:1224.61,  label:"India" },
-                                        { x: 2.73, y: 25023, z:40.41,  label:"Argentina" },
-                                        { x: 1.94, y: 26704, z:113.42,  label:"Mexico" },
-                                        { x: 1.21, y: 22051, z:49.99,  label:"SA" },
-                                        { x: .547, y: 33608, z:65.07,  label:"France" },
-                                        { x: .241, y: 31471, z:62.23,  label:"U.K" },
-                                        { x: .348, y: 33708, z:81.77,  label:"Germany" },
-                                        { x: .364, y: 20035, z:127.45,  label:"Japan" },
-                                        { x: .995, y: 5195, z:81.12,  label:"Egypt" },
-                                        { x: .743, y: 5352, z:17.11,  label:"Chile" }
+     data: [
+     {
+     type: "bubble",
+     toolTipContent: "<span style='\"'color: {color};'\"'><strong>{label}</strong></span><br/> <strong>Land Area</strong> {x} mn sq. km <br/> <strong>Rail Road</strong> {y} km<br/> <strong>Population</strong> {z} mn",
+     dataPoints: [
+     { x: 9.14, y: 228513, z:309.34,  label:"US" },
+     { x: 16.37, y: 85292, z:141.92,  label:"Russia" },
+     { x: 9.327, y: 66239, z:1337,  label:"China" },
+     { x: 9.09, y: 58345, z:34.12,  label:"Canada" },
+     { x: 8.45, y: 29817, z:194.94,  label:"Brazil" },
+     { x: 7.68, y: 8615, z:22.29,  label:"Australia" },
+     { x: 2.97, y: 63974, z:1224.61,  label:"India" },
+     { x: 2.73, y: 25023, z:40.41,  label:"Argentina" },
+     { x: 1.94, y: 26704, z:113.42,  label:"Mexico" },
+     { x: 1.21, y: 22051, z:49.99,  label:"SA" },
+     { x: .547, y: 33608, z:65.07,  label:"France" },
+     { x: .241, y: 31471, z:62.23,  label:"U.K" },
+     { x: .348, y: 33708, z:81.77,  label:"Germany" },
+     { x: .364, y: 20035, z:127.45,  label:"Japan" },
+     { x: .995, y: 5195, z:81.12,  label:"Egypt" },
+     { x: .743, y: 5352, z:17.11,  label:"Chile" }
 
 
-                                    ]
-                                }
-                            ]
-                        });
+     ]
+     }
+     ]
+     });
 
-                chart.render();
-    }*/
+     chart.render();
+     }*/
 </script>

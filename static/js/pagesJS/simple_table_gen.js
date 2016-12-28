@@ -15,6 +15,7 @@ SimpleTableGen.prototype.settings = new Object();
 SimpleTableGen.prototype.editFields = new Array();
 
 SimpleTableGen.prototype.apiName = '';
+SimpleTableGen.prototype.url = '';
 
 SimpleTableGen.prototype.bind = function () {
     window.onload = this.init();
@@ -32,7 +33,7 @@ SimpleTableGen.prototype.init = function () {
 SimpleTableGen.prototype.loadData = function () {
 
     $.ajax({
-        url: API_URL + "/api/" + this.apiName+ "?startTime=2016-09-18 00:00:00&endTime=2016-12-28 00:00:00",
+        url: this.url,
         type: 'GET',
         dataType: 'json',
         contentType: 'application/json',
