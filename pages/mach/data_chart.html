@@ -18,12 +18,12 @@ title: 农机跟踪
     </div>
 </div>
 
-<div id="row" style="width: 50%;height: 100%;float: right; border: 1px solid red;">
-    <div class="col-md-4" id="columnChart-box" style="width:100%; height: 50%; border:1px solid blue;">
+<div id="row" style="width: 50%;height: 100%;float: right;">
+    <div class="col-md-4" id="columnChart-box" style="width:100%; height: 50%;">
         {% include temp/chart.html id='columnChart' heading='柱形图'%}
     </div>
 
-    <div class="col-md-4" style="width: 100%;height: 50%; border: 1px solid black;">
+    <div class="col-md-4" style="width: 100%;height: 50%;">
         {% include temp/chart.html id='pieChart' heading='饼图'%}
     </div>
 </div>
@@ -42,11 +42,11 @@ title: 农机跟踪
         title: '车型',
         align: 'center',
     }, {
-        field: 'gpsTimes',
+        field: 'workArea',
         title: '作业面积',
         align: 'center',
     }, {
-        field: 'localTimes',
+        field: 'workTime',
         title: '作业时间',
         align: 'center',
     }];
@@ -75,6 +75,10 @@ title: 农机跟踪
                 var distance;
                 var total_number = 0;
                 var reMachTerminalId;
+
+                var analysisData = new Array(4);//存储统计出来的数据
+                var analysisDatas = [];//存储analysisData对象
+
                 for(var i=0;i<data.length;i++){
                     if(temp.length<1){
                         if(i>0){
@@ -90,6 +94,10 @@ title: 农机跟踪
                             console.log("车型="+temp[0].machCode)
                             console.log("车名="+temp[0].machName)
                             console.log("工作时间="+((temp[temp.length-1].gpsTime-temp[0].gpsTime)/(1000*60*60)).toFixed(2));//工作时间  待拼接
+
+                            analysisData[0] = temp[0].machCode;
+                            analysisData[1] = temp[0].machName;
+                            analysisData[2] = ((temp[temp.length-1].gpsTime-temp[0].gpsTime)/(1000*60*60)).toFixed(2);
 
                             for(var ii=0;ii<temp.length;ii++){
                                 if(temp[ii].sensor1=='1'){
@@ -115,9 +123,14 @@ title: 农机跟踪
                             }
 
                             console.log("总面积="+((total_number*3*15)/10000).toPrecision(3)+"亩")
+
+                            analysisData[3] = ((total_number*3*15)/10000).toPrecision(3);
+                            analysisDatas.push(analysisData);
+
                             total_number=0;
                             temp=[];
                         }
+
                     }
 
                 }
@@ -128,6 +141,11 @@ title: 农机跟踪
                     console.log("车型="+temp[0].machCode)
                     console.log("车名="+temp[0].machName)
                     console.log("工作时间="+((temp[temp.length-1].gpsTime-temp[0].gpsTime)/(1000*60*60)).toFixed(2));
+
+                    analysisData[0] = temp[0].machCode;
+                    analysisData[1] = temp[0].machName;
+                    analysisData[2] = ((temp[temp.length-1].gpsTime-temp[0].gpsTime)/(1000*60*60)).toFixed(2);
+
                     for(var ii=0;ii<temp.length;ii++){
                         if(temp[ii].sensor1=='1'){
                             temp_sensor1.push(temp[ii]);
@@ -150,10 +168,20 @@ title: 农机跟踪
                         }
                     }
                     console.log("总面积="+((total_numbers*3*15)/10000).toPrecision(3)+"亩")
+
+                    analysisData[3] = ((total_number*3*15)/10000).toPrecision(3);
+                    analysisDatas.push(analysisData);
                 }
 
-
-               var filterData=new Array();
+                //下面拼接json对象
+                var jsonData = "[";
+                for(var i = 0; i < analysisDatas.length; i++) {
+                    jsonData += "{"+"machCode:"+analysisDatas[i][0]+","+"machName:"+analysisDatas[i][1]+","+"workArea:"+analysisDatas[i][2]+","+"workTime:"+analysisDatas[i][3]+"},"
+                }
+                jsonData = jsonData.substring(0, jsonData.length - 1);
+                jsonData += "]";
+                console.log(jsonData);
+                var filterData=new Array();
                 var completeData=new Array();
                 for(var i=0;i<data.length;i++) {
                     filterData.push(data[i]);
@@ -161,7 +189,8 @@ title: 农机跟踪
                         completeData.push(filterData[i])
                     }
                 }
-                simpleTableGen.table.bootstrapTable('load', completeData);
+
+                simpleTableGen.table.bootstrapTable('load', jsonData);
             },
             error: function (err) {
             }
