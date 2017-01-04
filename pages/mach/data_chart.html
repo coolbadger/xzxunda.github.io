@@ -135,6 +135,9 @@ title: 农机跟踪
                     console.log("车型="+temp[0].machCode)
                     console.log("车名="+temp[0].machName)
                     console.log("工作时间="+((temp[temp.length-1].gpsTime-temp[0].gpsTime)/(1000*60*60)).toFixed(2));
+                    temp_data.push("machCode"+temp[0].machCode)
+                    temp_data.push("machName"+temp[0].machName)
+                    temp_data.push("workTime"+((temp[temp.length-1].gpsTime-temp[0].gpsTime)/(1000*60*60)).toFixed(2))
                     for(var ii=0;ii<temp.length;ii++){
                         if(temp[ii].sensor1=='1'){
                             temp_sensor1.push(temp[ii]);
@@ -157,6 +160,7 @@ title: 农机跟踪
                         }
                     }
                     console.log("总面积="+((total_numbers*3*15)/10000).toPrecision(3)+"亩")
+                    temp_data.push("workArea"+((total_number*3*15)/10000).toPrecision(3))
                 }
 
 
