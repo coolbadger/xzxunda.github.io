@@ -30,7 +30,7 @@ title: 农机跟踪
 
 <script type="text/javascript">
     var apiObjUrl = API_URL + '/api/gpsRecords';
-
+    var general_data=new Object();
     var simpleTableGen = new SimpleTableGen();
     var settings = new Object();
     settings.columns = [{
@@ -43,11 +43,11 @@ title: 农机跟踪
         align: 'center',
     }, {
         field: 'workArea',
-        title: '作业面积',
+        title: '作业面积/亩',
         align: 'center',
     }, {
         field: 'workTime',
-        title: '作业时间',
+        title: '作业时间/小时',
         align: 'center',
     }];
 
@@ -69,14 +69,13 @@ title: 农机跟踪
                 xhr.setRequestHeader("Authorization", $.cookie('author_code'));
             },
             success: function (data) {
-
-                console.log(data[1])
                 var temp_sensor1=[];
                 var temp=[];
                 var temp_data=[];
                 var distance;
                 var total_number = 0;
                 var reMachTerminalId;
+                var jsonData ="[";
                 for(var i=0;i<data.length;i++){
                     if(temp.length<1){
                         if(i>0){
@@ -89,14 +88,14 @@ title: 农机跟踪
                         if(data[i].reMachTerminalId==data[i-1].reMachTerminalId){
                             temp.push(data[i]);
                         }else{
-                            console.log("车型="+temp[0].machCode)
-                            console.log("车名="+temp[0].machName)
-                            console.log("工作时间="+((temp[temp.length-1].gpsTime-temp[0].gpsTime)/(1000*60*60)).toFixed(2));//工作时间  待拼接
                             temp_data.push("machCode"+temp[0].machCode)
                             temp_data.push("machName"+temp[0].machName)
                             temp_data.push("workTime"+((temp[temp.length-1].gpsTime-temp[0].gpsTime)/(1000*60*60)).toFixed(2))
 
+
                             for(var ii=0;ii<temp.length;ii++){
+
+
                                 if(temp[ii].sensor1=='1'){
                                     temp_sensor1.push(temp[ii]);
                                 }else{
@@ -111,7 +110,6 @@ title: 农机跟踪
                                                 distance += mm;//累加距离
                                             }
                                         }
-                                        //console.log("面积="+((distance*3*15)/10000).toPrecision(3)+"亩")
                                         total_number += distance;
                                     }
                                     distance=0;
@@ -119,7 +117,7 @@ title: 农机跟踪
                                 }
                             }
 
-                            console.log("总面积="+((total_number*3*15)/10000).toPrecision(3)+"亩")
+                            jsonData +="{"+"machCode:"+"'"+temp[0].machCode+"'"+","+"machName:"+"'"+temp[0].machName+"'"+","+"workTime:"+((temp[temp.length-1].gpsTime-temp[0].gpsTime)/(1000*60*60)).toFixed(2)+","+"workArea:"+"'"+((total_number*3*15)/10000).toPrecision(3)+"'"+"}"+",";
                             temp_data.push("workArea"+((total_number*3*15)/10000).toPrecision(3))
                             total_number=0;
                             temp=[];
@@ -128,13 +126,8 @@ title: 农机跟踪
 
                 }
 
-                console.log(temp_data)
-
                 if(temp.length>0){
                     var total_numbers=0;
-                    console.log("车型="+temp[0].machCode)
-                    console.log("车名="+temp[0].machName)
-                    console.log("工作时间="+((temp[temp.length-1].gpsTime-temp[0].gpsTime)/(1000*60*60)).toFixed(2));
                     for(var ii=0;ii<temp.length;ii++){
                         if(temp[ii].sensor1=='1'){
                             temp_sensor1.push(temp[ii]);
@@ -156,19 +149,16 @@ title: 农机跟踪
                             temp_sensor1=[];
                         }
                     }
-                    console.log("总面积="+((total_numbers*3*15)/10000).toPrecision(3)+"亩")
+                    jsonData +="{"+"machCode:"+"'"+temp[0].machCode+"'"+","+"machName:"+"'"+temp[0].machName+"'"+","+"workTime:"+((temp[temp.length-1].gpsTime-temp[0].gpsTime)/(1000*60*60)).toFixed(2)+","+"workArea:"+"'"+((total_numbers*3*15)/10000).toPrecision(3)+"'"+"}"+",";
                 }
 
+                jsonData +="]";
 
-               var filterData=new Array();
-                var completeData=new Array();
-                for(var i=0;i<data.length;i++) {
-                    filterData.push(data[i]);
-                    if(filterData.length<=1||filterData[i].reMachTerminalId!==completeData[completeData.length-1].reMachTerminalId){
-                        completeData.push(filterData[i])
-                    }
-                }
-                simpleTableGen.table.bootstrapTable('load', completeData);
+                var json = eval('(' + jsonData + ')');
+                general_data=json;
+                simpleTableGen.table.bootstrapTable('load', json);
+                pieChart();
+                columnChart();
             },
             error: function (err) {
             }
@@ -219,11 +209,11 @@ title: 农机跟踪
     }
 
 
-    //以下是加载数据分析表格
+  /*  //以下是加载数据分析表格
     window.onload = function () {
         columnChart();
         pieChart();
-    }
+    }*/
 
     function columnChart() {
         var chart = new CanvasJS.Chart("columnChart");
@@ -240,9 +230,16 @@ title: 农机跟踪
         chart.render();
     }
 
+
     function pieChart() {
-        var dataJson = "[{y:38.2,legendText:\"农机M003\",indexLabel:\"农机M003\"},{y:23.62,legendText:\"农机M002\",indexLabel:\"农机M002\"},{y:40.7,legendText:\"农机M004\",indexLabel:\"农机M004\"}]";
-        var j = eval('(' + dataJson + ')');
+        var dataTime="[";
+        for(var i=0;i<general_data.length;i++){
+            console.log(general_data[i].workTime)
+            dataTime +="{"+"y:"+general_data[i].workTime+","+"legendText:"+"'"+general_data[i].machName+general_data[i].machCode+"'"+","+"indexLabel:"+"'"+general_data[i].machName+general_data[i].machCode+"'"+"}"+","
+        }
+            dataTime +="]";
+        console.log(dataTime)
+        var j = eval('(' + dataTime + ')');
         var chart = new CanvasJS.Chart("pieChart",
                 {
                     title: {
