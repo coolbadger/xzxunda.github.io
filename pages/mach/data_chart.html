@@ -70,127 +70,89 @@ title: 农机跟踪
             },
             success: function (data) {
 
+                var temp_sensor1=[];
+                var temp=[];
+                var distance;
+                var total_number = 0;
+                var reMachTerminalId;
                 for(var i=0;i<data.length;i++){
-                    console.log(data[i]);
-                }
-
-
-/*
-
-                var data1=new Array();
-                var data2=new Array();
-                var fenLei=new Array();
-                var getGpsPoint=new Array();
-                var distance=0;
-
-                for(var i=1;i<data.length;i++) {
-                    data1.push(data[i-1]);//前一个数据
-                    data2.push(data[i]);//后一个数据
-                }
-
-                for(var i=0;i<data1.length;i++){
-                    if(data1[i].reMachTerminalId===data2[i].reMachTerminalId){
-                        fenLei.push(data2[i])
+                    if(temp.length<1){
+                        if(i>0){
+                            temp.push(data[i]);
+                            temp.push(data[i-1]);
+                        }else{
+                            temp.push(data[i]);
+                        }
                     }else{
-                        if(fenLei.length>0){
-                            console.log(fenLei)
-                            var map = new BMap.Map("map_container");            // 创建地图实例
-                            var point = new BMap.Point(117.606257, 34.042178);  // 创建点坐标(目前为双沟镇政府)
-                            for(var a=1;a<getGpsPoint.length;a++){
-                                if(a>=1) {
-                                    var pointA = new BMap.Point(getGpsPoint[a].lngFixed, getGpsPoint[a].latFixed);  // 创建点坐标
-                                    var pointB = new BMap.Point(getGpsPoint[a - 1].lngFixed, getGpsPoint[a - 1].latFixed);  // 创建点坐标
-                                    var mm = parseFloat((map.getDistance(pointA, pointB)).toFixed(2));
-                                    distance += mm;//累加距离
-                                    console.log("mm="+mm)
+                        if(data[i].reMachTerminalId==data[i-1].reMachTerminalId){
+                            temp.push(data[i]);
+                        }else{
+                            console.log("车型="+temp[0].machCode)
+                            console.log("车名="+temp[0].machName)
+                            console.log("工作时间="+((temp[temp.length-1].gpsTime-temp[0].gpsTime)/(1000*60*60)).toFixed(2));//工作时间  待拼接
+
+                            for(var ii=0;ii<temp.length;ii++){
+                                if(temp[ii].sensor1=='1'){
+                                    temp_sensor1.push(temp[ii]);
+                                }else{
+                                    if(temp_sensor1.length>0){
+                                        var map = new BMap.Map("map_container");            // 创建地图实例
+                                        var point = new BMap.Point(117.606257, 34.042178);  // 创建点坐标(目前为双沟镇政府)
+                                        for(var a=0;a<temp_sensor1.length;a++){
+                                            if(a>=1) {
+                                                var pointA = new BMap.Point(temp_sensor1[a].lngFixed, temp_sensor1[a].latFixed);  // 创建点坐标
+                                                var pointB = new BMap.Point(temp_sensor1[a - 1].lngFixed, temp_sensor1[a - 1].latFixed);  // 创建点坐标
+                                                var mm = parseFloat((map.getDistance(pointA, pointB)).toFixed(2));
+                                                distance += mm;//累加距离
+                                            }
+                                        }
+                                        //console.log("面积="+((distance*3*15)/10000).toPrecision(3)+"亩")
+                                        total_number += distance;
+                                    }
+                                    distance=0;
+                                    temp_sensor1=[];
                                 }
                             }
-                            console.log("我运行了")
-                            console.log("面积="+((distance*3*15)/10000).toPrecision(3))
-                            console.log("时间"+((fenLei[fenLei.length-1].gpsTime-fenLei[0].gpsTime)/(1000*60*60)).toFixed(2))
-                            console.log(fenLei)
+
+                            console.log("总面积="+((total_number*3*15)/10000).toPrecision(3)+"亩")
+                            total_number=0;
+                            temp=[];
                         }
-                        distance=0;
-                        fenLei.length=0;
                     }
-                    getGpsPoint.length=0;
+
                 }
 
-                if(fenLei.length>0){
 
-                    for(var i=0;i<fenLei.length;i++){
-                        if(fenLei[i].sensor1=='1'){
-                            getGpsPoint.push(fenLei[i]);
+                if(temp.length>0){
+                    var total_numbers=0;
+                    console.log("车型="+temp[0].machCode)
+                    console.log("车名="+temp[0].machName)
+                    console.log("工作时间="+((temp[temp.length-1].gpsTime-temp[0].gpsTime)/(1000*60*60)).toFixed(2));
+                    for(var ii=0;ii<temp.length;ii++){
+                        if(temp[ii].sensor1=='1'){
+                            temp_sensor1.push(temp[ii]);
                         }else{
-                            if(getGpsPoint.length>0){
+                            if(temp_sensor1.length>0){
                                 var map = new BMap.Map("map_container");            // 创建地图实例
                                 var point = new BMap.Point(117.606257, 34.042178);  // 创建点坐标(目前为双沟镇政府)
-                                for(var a=1;a<getGpsPoint.length;a++){
+                                for(var a=0;a<temp_sensor1.length;a++){
                                     if(a>=1) {
-                                        var pointA = new BMap.Point(getGpsPoint[a].lngFixed, getGpsPoint[a].latFixed);  // 创建点坐标
-                                        var pointB = new BMap.Point(getGpsPoint[a - 1].lngFixed, getGpsPoint[a - 1].latFixed);  // 创建点坐标
+                                        var pointA = new BMap.Point(temp_sensor1[a].lngFixed, temp_sensor1[a].latFixed);  // 创建点坐标
+                                        var pointB = new BMap.Point(temp_sensor1[a - 1].lngFixed, temp_sensor1[a - 1].latFixed);  // 创建点坐标
                                         var mm = parseFloat((map.getDistance(pointA, pointB)).toFixed(2));
-                                        distance = mm + distance;//累加距离
-
+                                        distance += mm;//累加距离
                                     }
                                 }
-                                console.log("我运行了")
+                                total_numbers += distance;
                             }
-
-                            getGpsPoint.length=0;
+                            distance=0;
+                            temp_sensor1=[];
                         }
                     }
-                    console.log("面积="+((distance*3*15)/10000).toPrecision(3))
-                    console.log("时间="+((fenLei[fenLei.length-1].gpsTime-fenLei[0].gpsTime)/(1000*60*60)).toFixed(2))
-                    console.log(fenLei)
-
+                    console.log("总面积="+((total_numbers*3*15)/10000).toPrecision(3)+"亩")
                 }
 
 
-
-                //统计
-                var filterData=new Array();
-                var completeData=new Array();
-                var points=new Array();
-                var DivideData=new Array();
-                var m=0;
-
-                for(var c=0;c<data.length;c++){
-                    if(data[c].sensor1=='1'){
-                        points.push(data[c]);
-                    }else{
-                        if(points.length>0) {
-                            var map = new BMap.Map("map_container");            // 创建地图实例
-                            var point = new BMap.Point(117.606257, 34.042178);  // 创建点坐标(目前为双沟镇政府)
-                             for (var i = 0; i < points.length; i++) {
-                                if(i>=1) {
-                                    var pointA = new BMap.Point(points[i].lngFixed, points[i].latFixed);  // 创建点坐标
-                                    var pointB = new BMap.Point(points[i - 1].lngFixed, points[i - 1].latFixed);  // 创建点坐标
-                                    var mm = parseFloat((map.getDistance(pointA, pointB)).toFixed(2));
-                                    m = mm + m;//累加距离
-                                }
-                              }
-                            //console.log(m)
-                              m=0;
-
-                        }
-                        points.length=0;
-                    }
-                }
-                if(points.length>1){
-                    var map = new BMap.Map("map_container");            // 创建地图实例
-                    var point = new BMap.Point(117.606257, 34.042178);  // 创建点坐标(目前为双沟镇政府)
-                    for (var i = 0; i < points.length; i++) {
-                        if(i>=1) {
-                            var pointA = new BMap.Point(points[i].lngFixed, points[i].latFixed);  // 创建点坐标
-                            var pointB = new BMap.Point(points[i - 1].lngFixed, points[i - 1].latFixed);  // 创建点坐标
-                            var mm = parseFloat((map.getDistance(pointA, pointB)).toFixed(2));
-                            m = mm + m;//累加距离
-                        }
-                    }
-                    console.log(m)
-                }
-*/
                var filterData=new Array();
                 var completeData=new Array();
                 for(var i=0;i<data.length;i++) {
@@ -211,7 +173,7 @@ title: 农机跟踪
     function onSearchClick() {
         fullData = null;
         machCode = $("#machCode").val();
-        var requestUrl = encodeURI(apiObjUrl + "?startTime=2016-12-04 00:00:00&endTime=" + currentTime + "&machCode=" + machCode);
+        var requestUrl = encodeURI(apiObjUrl + "?startTime=2016-08-04 00:00:00&endTime=" + currentTime + "&machCode=" + machCode);
         $.ajax({
             url: requestUrl,
             type: 'GET',
@@ -265,19 +227,19 @@ title: 农机跟踪
         chart.options.data.push(series1);
         series1.dataPoints = [
 
-            {label: "农机工作面积", y: 1000},
-            {label: "农机有效作业面积", y: 900}
+            {label: "农机工作面积", y: 1024},
+            {label: "农机有效作业面积", y: 908}
         ];
         chart.render();
     }
 
     function pieChart() {
-        var dataJson = "[{y:4181563,legendText:\"PS 3\",indexLabel:\"PlayStation 3\"},{y:2175498,legendText:\"Wii\",indexLabel:\"Wii\"},{y:3125844,legendText:\"360\",exploded:true,indexLabel:\"Xbox 360\"},{y:1176121,legendText:\"DS\",indexLabel:\"Nintendo DS\"},{y:1727161,legendText:\"PSP\",indexLabel:\"PSP\"},{y:4303364,legendText:\"3DS\",indexLabel:\"Nintendo 3DS\"},{y:1717786,legendText:\"Vita\",indexLabel:\"PS Vita\"}]";
+        var dataJson = "[{y:38.2,legendText:\"农机M003\",indexLabel:\"农机M003\"},{y:23.62,legendText:\"农机M002\",indexLabel:\"农机M002\"},{y:40.7,legendText:\"农机M004\",indexLabel:\"农机M004\"}]";
         var j = eval('(' + dataJson + ')');
         var chart = new CanvasJS.Chart("pieChart",
                 {
                     title: {
-                        text: "Gaming Consoles Sold in 2012"
+                        text: "农机工作时间"
                     },
                     animationEnabled: true,
                     legend: {
