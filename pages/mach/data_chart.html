@@ -42,11 +42,11 @@ title: 农机跟踪
         title: '车型',
         align: 'center',
     }, {
-        field: 'gpsTimes',
+        field: 'workArea',
         title: '作业面积',
         align: 'center',
     }, {
-        field: 'localTimes',
+        field: 'workTime',
         title: '作业时间',
         align: 'center',
     }];
@@ -70,8 +70,10 @@ title: 农机跟踪
             },
             success: function (data) {
 
+                console.log(data[1])
                 var temp_sensor1=[];
                 var temp=[];
+                var temp_data=[];
                 var distance;
                 var total_number = 0;
                 var reMachTerminalId;
@@ -90,6 +92,9 @@ title: 农机跟踪
                             console.log("车型="+temp[0].machCode)
                             console.log("车名="+temp[0].machName)
                             console.log("工作时间="+((temp[temp.length-1].gpsTime-temp[0].gpsTime)/(1000*60*60)).toFixed(2));//工作时间  待拼接
+                            temp_data.push("machCode"+temp[0].machCode)
+                            temp_data.push("machName"+temp[0].machName)
+                            temp_data.push("workTime"+((temp[temp.length-1].gpsTime-temp[0].gpsTime)/(1000*60*60)).toFixed(2))
 
                             for(var ii=0;ii<temp.length;ii++){
                                 if(temp[ii].sensor1=='1'){
@@ -115,6 +120,7 @@ title: 农机跟踪
                             }
 
                             console.log("总面积="+((total_number*3*15)/10000).toPrecision(3)+"亩")
+                            temp_data.push("workArea"+((total_number*3*15)/10000).toPrecision(3))
                             total_number=0;
                             temp=[];
                         }
@@ -122,6 +128,7 @@ title: 农机跟踪
 
                 }
 
+                console.log(temp_data)
 
                 if(temp.length>0){
                     var total_numbers=0;
