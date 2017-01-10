@@ -6,7 +6,6 @@ var secondCtrl = angular.module('login', ['ngRoute', 'httpService']);
 
 secondCtrl.controller('loginCtrl', function ($scope, $location, httpService) {
     $scope.login = function () {
-
         var userName = $scope.username;
         var password = $scope.password;
         var params = {
@@ -24,6 +23,8 @@ secondCtrl.controller('loginCtrl', function ($scope, $location, httpService) {
                 xhr.setRequestHeader("Authorization", author_code);
             },
             success: function (data) {
+                $.cookie('userName',userName);
+                $.cookie('password',password);
                 $.cookie('islogin', 'true', {path: '/'});
                 $.cookie('author_code', author_code, {path: '/'});
                 window.location.href = "/pages/home.html";

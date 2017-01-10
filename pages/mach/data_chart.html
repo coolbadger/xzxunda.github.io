@@ -69,6 +69,8 @@ title: 农机跟踪
                 xhr.setRequestHeader("Authorization", $.cookie('author_code'));
             },
             success: function (data) {
+
+
                 var map = new BMap.Map("map_container");            // 创建地图实例
                 var point = new BMap.Point(117.606257, 34.042178);  // 创建点坐标(目前为双沟镇政府)
                 var temp_sensor1=[];
@@ -83,8 +85,6 @@ title: 农机跟踪
                 for(var i=0;i<data.length;i++){
                     if(temp.length<1){
                         if(i>0){
-                            temp.push(data[i]);
-                            temp.push(data[i-1]);
                         }else{
                             temp.push(data[i]);
                         }
@@ -92,9 +92,9 @@ title: 农机跟踪
                         if(data[i].reMachTerminalId==data[i-1].reMachTerminalId){
                             temp.push(data[i]);
                         }else{
-                            temp_data.push("machCode"+temp[0].machCode)
-                            temp_data.push("machName"+temp[0].machName)
-                            temp_data.push("workTime"+((temp[temp.length-1].gpsTime-temp[0].gpsTime)/(1000*60*60)).toFixed(2))
+                            temp_data.push("machCode"+temp[0].machCode);
+                            temp_data.push("machName"+temp[0].machName);
+                            temp_data.push("workTime"+((temp[temp.length-1].gpsTime-temp[0].gpsTime)/(1000*60*60)).toFixed(2));
 
 
                             for(var ii=0;ii<temp.length;ii++){
@@ -127,8 +127,8 @@ title: 农机跟踪
                             }
 
                             jsonData +="{"+ "drivingArea:"+((mm_distance*3*15)/10000).toPrecision(3)+","+"machCode:"+"'"+temp[0].machCode+"'"+","+"machName:"+"'"+temp[0].machName+"'"+","+"workTime:"+((temp[temp.length-1].gpsTime-temp[0].gpsTime)/(1000*60*60)).toFixed(2)+","+"workArea:"+((total_number*3*15)/10000).toPrecision(3) + "}"+",";
-                            temp_data.push("workArea"+((total_number*3*15)/10000).toPrecision(3))
-                            mm_distance=0
+                            temp_data.push("workArea"+((total_number*3*15)/10000).toPrecision(3));
+                            mm_distance=0;
                             total_number=0;
                             temp=[];
                         }
@@ -240,8 +240,6 @@ title: 农机跟踪
         }
 
 
-        console.log(nm_drivingArea)
-        console.log(nm_workArea)
 
         var chart = new CanvasJS.Chart("columnChart");
         chart.options.title = {text: "所有作业面积分析柱形图"};
