@@ -1,0 +1,68 @@
+---
+layout: base_page
+---
+
+
+
+    <div id="text-content">
+        <p id="head">用户信息</p><br/>
+        <form>
+                                    <input type="hidden" placeholder="   账号" class="from-all" readonly="true" id="userId"><!--隐藏表单  用于储存  用户ID  传到后台-->
+         <b>账&nbsp;&nbsp;号: </b><input type="text" placeholder="   账号" class="from-all" readonly="true" id="username"><br/><br/><br/>
+         <b>密&nbsp;&nbsp;码: </b><input type="text" placeholder="   密码" class="from-all"  id="passWord"  required="required"  onpaste="return false" ondragenter="return false" onkeyup="this.value=this.value.replace(/[\u0391-\uffe5]/gi,'')"><br/><br/><br/>
+                                    <input type="submit"  class="from-all" value="修改">
+        </form>
+    </div>
+
+<style>
+
+    #head{
+        font-size: 22px;
+    }
+
+    #text-content{
+        color: #7a869d;
+        font-size: 16px;
+        align: middle;
+        margin-top: 40px;
+        text-align: center;
+    }
+
+    .from-all{
+        width:30%;
+        height:37px;
+        border: 1px solid #e6e6e6;
+        font-size: 18px;
+    }
+
+
+</style>
+
+<script type="text/javascript">
+
+
+    window.onload = function (){
+        UserData();
+    } ;
+
+    function UserData()
+    {
+        document.getElementById('username').value = $.cookie('userName');
+        document.getElementById('userId').value = $.cookie('id');
+        //alert($.cookie('id'))
+    }
+
+
+
+
+
+
+</script>
+
+
+
+
+
+
+
+
