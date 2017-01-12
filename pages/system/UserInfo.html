@@ -2,20 +2,18 @@
 layout: base_page
 ---
 
-
-
     <div id="text-content">
         <p id="head">用户信息</p><br/>
-        <form>
-                                    <input type="hidden" placeholder="   账号" class="from-all" readonly="true" id="userId"><!--隐藏表单  用于储存  用户ID  传到后台-->
-         <b>账&nbsp;&nbsp;号: </b><input type="text" placeholder="   账号" class="from-all" readonly="true" id="username"><br/><br/><br/>
-         <b>密&nbsp;&nbsp;码: </b><input type="text" placeholder="   密码" class="from-all"  id="passWord"  required="required"  onpaste="return false" ondragenter="return false" onkeyup="this.value=this.value.replace(/[\u0391-\uffe5]/gi,'')"><br/><br/><br/>
-                                    <input type="submit"  class="from-all" value="修改">
+        <form id="update_user" action="" method="get">
+            <input type="hidden" placeholder="   账号" class="from-all" readonly="true" id="userId"><!--隐藏表单  用于储存  用户ID  传到后台-->
+            <b>账&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号: </b><input type="text" placeholder="   账 号" class="from-all" readonly="true" id="username"><br/><br/><br/>
+            <b>密&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;码: </b><input type="password" placeholder="   密 码(不支持任何中文汉字以及符号！)" class="from-all"  id="passWord"  class="passWord" required="required"  onpaste="return false" ondragenter="return false" onkeyup="this.value=this.value.replace(/[\u0391-\uffe5]/gi,'')"><br/><br/><br/>
+            <b>再次输入密码: </b><input type="password" placeholder="   密 码(不支持任何中文汉字以及符号！)" class="from-all"  id="passWords" class="passWord" required="required"  onpaste="return false" ondragenter="return false" onkeyup="this.value=this.value.replace(/[\u0391-\uffe5]/gi,'')"><span id="text_info" style="display:none ;color: red">*密码不一致</span><br/><br/><br/>
+            <span style="display: none" id="pwd_span"><input type="submit"  class="from-submit" value="修改" onclick="submit_btn()"></span><span id="text_span">修改</span>
         </form>
     </div>
 
 <style>
-
     #head{
         font-size: 22px;
     }
@@ -24,7 +22,7 @@ layout: base_page
         color: #7a869d;
         font-size: 16px;
         align: middle;
-        margin-top: 40px;
+        padding-top: 40px;
         text-align: center;
     }
 
@@ -35,14 +33,18 @@ layout: base_page
         font-size: 18px;
     }
 
-
+    .from-submit{
+        width:10%;
+        height:37px;
+        border: 1px solid #e6e6e6;
+        font-size: 18px;
+    }
 </style>
 
 <script type="text/javascript">
-
-
     window.onload = function (){
         UserData();
+        notNull();
     } ;
 
     function UserData()
@@ -52,12 +54,60 @@ layout: base_page
         //alert($.cookie('id'))
     }
 
+    function notNull() {
+        $("#passWords").mousedown(function () {
+            if (document.getElementById("passWord").value != document.getElementById("passWords").value) {
+                document.getElementById("text_info").style.display = "block";
+                document.getElementById("text_span").style.display = "block";
+                document.getElementById("pwd_span").style.display = "none";
+            } else {
+                document.getElementById("text_info").style.display = "none";
+                document.getElementById("text_span").style.display = "none";
+                document.getElementById("pwd_span").style.display = "block";
+            }
+        });//这个是鼠标键，是你鼠标左击按下的的效果
+        $("#passWords").mouseout(function () {
+            if (document.getElementById("passWord").value != document.getElementById("passWords").value) {
+                document.getElementById("text_info").style.display = "block";
+                document.getElementById("text_span").style.display = "block";
+                document.getElementById("pwd_span").style.display = "none";
+            } else {
+                document.getElementById("text_info").style.display = "none";
+                document.getElementById("text_span").style.display = "none";
+                document.getElementById("pwd_span").style.display = "block";
+            }
+        })//这个是鼠标键，是你鼠标左击放开后的效果
 
+        $("#passWord").mousedown(function () {
+            if (document.getElementById("passWord").value != document.getElementById("passWords").value) {
+                document.getElementById("text_info").style.display = "block";
+                document.getElementById("text_span").style.display = "block";
+                document.getElementById("pwd_span").style.display = "none";
+            } else {
+                document.getElementById("text_info").style.display = "none";
+                document.getElementById("text_span").style.display = "none";
+                document.getElementById("pwd_span").style.display = "block";
+            }
+        });//这个是鼠标键，是你鼠标左击按下的的效果
+        $("#passWord").mouseout(function () {
+            if (document.getElementById("passWord").value != document.getElementById("passWords").value) {
+                document.getElementById("text_info").style.display = "block";
+                document.getElementById("text_span").style.display = "block";
+                document.getElementById("pwd_span").style.display = "none";
+            } else {
+                document.getElementById("text_info").style.display = "none";
+                document.getElementById("text_span").style.display = "none";
+                document.getElementById("pwd_span").style.display = "block";
+            }
+        })//这个是鼠标键，是你鼠标左击放开后的效果
 
+     }
+    function submit_btn() {
 
-
-
+    }
+    
 </script>
+
 
 
 
