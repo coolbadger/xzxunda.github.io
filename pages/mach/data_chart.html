@@ -54,7 +54,7 @@ title: 农机跟踪
     var jsonData ="[";
     var nm_drivingArea = 0;
     var nm_workArea = 0;
-
+    var machCodes;
     settings.onDblClickRow = function (row, $element) {
 
         $("#process").fadeIn('fast', function () {
@@ -68,10 +68,9 @@ title: 农机跟踪
 
     function onRowDbClick(row, $element) {
         var a=1;
-        console.log(row)
         nm_drivingArea=row.drivingArea;
         nm_workArea=row.workArea;
-        console.log("nm_drivingArea="+nm_drivingArea+"nm_workArea="+nm_workArea)
+        machCodes = row.machCode
         columnChart(a);
 
     }
@@ -272,11 +271,15 @@ title: 农机跟踪
         var series1 = {type: "column", name: "First Quarter"};
 
         chart.options.data.push(series1);
+        if(a!=1){
         series1.dataPoints = [
-
             {label: "农机工作面积", y: nm_drivingArea},
             {label: "农机有效作业面积", y:nm_workArea }
-        ];
+        ];}else{
+            series1.dataPoints = [
+            {label: machCodes+"农机工作面积", y: nm_drivingArea},
+            {label: machCodes+"农机有效作业面积", y:nm_workArea }];
+        }
         chart.render();
     }
 
