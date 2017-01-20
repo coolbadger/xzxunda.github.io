@@ -2,15 +2,16 @@
 layout: base_page
 ---
 
+{% include temp/UserUpdate.html %}
+
     <div id="text-content">
         <p id="head">用户信息</p><br/>
-        <form id="update_user" action="" method="get">
-            <input type="hidden" placeholder="   账号" class="from-all" readonly="true" id="userId"><!--隐藏表单  用于储存  用户ID  传到后台-->
+
             <b>账&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号: </b><input type="text" placeholder="   账 号" class="from-all" readonly="true" id="username"><br/><br/><br/>
             <b>密&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;码: </b><input type="password" placeholder="   密 码(不支持任何中文汉字以及符号！)" class="from-all"  id="passWord"  class="passWord" required="required"  onpaste="return false" ondragenter="return false" onkeyup="this.value=this.value.replace(/[\u0391-\uffe5]/gi,'')"><br/><br/><br/>
             <b>再次输入密码: </b><input type="password" placeholder="   密 码(不支持任何中文汉字以及符号！)" class="from-all"  id="passWords" class="passWord" required="required"  onpaste="return false" ondragenter="return false" onkeyup="this.value=this.value.replace(/[\u0391-\uffe5]/gi,'')"><span id="text_info" style="display:none ;color: red">*密码不一致</span><br/><br/><br/>
             <span style="display: none" id="pwd_span"><input type="submit"  class="from-submit" value="修改" onclick="submit_btn()"></span><span id="text_span">修改</span>
-        </form>
+
     </div>
 
 <style>
@@ -50,7 +51,6 @@ layout: base_page
     function UserData()
     {
         document.getElementById('username').value = $.cookie('userName');
-        document.getElementById('userId').value = $.cookie('id');
         //alert($.cookie('id'))
     }
 
@@ -102,9 +102,7 @@ layout: base_page
         })//这个是鼠标键，是你鼠标左击放开后的效果
 
      }
-    function submit_btn() {
 
-    }
     
 </script>
 

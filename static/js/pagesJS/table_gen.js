@@ -230,6 +230,7 @@ TableGen.prototype.createOrUpdate = function () {
                     var id = $('#id').val();//取得隐藏id控件的值，用来判断saveObj方法是创建记录，还是还是修改记录
                     console.log("id:" + id);
                     console.log("input json object:" + JSON.stringify(params));
+                    console.log(params)
                     if (id != "") {  //修改
                         var url = apiObjUrl + '/' + id;
                         updateItem(url, params, $http);
@@ -268,9 +269,12 @@ function saveItem(url, params, $http) {
 
 //修改一条记录的方法
 function updateItem(url, params, $http) {
+    console.log(url);
+    console.log(params)
     var $table = $('#' + TableGen.prototype.tableID);
     $http.defaults.headers.common = {'Authorization': $.cookie('author_code')};
     $http.put(url, params, {
+
         'Content-Type': "application/json",
         "X-HTTP-Method-Override": "PUT"
     }).success(function (data, state) {

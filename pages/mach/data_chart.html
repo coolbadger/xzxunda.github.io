@@ -102,7 +102,7 @@ title: 农机跟踪
                 var temp_data=[];
                 var distance;
                 var mm_distance = 0;
-                var mm_distance_number = 0;
+                var workTime = 0;
                 var total_number = 0;
                 var reMachTerminalId;
 
@@ -116,7 +116,7 @@ title: 农机跟踪
                         }
                     }else{
                         if(data[i].reMachTerminalId==data[i-1].reMachTerminalId){
-                            temp.push(data[i]);
+                            temp.push(data[i]);//相同农机GPS数据
                         }else{
                             temp_data.push("machCode"+temp[0].machCode)
                             temp_data.push("machName"+temp[0].machName)
@@ -152,6 +152,7 @@ title: 农机跟踪
                                 }
                             }
 
+                            console.log( temp.length)
                             jsonData +="{"+ "drivingArea:"+((mm_distance*3*15)/10000).toPrecision(3)+","+"machCode:"+"'"+temp[0].machCode+"'"+","+"machName:"+"'"+temp[0].machName+"'"+","+"workTime:"+((temp[temp.length-1].gpsTime-temp[0].gpsTime)/(1000*60*60)).toFixed(2)+","+"workArea:"+((total_number*3*15)/10000).toPrecision(3) + "}"+",";
                             temp_data.push("workArea"+((total_number*3*15)/10000).toPrecision(3))
                             mm_distance=0
@@ -186,11 +187,13 @@ title: 农机跟踪
                                     }
                                 }
                                 total_numbers += distance;
+
                             }
                             distance=0;
                             temp_sensor1=[];
                         }
                     }
+                    console.log( temp.length)
                     jsonData +="{"+"drivingArea:"+((mm_distance*3*15)/10000).toPrecision(3)+","+"machCode:"+"'"+temp[0].machCode+"'"+","+"machName:"+"'"+temp[0].machName+"'"+","+"workTime:"+((temp[temp.length-1].gpsTime-temp[0].gpsTime)/(1000*60*60)).toFixed(2)+","+"workArea:"+((total_numbers*3*15)/10000).toPrecision(3)+"}"+",";
                 }
 
@@ -259,6 +262,9 @@ title: 农机跟踪
 
     function columnChart(a) {
         if(a!=1) {
+             nm_drivingArea = 0;
+             nm_workArea = 0;
+
             for (var i = 0; i < general_data.length; i++) {
                 nm_drivingArea += general_data[i].drivingArea;
                 nm_workArea += general_data[i].workArea;
@@ -290,7 +296,7 @@ title: 农机跟踪
             dataTime +="{"+"y:"+general_data[i].workTime+","+"legendText:"+"'"+general_data[i].machName+general_data[i].machCode+"'"+","+"indexLabel:"+"'"+general_data[i].machName+general_data[i].machCode+"'"+"}"+","
         }
         dataTime +="]";
-
+console.log(dataTime)
         var j = eval('(' + dataTime + ')');
         var chart = new CanvasJS.Chart("pieChart",
                 {

@@ -1,0 +1,40 @@
+
+<script type="text/javascript">
+    window.onload=function () {
+    }
+
+
+    function submit_btn() {
+        var userName=document.getElementById("username").value;
+        var password=document.getElementById("passWord").value;
+        var jsonData="{"+'"'+"userName"+'"'+":"+'"'+userName+'"'+","+'"'+"password"+'"'+":"+'"'+password+'"'+"}"
+
+        var Id=$.cookie("id")
+
+
+        $.ajax({
+            contentType: "application/json;charset=utf-8",
+            url: API_URL + "/api/orgUsers"+"/"+Id,
+            data: jsonData,
+            dataType: "json",
+            type: 'PUT',
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("Authorization", $.cookie('author_code'));
+                alert("修改成功")
+            },
+            success: function (data) {
+            },
+            error: function (err) {
+                console.log(err.status);
+            }
+        });
+
+    }
+
+
+
+
+
+
+
+</script>

@@ -18,7 +18,6 @@ secondCtrl.controller('loginCtrl', function ($scope, $location, httpService) {
         };
         var author_code = "Basic " + btoa(userName + ":" + password);
 
-        console.log(params);
         $.ajax({
             url: API_URL + "/api/orgUsers",
             data: params,
@@ -27,18 +26,18 @@ secondCtrl.controller('loginCtrl', function ($scope, $location, httpService) {
                 xhr.setRequestHeader("Authorization", author_code);
             },
             success: function (data) {
-                console.log(data)
 
                 for(var i=0;i<data.length;i++){
                     if(data[i].password==password&&data[i].userName==userName){
                         $.cookie('id',data[i].id)
+
                     }
                 }
                 $.cookie('userName',userName);
                 $.cookie('passWord',password);
                 $.cookie('islogin', 'true', {path: '/'});
                 $.cookie('author_code', author_code, {path: '/'});
-                console.log($.cookie('id'))
+                /*alert($.cookie('id'))*/
                 window.location.href = "/pages/home.html";
             },
             error: function (err) {
