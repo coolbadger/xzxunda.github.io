@@ -1,0 +1,49 @@
+- name: ID
+  id: id
+  visible: false
+  placeholder:
+
+- name: 农机名称
+  id: gName
+  span: 1
+  placeholder: 请输入农机名称
+
+- name: 合作社名
+  id: gCode
+  span: 1
+  placeholder: 请输入合作社名
+
+
+
+- name: 工作状态
+  id: workStation
+  span: 1
+  placeholder: 请输入工作状态
+
+- name: 运行状态
+  id: runStation
+  span: 1
+  placeholder: 请输入运行状态
+
+- name: 关机状态
+  id: offStation
+  span: 1
+  placeholder: 请输入关机状态
+
+- name: 上次运行时间
+  id: formerRuntime
+  span: 1
+  placeholder: 请输入上次运行时间
+
+- name: 停止运行时间
+  id: endRuntime
+  span: 1
+  placeholder: 请输入停止时间
+
+
+- name: 备注
+  id: notes
+  placeholder: 请输入备注
+
+
+

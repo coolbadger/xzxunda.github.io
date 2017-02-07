@@ -330,7 +330,7 @@
                                 "F_EnCode" : "AreaManage",
                                 "F_FullName" : "土地详情",
                                 "F_Icon" : "fa fa-jsfiddle",
-                                "F_UrlAddress" : "../pages/system/baseOrg.html",
+                                "F_UrlAddress" : "../pages/system/groundDails.html",
                                 "F_Target" : "iframe",
                                 "F_IsMenu" : 1,
                                 "F_AllowExpand" : 1,
