@@ -15,55 +15,32 @@ layout: base_page
         inTable.bootstrapTable({
             height: $(window).height(),
             columns: [{
-                field: 'state',
-                checkbox: true,
-                align: 'center',
-                valign: 'middle'
-            }, {
                 title: 'ID',
                 field: 'id',
                 align: 'center',
                 sortable: true,
-            }, {
+            },
+                {
+                    title: '合作社名',
+                    field: 'gCode',
+                    align: 'center',
+                },{
                 title: '农机名称',
                 field: 'gName',
                 align: 'center',
             },
                 {
-                title: '合作社名',
-                field: 'gCode',
-                align: 'center',
-            }, {
                 title: '工作状态',
                 field: 'workStation',
-                align: 'center',
-            }, {
-                title: '运行状态',
-                field: 'runStation',
-                align: 'center',
-            }, {
-                title: '关机状态',
-                field: 'offStation',
                 align: 'center',
             }, {
                 title: '上次运行时间',
                 field: 'formerRuntime',
                 align: 'center',
-            }, {
-                title: '停止运行时间',
-                field: 'endRuntime',
-                align: 'center',
             },{
                 title: '备注',
                 field: 'notes',
                 align: 'center',
-            }, {
-                title: '操作',
-                field: 'operate',
-                align: 'center',
-                valign: 'middle',
-                formatter: tableGen.operateFormatter,
-                events: operateEvents
             }]
         });
     }

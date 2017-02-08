@@ -328,7 +328,7 @@
                                 "F_ModuleId" : "7ae94059-9aa5-48eb-8330-4e2a6565b193",
                                 "F_ParentId" : "3",
                                 "F_EnCode" : "AreaManage",
-                                "F_FullName" : "土地详情",
+                                "F_FullName" : "合作社-农机详情",
                                 "F_Icon" : "fa fa-jsfiddle",
                                 "F_UrlAddress" : "../pages/system/groundDails.html",
                                 "F_Target" : "iframe",

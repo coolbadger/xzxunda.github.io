@@ -8,22 +8,36 @@ title: 农机跟踪
 {% include common/canvas.html %}
 <div style="height: 100%;width: 100%">
     <div class="row" style="width:50%;height: 100%;float: left;padding-left: 20px;">
-        <div class="col-md-12" style="width: 300px;height: 80px;margin-top: 40px;margin-left: 25px;">
+        <div class="col-md-12" style="height: 4%;">
+
+        </div>
+        <div class="col-md-6" >
             {% include temp/textbox.html id='machCode' text='农机:' placeholder='请输入农机车牌号或类型' showButton = true
             onclick='onSearchClick()' onTextChange='onAutoSearch(value)' %}
         </div>
-        <div class="col-md-8" style="width: 100%;height: 600px ;">
+        <div class="col-md-12" style="height: 2%;">
+
+        </div>
+        <div class="col-md-12" >
             {% include temp/simple_table.html %}
         </div>
     </div>
 </div>
 
-<div id="row" style="width: 50%;height: 100%;float: right; border: 1px solid red;">
-    <div class="col-md-4" id="columnChart-box" style="width:100%; height: 50%; border:1px solid blue;">
+<div id="row" style="width: 50%;height: 100%;float: right; border: 0px solid red;">
+    <div class="col-md-12" style="height: 4%;">
+
+    </div>
+    <div class="col-md-12" id="columnChart-box" >
         {% include temp/chart.html id='columnChart' heading='柱形图'%}
     </div>
 
-    <div class="col-md-4" style="width: 100%;height: 50%; border: 1px solid black;">
+    <div class="col-md-12" style="height: 11%;">
+
+    </div>
+
+
+    <div class="col-md-12">
         {% include temp/chart.html id='pieChart' heading='饼图'%}
     </div>
 </div>
