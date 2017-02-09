@@ -7,7 +7,7 @@ layout: base_page
 <script type="text/javascript">
 
     var tableGen = new TableGen();
-    tableGen.editFields = new Array('id', 'gName','gCode',  'workStation', 'runStation', 'offStation', 'formerRuntime', 'endRuntime', 'notes');
+    tableGen.editFields = new Array('id','machCode','orgName','workingType',  'machName','terminalCode', 'terminalName', 'sensor1', 'localTime', 'notes');
 
     tableGen.validates = {orgCode: "notEmpty", orgName: "notEmpty", orgContact: "notEmpty"};
 
@@ -22,20 +22,38 @@ layout: base_page
             },
                 {
                     title: '合作社名',
-                    field: 'gCode',
+                    field: 'orgName',
+                    align: 'center',
+                }, {
+                    title: '农机车牌',
+                    field: 'machCode',
+                    align: 'center',
+                }, {
+                    title: '农机型号',
+                    field: 'workingType',
+                    align: 'center',
+                },
+
+                {
+                title: '农机名称',
+                field: 'machName',
+                align: 'center',
+            },{
+                    title: '终端号',
+                    field: 'terminalCode',
                     align: 'center',
                 },{
-                title: '农机名称',
-                field: 'gName',
-                align: 'center',
-            },
+                    title: '终端名称',
+                    field: 'terminalName',
+                    align: 'center',
+                },
                 {
                 title: '工作状态',
-                field: 'workStation',
+                field: 'sensor1',
                 align: 'center',
             }, {
                 title: '上次运行时间',
-                field: 'formerRuntime',
+                field: 'localTime',
                 align: 'center',
             },{
                 title: '备注',
@@ -46,7 +64,7 @@ layout: base_page
     }
 
     window.operateEvents = tableGen.operationEvent();
-    tableGen.apiName = 'baseOrgs';
+    tableGen.apiName = 'CooperativeInfo';
 
     tableGen.bind();
 

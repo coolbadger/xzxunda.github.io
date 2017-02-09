@@ -88,7 +88,8 @@ title: 农机跟踪
         columnChart(a);
 
     }
-   /* [{drivingArea:8.38,machCode:'M002',machName:'播种机'}]*/
+
+
 
 
     var currentTime = getCurrentDate(1, true);
@@ -225,26 +226,6 @@ title: 农机跟踪
     };
     simpleTableGen.bind();
 
-    // 查询某农机作业信息列表
-    function onSearchClick() {
-        fullData = null;
-        machCode = $("#machCode").val();
-        var requestUrl = encodeURI(apiObjUrl + "?startTime=2016-08-04 00:00:00&endTime=" + currentTime + "&machCode=" + machCode);
-        $.ajax({
-            url: requestUrl,
-            type: 'GET',
-            beforeSend: function (xhr) {
-                xhr.setRequestHeader("Authorization", $.cookie('author_code'));
-            },
-            success: function (data) {
-                simpleTableGen.table.bootstrapTable('load', data);
-            },
-            error: function (err) {
-            }
-        });
-
-//        cleanAllInfo();
-    }
 
     // 自动查询本地缓存结果
     function onAutoSearch(value) {
@@ -255,6 +236,7 @@ title: 农机跟踪
         fullData.forEach(function (item) {
             if (item.machCode.indexOf(value) > 0 || item.machName.indexOf(value) > 0) {
                 newData.push(item);
+                console.log(newData)
             }
         });
         var checkCondition = value.length > machCode.length && value.indexOf(machCode) > 0 || (machCode.length == 0 && value.length > 0);
@@ -267,12 +249,6 @@ title: 农机跟踪
 //        cleanAllInfo();
     }
 
-
-    /*  //以下是加载数据分析表格
-     window.onload = function () {
-     columnChart();
-     pieChart();
-     }*/
 
     function columnChart(a) {
         if(a!=1) {
