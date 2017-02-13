@@ -120,17 +120,21 @@ TableGen.prototype.init = function () {
 
 };
 
-//预设初始化编辑列方法
-TableGen.prototype.operateFormatter = function (value, row, index) {
-    return [
-        '<a class="edit" href="javascript:void(0)" title="修改">',
-        '<i class="glyphicon glyphicon-edit"></i>',
-        '</a>&nbsp;&nbsp;&nbsp;',
-        '<a class="remove" href="javascript:void(0)" title="删除">',
-        '<i class="glyphicon glyphicon-remove"></i>',
-        '</a>'
-    ].join('');
-};
+if($.cookie('management')==1){
+    //预设初始化编辑列方法
+    TableGen.prototype.operateFormatter = function (value, row, index) {
+        return [
+            '<a class="edit" href="javascript:void(0)" title="修改">',
+            '<i class="glyphicon glyphicon-edit"></i>',
+            '</a>&nbsp;&nbsp;&nbsp;',
+            '<a class="remove" href="javascript:void(0)" title="删除">',
+            '<i class="glyphicon glyphicon-remove"></i>',
+            '</a>'
+        ].join('');
+    };
+}else{
+}
+
 
 //密码隐藏显示方法
 TableGen.prototype.pwdFormatter = function (value, row, index) {

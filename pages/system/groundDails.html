@@ -68,4 +68,20 @@ layout: base_page
 
     tableGen.bind();
 
+
+    tableGen.onDblClickRow = function (row, $element) {
+
+        $("#process").fadeIn('fast', function () {
+            $.when(onRowDbClick(row, $element)).done(
+                    function () {
+                        $("#process").fadeOut();
+                    }
+            );
+        });
+    }
+    // 双击选中行事件
+    function onRowDbClick(row, $element) {
+        alert("我被点击了")
+    }
+
 </script>
