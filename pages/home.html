@@ -13,7 +13,7 @@ layout: home_pages
             <span class="logo-mini">AMM</span>
             <span class="logo-sm"><strong style="font-size: 17px">双沟镇农机智慧管理平台</strong></span>
         </a>
-        <nav class="navbar navbar-static-top">
+        <nav class="navbar navbar-static-top" id="bg_top">
             <a class="sidebar-toggle">
                 <span class="sr-only">Toggle navigation</span>
             </a>
@@ -42,12 +42,12 @@ layout: home_pages
                     <li class="dropdown user user-menu">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                             <img src="../static/images/img/user2-160x160.jpg" class="user-image" alt="User Image">
-                            <span class="hidden-xs">administrator</span>
+                            <span class="hidden-xs" id="UserNameRight">administrator</span>
                         </a>
                         <ul class="dropdown-menu pull-right">
-                            <li><a class="menuItem" data-id="userInfo" href="../pages/mach/mach_map.html"><i class="fa fa-user"></i>个人信息</a></li>
-                            <li><a href="javascript:void();"><i class="fa fa-trash-o"></i>清空缓存</a></li>
-                            <li><a href="javascript:void();"><i class="fa fa-paint-brush"></i>皮肤设置</a></li>
+                            <li><a class="menuItem" data-id="userInfo" href="/pages/system/UserInfo.html"><i class="fa fa-user"></i>修改信息</a></li>
+                            <!--<li><a href="javascript:void();" ><i class="fa fa-trash-o"></i>清空缓存</a></li>-->
+                            <!--<li><a class="menuItem" data-id="userInfo" href="/pages/system/bgSkin.html"><i class="fa fa-paint-brush"></i>皮肤设置</a></li>-->
                             <li class="divider"></li>
                             <li><a href="javascript:void();" onclick="sexit()"><i class="ace-icon fa fa-power-off"   ></i>安全退出</a></li>
                         </ul>
@@ -63,8 +63,8 @@ layout: home_pages
                 <div class="pull-left image">
                     <img src="../static/images/img/user2-160x160.jpg" class="img-circle" alt="User Image">
                 </div>
-                <div class="pull-left info">
-                    <p>administrator</p>
+                <div class="pull-left info" >
+                    <p id="UserNameLeft">administrator</p>
                     <a><i class="fa fa-circle text-success"></i>在线</a>
                 </div>
             </div>
@@ -140,7 +140,9 @@ layout: home_pages
 <script type="text/javascript">
 
     window.onload = function (){
-
+        UserData();
+        var strCookie = document.cookie;
+        console.log(strCookie);
     } ;
 
     var id=null;
@@ -198,35 +200,29 @@ layout: home_pages
     }
     
     function sexit() {
-
         $.cookie("islogin",null);
         $.cookie("author_code",null);
         var strCookie = document.cookie;
         console.log(strCookie);
-        alert(strCookie);
+        //alert(strCookie);
         window.close();
 
 
 
-  /*      var strCookie = document.cookie;
-        var arrCookie = strCookie.split(";");
-        for(var i = 0; i < arrCookie.length; i++){
-            var arr = arrCookie[i].split("=");
-            console.log(arr[0])
-
-            console.log(arr)
-
-            if("ltype" == arr[0]){
-                return arr[1];
-
-            }
-        }
-
-        alert(strCookie);*/
 
 
     }
-    
+
+
+    function UserData()
+    {
+        document.getElementById('UserNameLeft').innerHTML = "欢迎您,"+$.cookie('userName');
+        document.getElementById('UserNameRight').innerHTML ="欢迎您,"+$.cookie('userName');
+
+    }
+
+
+
 </script>
 </div>
 

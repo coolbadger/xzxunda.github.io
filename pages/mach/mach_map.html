@@ -6,6 +6,7 @@ title: 农机跟踪
 {% include mapScript.html %}
 {% include temp/control_head.html %}
 
+
 <div class="main_container">
     <div class="row full_height">
         <div class="col-md-9 map_part">
@@ -15,38 +16,38 @@ title: 农机跟踪
             <div class="row map_bottom border">
                 <div class="row ">
                     <div class="col-md-4 map_operation">
-                        <div id="operation">
+                        <div id="operation" >
                             <p>
                                 <input type="button" class="btn btn-info btn-mini" value="跳到当前位置"
-                                       onclick="goCurrentPosition()"/>
+                                       onclick="goCurrentPosition()" style="height: 5%;width: 30%;"/>
                                 <input type="button" class="btn btn-info btn-mini" value="跳转到双沟镇"
-                                       onclick="goShuangGou()"/>
+                                       onclick="goShuangGou()" style="height: 5%;width: 30%;"/>
                             </p>
                             <p>
                                 <input type="button" class="btn btn-info btn-mini" value="清除所有标记"
-                                       onclick="clearAll()"/>
+                                       onclick="clearAll()" style="height: 5%;width: 30%;"/>
 
                                 <input id="mapClickButton" type="button" class="btn btn-info btn-mini" value="启用点击坐标"
-                                       onclick="shiftMapClick()"/>
+                                       onclick="shiftMapClick()" style="height: 5%;width: 30%;"/>
                             </p>
                         </div>
 
                     </div>
                     <div class="col-md-8">
-                        <ul class="list-group map_info">
-                            <li id="successInfo" class="list-group-item list-group-item-success">
+                        <ul class="list-group map_info" >
+                            <li id="successInfo" class="list-group-item list-group-item-success" >
                                 <span id="successNumber" class="badge">0</span>
                                 <label></label>
                             </li>
-                            <li id="infoInfo" class="list-group-item list-group-item-info">
+                            <li id="infoInfo" class="list-group-item list-group-item-info" >
                                 <span id="infoNumber" class="badge">0</span>
                                 <label></label>
                             </li>
-                            <li id="warningInfo" class="list-group-item list-group-item-warning">
+                            <li id="warningInfo" class="list-group-item list-group-item-warning" >
                                 <span id="warningNumber" class="badge">0</span>
                                 <label></label>
                             </li>
-                            <li id="dangerInfo" class="list-group-item list-group-item-danger">
+                            <li id="dangerInfo" class="list-group-item list-group-item-danger" >
                                 <span id="dangerNumber" class="badge">0</span>
                                 <label></label>
                             </li>
@@ -217,12 +218,9 @@ title: 农机跟踪
             var allOverlay = map.getOverlays();
 
             for (var i = 0; i < allOverlay.length -1; i++){
-                console.log("allOverlay="+allOverlay.length)
                     map.removeOverlay(allOverlay[i]);
                     return false;
             }
-
-
             defer.resolve();
         }
         else {
@@ -241,46 +239,6 @@ title: 农机跟踪
                             //跳转到线路最后一个点位
                             gotoPosition(gpsLine.points[gpsLine.points.length - 1]);
 
-
-
-
-/*
-
-                            var num_list=0;
-                            var num_lists=0;
-                            var list=new Array();
-                            var lists=new Array();
-                            for(var i=0;i<gpsLine.records.length;i++){
-                                var  sensor1=gpsLine.records[i];
-                               if(sensor1.sensor1==0){
-                                   if(lists.length!=0){
-                                      /!* 工作状态*!/
-                                               console.log("工作范围点="+(num_list+num_lists)+"-"+(num_lists+num_list+lists.length))
-
-                                               num_lists=num_lists+lists.length;
-                                   }
-                                    list.push(sensor1);
-                                    lists.length=0;
-                                }else if(sensor1.sensor1==1){
-                                    if(list.length!=0){
-                                        /!*未工作状态*!/
-                                        console.log("未工作范围点="+(num_list+num_lists)+"-"+(num_lists+num_list+list.length))
-                                        num_list=num_list+list.length;
-                                    }
-                                    lists.push(sensor1);
-                                    list.length=0;
-                                }
-                            }
-                            if(list.length!=0){
-                                /!*工作状态*!/
-                                console.log("工作范围点="+(num_list+num_lists)+"-"+(num_lists+num_list+list.length))
-                            }
-                            if(lists.length!=0){
-                                console.log("未工作范围点="+(num_list+num_lists)+"-"+(num_lists+num_list+lists.length))
-                            }
-*/
-
-
                             /**
                              * 我需要做的地方  路线定位
                              */
@@ -295,36 +253,6 @@ title: 农机跟踪
                             var oDate1First = new Date(strFirst);
                             var dataFirst_getTime=oDate1First.getTime();//时间戳
                             var  custom_getTime=1000*60*60*3;//相隔时间定点时间戳
-                            //console.log("dataFirst_getTime="+dataFirst_getTime)
-/*                            for(var i=0;i<dateLength;i++){
-                                var next_getTime=gpsLine.records[i].gpsTime;
-                                var  strNext=next_getTime.toString();
-                                strNext =  strNext.replace(/-/g,"/");
-                                var oDate1Next = new Date(strNext);
-                                var dataNext_getTime=oDate1Next.getTime();//时间戳
-
-                                var poor=dataNext_getTime-dataFirst_getTime;
-                                //console.log("poor="+poor)
-                                var dataPoor=poor-custom_getTime;
-
-
-                                //console.log("dataPoor="+dataPoor)
-                                   if(dataPoor>=0){
-                                       dataFirst_getTime=dataNext_getTime;
-                                       // console.log("dataFirst_getTime"+dataFirst_getTime);
-                                       var point = new BMap.Point(gpsLine.points[i].lng,gpsLine.points[i].lat);
-                                       map.centerAndZoom(point, 15);
-                                       var myIcon = new BMap.Icon("/static/images/image4.png", new BMap.Size(16,15));
-                                       var marker2 = new BMap.Marker(point,{icon:myIcon});  // 创建标注
-                                       map.addOverlay(marker2);              // 将标注添加到地图中
-                                       //marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
-                                   }
-
-
-
-
-
-                            }*/
                             var point = new BMap.Point(last_point.lng,last_point.lat);
                             map.centerAndZoom(point, 15);
                             var myIcon = new BMap.Icon("/static/images/image4.png", new BMap.Size(16,15));

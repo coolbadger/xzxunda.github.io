@@ -89,7 +89,7 @@ MachMap.prototype.initMap = function (containerID) {
 }
 
 function mapClick(e) {
-    alert("好好的工作"+e.point.lng + ", " + e.point.lat);
+    alert(e.point.lng + ", " + e.point.lat);
 }
 // 自定义地图点击事件
 MachMap.prototype.enableMapClick = function (enableClick) {
@@ -181,7 +181,7 @@ MachMap.prototype.addGpsRecords = function (row, cssClass) {
                             }
                         }
                         blocks_area.push(area);
-                        var flightPath= new BMap.Polyline(arr, { strokeColor: "#05ab21", strokeOpacity: 1.0, strokeWeight: 25 });
+                        var flightPath= new BMap.Polyline(arr, { strokeColor: "#05ab21", strokeOpacity: 0.5, strokeWeight: 25 });
                         blocks.push(flightPath);
                         temp.push(result[i])
                         map.addOverlay(flightPath);
@@ -216,7 +216,11 @@ MachMap.prototype.addGpsRecords = function (row, cssClass) {
                             height: 100,    // 信息窗口高度
                             title : row.machCode + row.machName + "-" + index// 信息窗口标题
                         };
-                        var infoWindow = new BMap.InfoWindow("作业面积："+temp_area[index+1]+"亩", opts);  // 创建信息窗口对象
+
+                        var infoWindow = new BMap.InfoWindow("作业面积："+temp_area[index+1]+"亩",opts);  // 创建信息窗口对象
+    /*                    infoWindow.setContent(
+                            "<div style='background-color: #001a35;height: 100px;width: 250px;'>"+row.machCode + row.machName+"作业面积："+temp_area[index+1]+"亩"+"</div>"
+                        );*/
                         var pts = new BMap.Point(point.lngFixed,point.latFixed);
                         map.openInfoWindow(infoWindow, pts);      // 打开信息窗口
                     }

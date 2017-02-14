@@ -1,0 +1,76 @@
+---
+layout: base_page
+---
+
+{% include temp/table.html inData = site.data.ground apiName = 'groundDails' %}
+
+<script type="text/javascript">
+
+    var tableGen = new TableGen();
+    tableGen.editFields = new Array('id','orgName','orgCode','orgAddress',  'orgTell','orgFax', 'orgEmail', 'createTime', 'creator', 'notes');
+
+    tableGen.validates = {orgCode: "notEmpty", orgName: "notEmpty", orgContact: "notEmpty"};
+
+    tableGen.setTable = function (inTable) {
+        inTable.bootstrapTable({
+            height: $(window).height(),
+            columns: [{
+                title: 'ID',
+                field: 'id',
+                align: 'center',
+                sortable: true,
+            },
+                {
+                    title: '合作社',
+                    field: 'orgName',
+                    align: 'center',
+                }, {
+                    title: '合作社代号',
+                    field: 'orgCode',
+                    align: 'center',
+                }, {
+                    title: '所在地',
+                    field: 'orgAddress',
+                    align: 'center',
+                },
+
+                {
+                title: '电话',
+                field: 'orgTell',
+                align: 'center',
+            },{
+                    title: '传真',
+                    field: 'orgFax',
+                    align: 'center',
+                },{
+                    title: '邮箱',
+                    field: 'orgEmail',
+                    align: 'center',
+                },
+                {
+                title: '创建时间',
+                field: 'createTime',
+                align: 'center',
+            }, {
+                title: '创建用户',
+                field: 'creator',
+                align: 'center',
+            },
+                {
+                    title: '农机数量',
+                    field: 'machSize',
+                    align: 'center',
+                },{
+                title: '备注',
+                field: 'notes',
+                align: 'center',
+            }]
+        });
+    }
+
+    window.operateEvents = tableGen.operationEvent();
+    tableGen.apiName = 'CptDetails';
+
+    tableGen.bind();
+
+</script>

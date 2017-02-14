@@ -1,0 +1,87 @@
+---
+layout: base_page
+---
+
+{% include temp/table.html inData = site.data.ground apiName = 'groundDails' %}
+
+<script type="text/javascript">
+
+    var tableGen = new TableGen();
+    tableGen.editFields = new Array('id','machCode','orgName','workingType',  'machName','terminalCode', 'terminalName', 'sensor1', 'localTime', 'notes');
+
+    tableGen.validates = {orgCode: "notEmpty", orgName: "notEmpty", orgContact: "notEmpty"};
+
+    tableGen.setTable = function (inTable) {
+        inTable.bootstrapTable({
+            height: $(window).height(),
+            columns: [{
+                title: 'ID',
+                field: 'id',
+                align: 'center',
+                sortable: true,
+            },
+                {
+                    title: '合作社名',
+                    field: 'orgName',
+                    align: 'center',
+                }, {
+                    title: '农机车牌',
+                    field: 'machCode',
+                    align: 'center',
+                }, {
+                    title: '农机型号',
+                    field: 'workingType',
+                    align: 'center',
+                },
+
+                {
+                title: '农机名称',
+                field: 'machName',
+                align: 'center',
+            },{
+                    title: '终端号',
+                    field: 'terminalCode',
+                    align: 'center',
+                },{
+                    title: '终端名称',
+                    field: 'terminalName',
+                    align: 'center',
+                },
+                {
+                title: '工作状态',
+                field: 'sensor1',
+                align: 'center',
+            }, {
+                title: '上次运行时间',
+                field: 'localTime',
+                align: 'center',
+            },{
+                title: '备注',
+                field: 'notes',
+                align: 'center',
+            }]
+        });
+    }
+
+    window.operateEvents = tableGen.operationEvent();
+    tableGen.apiName = 'CooperativeInfo';
+
+    tableGen.bind();
+
+
+    tableGen.onDblClickRow = function (row, $element) {
+
+        $("#process").fadeIn('fast', function () {
+            $.when(onRowDbClick(row, $element)).done(
+                    function () {
+                        $("#process").fadeOut();
+                    }
+            );
+        });
+    }
+    // 双击选中行事件
+    function onRowDbClick(row, $element) {
+        alert("我被点击了")
+    }
+
+</script>

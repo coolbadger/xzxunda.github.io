@@ -120,17 +120,21 @@ TableGen.prototype.init = function () {
 
 };
 
-//预设初始化编辑列方法
-TableGen.prototype.operateFormatter = function (value, row, index) {
-    return [
-        '<a class="edit" href="javascript:void(0)" title="修改">',
-        '<i class="glyphicon glyphicon-edit"></i>',
-        '</a>&nbsp;&nbsp;&nbsp;',
-        '<a class="remove" href="javascript:void(0)" title="删除">',
-        '<i class="glyphicon glyphicon-remove"></i>',
-        '</a>'
-    ].join('');
-};
+if($.cookie('management')==1){
+    //预设初始化编辑列方法
+    TableGen.prototype.operateFormatter = function (value, row, index) {
+        return [
+            '<a class="edit" href="javascript:void(0)" title="修改">',
+            '<i class="glyphicon glyphicon-edit"></i>',
+            '</a>&nbsp;&nbsp;&nbsp;',
+            '<a class="remove" href="javascript:void(0)" title="删除">',
+            '<i class="glyphicon glyphicon-remove"></i>',
+            '</a>'
+        ].join('');
+    };
+}else{
+}
+
 
 //密码隐藏显示方法
 TableGen.prototype.pwdFormatter = function (value, row, index) {
@@ -230,6 +234,7 @@ TableGen.prototype.createOrUpdate = function () {
                     var id = $('#id').val();//取得隐藏id控件的值，用来判断saveObj方法是创建记录，还是还是修改记录
                     console.log("id:" + id);
                     console.log("input json object:" + JSON.stringify(params));
+                    console.log(params)
                     if (id != "") {  //修改
                         var url = apiObjUrl + '/' + id;
                         updateItem(url, params, $http);
@@ -268,9 +273,12 @@ function saveItem(url, params, $http) {
 
 //修改一条记录的方法
 function updateItem(url, params, $http) {
+    console.log(url);
+    console.log(params)
     var $table = $('#' + TableGen.prototype.tableID);
     $http.defaults.headers.common = {'Authorization': $.cookie('author_code')};
     $http.put(url, params, {
+
         'Content-Type': "application/json",
         "X-HTTP-Method-Override": "PUT"
     }).success(function (data, state) {

@@ -8,29 +8,44 @@ title: 农机跟踪
 {% include common/canvas.html %}
 <div style="height: 100%;width: 100%">
     <div class="row" style="width:50%;height: 100%;float: left;padding-left: 20px;">
-        <div class="col-md-12" style="width: 300px;height: 80px;margin-top: 40px;margin-left: 25px;">
+        <div class="col-md-12" style="height: 4%;">
+
+        </div>
+        <div class="col-md-6" >
             {% include temp/textbox.html id='machCode' text='农机:' placeholder='请输入农机车牌号或类型' showButton = true
             onclick='onSearchClick()' onTextChange='onAutoSearch(value)' %}
         </div>
-        <div class="col-md-8" style="width: 100%;height: 600px ;">
-            {% include temp/simple_table.html %}
+        <div class="col-md-12" style="height: 2%;">
+
         </div>
+            <div class="col-md-12" style="overflow: scroll; height: 100%">
+                {% include temp/simple_table.html %}
+            </div>
+
     </div>
 </div>
 
-<div id="row" style="width: 50%;height: 100%;float: right; border: 1px solid red;">
-    <div class="col-md-4" id="columnChart-box" style="width:100%; height: 50%; border:1px solid blue;">
+<div id="row" style="width: 50%;height: 100%;float: right; border: 0px solid red;">
+    <div class="col-md-12" style="height: 4%;">
+
+    </div>
+    <div class="col-md-12" id="columnChart-box" >
         {% include temp/chart.html id='columnChart' heading='柱形图'%}
     </div>
 
-    <div class="col-md-4" style="width: 100%;height: 50%; border: 1px solid black;">
+    <div class="col-md-12" style="height: 11%;">
+
+    </div>
+
+
+    <div class="col-md-12">
         {% include temp/chart.html id='pieChart' heading='饼图'%}
     </div>
 </div>
 
 <script type="text/javascript">
     var apiObjUrl = API_URL + '/api/gpsRecords';
-
+    var general_data=new Object();
     var simpleTableGen = new SimpleTableGen();
     var settings = new Object();
     settings.columns = [{
@@ -42,14 +57,41 @@ title: 农机跟踪
         title: '车型',
         align: 'center',
     }, {
-        field: 'gpsTimes',
-        title: '作业面积',
+        field: 'workArea',
+        title: '作业面积/亩',
         align: 'center',
     }, {
-        field: 'localTimes',
-        title: '作业时间',
+        field: 'workTime',
+        title: '作业时间/小时',
         align: 'center',
     }];
+
+    var jsonData ="[";
+    var nm_drivingArea = 0;
+    var nm_workArea = 0;
+    var machCodes;
+    settings.onDblClickRow = function (row, $element) {
+
+        $("#process").fadeIn('fast', function () {
+            $.when(onRowDbClick(row, $element)).done(
+                    function () {
+                        $("#process").fadeOut();
+                    }
+            );
+        });
+    }
+
+    function onRowDbClick(row, $element) {
+        var a=1;
+        nm_drivingArea=row.drivingArea;
+        nm_workArea=row.workArea;
+        machCodes = row.machCode
+        columnChart(a);
+
+    }
+
+
+
 
     var currentTime = getCurrentDate(1, true);
     var fullData = null;
@@ -69,12 +111,17 @@ title: 农机跟踪
                 xhr.setRequestHeader("Authorization", $.cookie('author_code'));
             },
             success: function (data) {
-
+                var map = new BMap.Map("map_container");            // 创建地图实例
+                var point = new BMap.Point(117.606257, 34.042178);  // 创建点坐标(目前为双沟镇政府)
                 var temp_sensor1=[];
                 var temp=[];
+                var temp_data=[];
                 var distance;
+                var mm_distance = 0;
+                var workTime = 0;
                 var total_number = 0;
                 var reMachTerminalId;
+
                 for(var i=0;i<data.length;i++){
                     if(temp.length<1){
                         if(i>0){
@@ -85,28 +132,35 @@ title: 农机跟踪
                         }
                     }else{
                         if(data[i].reMachTerminalId==data[i-1].reMachTerminalId){
-                            temp.push(data[i]);
+                            temp.push(data[i]);//相同农机GPS数据
                         }else{
-                            console.log("车型="+temp[0].machCode)
-                            console.log("车名="+temp[0].machName)
-                            console.log("工作时间="+((temp[temp.length-1].gpsTime-temp[0].gpsTime)/(1000*60*60)).toFixed(2));//工作时间  待拼接
+                            temp_data.push("machCode"+temp[0].machCode)
+                            temp_data.push("machName"+temp[0].machName)
+                            temp_data.push("workTime"+((temp[temp.length-1].gpsTime-temp[0].gpsTime)/(1000*60*60)).toFixed(2))
+
 
                             for(var ii=0;ii<temp.length;ii++){
+                                if(ii>=1){
+                                    //行驶距离
+                                    var pointA = new BMap.Point(temp[ii].lngFixed, temp[ii].latFixed);  // 创建点坐标
+                                    var pointB = new BMap.Point(temp[ii - 1].lngFixed, temp[ii - 1].latFixed);  // 创建点坐标
+                                    var mm = parseFloat((map.getDistance(pointA, pointB)).toFixed(2));
+                                    mm_distance +=mm;
+                                }
+
                                 if(temp[ii].sensor1=='1'){
                                     temp_sensor1.push(temp[ii]);
                                 }else{
                                     if(temp_sensor1.length>0){
-                                        var map = new BMap.Map("map_container");            // 创建地图实例
-                                        var point = new BMap.Point(117.606257, 34.042178);  // 创建点坐标(目前为双沟镇政府)
                                         for(var a=0;a<temp_sensor1.length;a++){
                                             if(a>=1) {
+                                                //工作距离
                                                 var pointA = new BMap.Point(temp_sensor1[a].lngFixed, temp_sensor1[a].latFixed);  // 创建点坐标
                                                 var pointB = new BMap.Point(temp_sensor1[a - 1].lngFixed, temp_sensor1[a - 1].latFixed);  // 创建点坐标
                                                 var mm = parseFloat((map.getDistance(pointA, pointB)).toFixed(2));
                                                 distance += mm;//累加距离
                                             }
                                         }
-                                        //console.log("面积="+((distance*3*15)/10000).toPrecision(3)+"亩")
                                         total_number += distance;
                                     }
                                     distance=0;
@@ -114,7 +168,10 @@ title: 农机跟踪
                                 }
                             }
 
-                            console.log("总面积="+((total_number*3*15)/10000).toPrecision(3)+"亩")
+                            console.log( temp.length)
+                            jsonData +="{"+ "drivingArea:"+((mm_distance*3*15)/10000).toPrecision(3)+","+"machCode:"+"'"+temp[0].machCode+"'"+","+"machName:"+"'"+temp[0].machName+"'"+","+"workTime:"+((temp[temp.length-1].gpsTime-temp[0].gpsTime)/(1000*60*60)).toFixed(2)+","+"workArea:"+((total_number*3*15)/10000).toPrecision(3) + "}"+",";
+                            temp_data.push("workArea"+((total_number*3*15)/10000).toPrecision(3))
+                            mm_distance=0
                             total_number=0;
                             temp=[];
                         }
@@ -122,19 +179,21 @@ title: 农机跟踪
 
                 }
 
-
                 if(temp.length>0){
                     var total_numbers=0;
-                    console.log("车型="+temp[0].machCode)
-                    console.log("车名="+temp[0].machName)
-                    console.log("工作时间="+((temp[temp.length-1].gpsTime-temp[0].gpsTime)/(1000*60*60)).toFixed(2));
                     for(var ii=0;ii<temp.length;ii++){
+                        if(ii>=1){
+                            //行驶距离
+                            var pointA = new BMap.Point(temp[ii].lngFixed, temp[ii].latFixed);  // 创建点坐标
+                            var pointB = new BMap.Point(temp[ii - 1].lngFixed, temp[ii - 1].latFixed);  // 创建点坐标
+                            var mm = parseFloat((map.getDistance(pointA, pointB)).toFixed(2));
+                            mm_distance +=mm;
+                        }
+
                         if(temp[ii].sensor1=='1'){
                             temp_sensor1.push(temp[ii]);
                         }else{
                             if(temp_sensor1.length>0){
-                                var map = new BMap.Map("map_container");            // 创建地图实例
-                                var point = new BMap.Point(117.606257, 34.042178);  // 创建点坐标(目前为双沟镇政府)
                                 for(var a=0;a<temp_sensor1.length;a++){
                                     if(a>=1) {
                                         var pointA = new BMap.Point(temp_sensor1[a].lngFixed, temp_sensor1[a].latFixed);  // 创建点坐标
@@ -144,24 +203,23 @@ title: 农机跟踪
                                     }
                                 }
                                 total_numbers += distance;
+
                             }
                             distance=0;
                             temp_sensor1=[];
                         }
                     }
-                    console.log("总面积="+((total_numbers*3*15)/10000).toPrecision(3)+"亩")
+                    console.log( temp.length)
+                    jsonData +="{"+"drivingArea:"+((mm_distance*3*15)/10000).toPrecision(3)+","+"machCode:"+"'"+temp[0].machCode+"'"+","+"machName:"+"'"+temp[0].machName+"'"+","+"workTime:"+((temp[temp.length-1].gpsTime-temp[0].gpsTime)/(1000*60*60)).toFixed(2)+","+"workArea:"+((total_numbers*3*15)/10000).toPrecision(3)+"}"+",";
                 }
 
-
-               var filterData=new Array();
-                var completeData=new Array();
-                for(var i=0;i<data.length;i++) {
-                    filterData.push(data[i]);
-                    if(filterData.length<=1||filterData[i].reMachTerminalId!==completeData[completeData.length-1].reMachTerminalId){
-                        completeData.push(filterData[i])
-                    }
-                }
-                simpleTableGen.table.bootstrapTable('load', completeData);
+                jsonData +="]";
+                console.log(jsonData)
+                var json = eval('(' + jsonData + ')');
+                general_data=json;
+                simpleTableGen.table.bootstrapTable('load', json);
+                pieChart();
+                columnChart();
             },
             error: function (err) {
             }
@@ -169,26 +227,6 @@ title: 农机跟踪
     };
     simpleTableGen.bind();
 
-    // 查询某农机作业信息列表
-    function onSearchClick() {
-        fullData = null;
-        machCode = $("#machCode").val();
-        var requestUrl = encodeURI(apiObjUrl + "?startTime=2016-08-04 00:00:00&endTime=" + currentTime + "&machCode=" + machCode);
-        $.ajax({
-            url: requestUrl,
-            type: 'GET',
-            beforeSend: function (xhr) {
-                xhr.setRequestHeader("Authorization", $.cookie('author_code'));
-            },
-            success: function (data) {
-                simpleTableGen.table.bootstrapTable('load', data);
-            },
-            error: function (err) {
-            }
-        });
-
-//        cleanAllInfo();
-    }
 
     // 自动查询本地缓存结果
     function onAutoSearch(value) {
@@ -199,6 +237,7 @@ title: 农机跟踪
         fullData.forEach(function (item) {
             if (item.machCode.indexOf(value) > 0 || item.machName.indexOf(value) > 0) {
                 newData.push(item);
+                console.log(newData)
             }
         });
         var checkCondition = value.length > machCode.length && value.indexOf(machCode) > 0 || (machCode.length == 0 && value.length > 0);
@@ -212,30 +251,44 @@ title: 农机跟踪
     }
 
 
-    //以下是加载数据分析表格
-    window.onload = function () {
-        columnChart();
-        pieChart();
-    }
+    function columnChart(a) {
+        if(a!=1) {
+             nm_drivingArea = 0;
+             nm_workArea = 0;
 
-    function columnChart() {
+            for (var i = 0; i < general_data.length; i++) {
+                nm_drivingArea += general_data[i].drivingArea;
+                nm_workArea += general_data[i].workArea;
+            }
+        }
+
         var chart = new CanvasJS.Chart("columnChart");
         chart.options.title = {text: "所有作业面积分析柱形图"};
         chart.options.data = [];
         var series1 = {type: "column", name: "First Quarter"};
 
         chart.options.data.push(series1);
+        if(a!=1){
         series1.dataPoints = [
-
-            {label: "农机工作面积", y: 1024},
-            {label: "农机有效作业面积", y: 908}
-        ];
+            {label: "农机工作面积", y: nm_drivingArea},
+            {label: "农机有效作业面积", y:nm_workArea }
+        ];}else{
+            series1.dataPoints = [
+            {label: machCodes+"农机工作面积", y: nm_drivingArea},
+            {label: machCodes+"农机有效作业面积", y:nm_workArea }];
+        }
         chart.render();
     }
 
+
     function pieChart() {
-        var dataJson = "[{y:38.2,legendText:\"农机M003\",indexLabel:\"农机M003\"},{y:23.62,legendText:\"农机M002\",indexLabel:\"农机M002\"},{y:40.7,legendText:\"农机M004\",indexLabel:\"农机M004\"}]";
-        var j = eval('(' + dataJson + ')');
+        var dataTime="[";
+        for(var i=0;i<general_data.length;i++){
+            dataTime +="{"+"y:"+general_data[i].workTime+","+"legendText:"+"'"+general_data[i].machName+general_data[i].machCode+"'"+","+"indexLabel:"+"'"+general_data[i].machName+general_data[i].machCode+"'"+"}"+","
+        }
+        dataTime +="]";
+console.log(dataTime)
+        var j = eval('(' + dataTime + ')');
         var chart = new CanvasJS.Chart("pieChart",
                 {
                     title: {
@@ -263,210 +316,4 @@ title: 农机跟踪
         chart.render();
     }
 
-    /*
-     function rangeChart() {
-     var chart = new CanvasJS.Chart("rangeChart",
-     {
-     title: {
-     text: "Temperature Variation - Ladakh vs Chandigarh",
-     },
-     theme: "theme2",
-     exportEnabled: true,
-     animationEnabled: true,
-     axisY: {
-     includeZero: false,
-     suffix: "°C",
-     },
-     axisX: {
-     interval: 10,
-     title: "April 2014",
-     valueFormatString: "DD",
-     },
-     toolTip: {
-     shared: true,
-     },
-     data: [
-     {
-     type: "rangeSplineArea",
-     showInLegend: true,
-     name: "Ladakh",
-     yValueFormatString: "#0.## °C",
-     dataPoints: [   // Y: [Low, High]
-     {x: new Date(2014, 03, 01), y: [05, 21]},
-     {x: new Date(2014, 03, 02), y: [07, 15]},
-     {x: new Date(2014, 03, 03), y: [07, 18]},
-     {x: new Date(2014, 03, 04), y: [09, 16]},
-     {x: new Date(2014, 03, 05), y: [10, 17]},
-     {x: new Date(2014, 03, 06), y: [08, 13]},
-     {x: new Date(2014, 03, 07), y: [06, 10]},
-     {x: new Date(2014, 03, 08), y: [06, 15]},
-     {x: new Date(2014, 03, 09), y: [06, 20]},
-     {x: new Date(2014, 03, 10), y: [05, 21]},
-     {x: new Date(2014, 03, 11), y: [06, 21]},
-     {x: new Date(2014, 03, 12), y: [07, 14]},
-     {x: new Date(2014, 03, 13), y: [07, 17]},
-     {x: new Date(2014, 03, 14), y: [05, 20]},
-     {x: new Date(2014, 03, 15), y: [07, 18]},
-     {x: new Date(2014, 03, 16), y: [07, 15]},
-     {x: new Date(2014, 03, 17), y: [08, 15]},
-     {x: new Date(2014, 03, 18), y: [07, 13]},
-     {x: new Date(2014, 03, 19), y: [07, 13]},
-     {x: new Date(2014, 03, 20), y: [07, 18]},
-     {x: new Date(2014, 03, 21), y: [06, 20]},
-     {x: new Date(2014, 03, 22), y: [09, 23]},
-     {x: new Date(2014, 03, 23), y: [09, 24]},
-     {x: new Date(2014, 03, 24), y: [08, 23]},
-     {x: new Date(2014, 03, 25), y: [12, 24]},
-     {x: new Date(2014, 03, 26), y: [10, 21]},
-     {x: new Date(2014, 03, 27), y: [07, 24]},
-     {x: new Date(2014, 03, 28), y: [10, 27]},
-     {x: new Date(2014, 03, 29), y: [10, 26]},
-     {x: new Date(2014, 03, 30), y: [12, 27]}
-     ]
-     },
-     {
-     type: "rangeSplineArea",
-     showInLegend: true,
-     name: "Chandigarh",
-     yValueFormatString: "#0.## °C",
-     dataPoints: [   // Y: [Low, High]
-     {x: new Date(2014, 03, 01), y: [15, 31]},
-     {x: new Date(2014, 03, 02), y: [16, 30]},
-     {x: new Date(2014, 03, 03), y: [14, 30]},
-     {x: new Date(2014, 03, 04), y: [15, 30]},
-     {x: new Date(2014, 03, 05), y: [17, 33]},
-     {x: new Date(2014, 03, 06), y: [19, 35]},
-     {x: new Date(2014, 03, 07), y: [20, 30]},
-     {x: new Date(2014, 03, 08), y: [15, 31]},
-     {x: new Date(2014, 03, 09), y: [16, 32]},
-     {x: new Date(2014, 03, 10), y: [16, 33]},
-     {x: new Date(2014, 03, 11), y: [16, 35]},
-     {x: new Date(2014, 03, 12), y: [17, 36]},
-     {x: new Date(2014, 03, 13), y: [20, 32]},
-     {x: new Date(2014, 03, 14), y: [17, 35]},
-     {x: new Date(2014, 03, 15), y: [18, 36]},
-     {x: new Date(2014, 03, 16), y: [20, 34]},
-     {x: new Date(2014, 03, 17), y: [17, 30]},
-     {x: new Date(2014, 03, 18), y: [19, 29]},
-     {x: new Date(2014, 03, 19), y: [16, 32]},
-     {x: new Date(2014, 03, 20), y: [17, 33]},
-     {x: new Date(2014, 03, 21), y: [16, 35]},
-     {x: new Date(2014, 03, 22), y: [19, 36]},
-     {x: new Date(2014, 03, 23), y: [20, 36]},
-     {x: new Date(2014, 03, 24), y: [21, 37]},
-     {x: new Date(2014, 03, 25), y: [21, 38]},
-     {x: new Date(2014, 03, 26), y: [21, 39]},
-     {x: new Date(2014, 03, 27), y: [22, 39]},
-     {x: new Date(2014, 03, 28), y: [22, 39]},
-     {x: new Date(2014, 03, 29), y: [22, 41]},
-     {x: new Date(2014, 03, 30), y: [23, 42]}
-     ]
-     }
-     ]
-     });
-     chart.render();
-     }
-     */
-
-    /*
-     function pieChart() {
-     var chart = new CanvasJS.Chart("pieChart",
-     {
-     title: {
-     text: "Gaming Consoles Sold in 2012"
-     },
-     animationEnabled: true,
-     legend: {
-     verticalAlign: "bottom",
-     horizontalAlign: "center"
-     },
-     data: [
-     {
-     indexLabelFontSize: 20,
-     indexLabelFontFamily: "Monospace",
-     indexLabelFontColor: "darkgrey",
-     indexLabelLineColor: "darkgrey",
-     indexLabelPlacement: "outside",
-     type: "pie",
-     showInLegend: true,
-     toolTipContent: "{y} - <strong>#percent%</strong>",
-     dataPoints: [
-     {y: 4181563, legendText: "PS 3", indexLabel: "PlayStation 3"},
-     {y: 2175498, legendText: "Wii", indexLabel: "Wii"},
-     {y: 3125844, legendText: "360", exploded: true, indexLabel: "Xbox 360"},
-     {y: 1176121, legendText: "DS", indexLabel: "Nintendo DS"},
-     {y: 1727161, legendText: "PSP", indexLabel: "PSP"},
-     {y: 4303364, legendText: "3DS", indexLabel: "Nintendo 3DS"},
-     {y: 1717786, legendText: "Vita", indexLabel: "PS Vita"}
-     ]
-     }
-     ]
-     });
-     chart.render();
-     }
-     */
-
-    /*    function bubbleChart() {
-
-     var chart = new CanvasJS.Chart("bubbleChart",
-     {
-     zoomEnabled: true,
-     animationEnabled: true,
-     title:{
-     text: "Rail Roads Vs Land Area and Population"
-     },
-     axisX: {
-     title:"Land Area (million sq. km)",
-     valueFormatString: "#0.#",
-     maximum: 17,
-     minimum: -.1,
-     gridThickness: 1,
-     tickThickness: 1,
-     gridColor: "lightgrey",
-     tickColor: "lightgrey",
-     lineThickness: 0
-     },
-     axisY:{
-     title: "Rail Lines(total route-km)",
-     gridThickness: 1,
-     tickThickness: 1,
-     gridColor: "lightgrey",
-     tickColor: "lightgrey",
-     lineThickness: 0,
-     valueFormatString:"#,##0k,.",
-     maximum: 250000,
-     interval: 50000
-
-     },
-
-     data: [
-     {
-     type: "bubble",
-     toolTipContent: "<span style='\"'color: {color};'\"'><strong>{label}</strong></span><br/> <strong>Land Area</strong> {x} mn sq. km <br/> <strong>Rail Road</strong> {y} km<br/> <strong>Population</strong> {z} mn",
-     dataPoints: [
-     { x: 9.14, y: 228513, z:309.34,  label:"US" },
-     { x: 16.37, y: 85292, z:141.92,  label:"Russia" },
-     { x: 9.327, y: 66239, z:1337,  label:"China" },
-     { x: 9.09, y: 58345, z:34.12,  label:"Canada" },
-     { x: 8.45, y: 29817, z:194.94,  label:"Brazil" },
-     { x: 7.68, y: 8615, z:22.29,  label:"Australia" },
-     { x: 2.97, y: 63974, z:1224.61,  label:"India" },
-     { x: 2.73, y: 25023, z:40.41,  label:"Argentina" },
-     { x: 1.94, y: 26704, z:113.42,  label:"Mexico" },
-     { x: 1.21, y: 22051, z:49.99,  label:"SA" },
-     { x: .547, y: 33608, z:65.07,  label:"France" },
-     { x: .241, y: 31471, z:62.23,  label:"U.K" },
-     { x: .348, y: 33708, z:81.77,  label:"Germany" },
-     { x: .364, y: 20035, z:127.45,  label:"Japan" },
-     { x: .995, y: 5195, z:81.12,  label:"Egypt" },
-     { x: .743, y: 5352, z:17.11,  label:"Chile" }
-
-
-     ]
-     }
-     ]
-     });
-
-     chart.render();
-     }*/
 </script>

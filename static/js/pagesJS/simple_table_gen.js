@@ -34,27 +34,6 @@ SimpleTableGen.prototype.initData = function () {
 
 };
 
-// SimpleTableGen.prototype.loadData = function () {
-//
-//     $.ajax({
-//         url: this.url,
-//         type: 'GET',
-//         dataType: 'json',
-//         contentType: 'application/json',
-//
-//         beforeSend: function (xhr) {
-//             xhr.setRequestHeader("Authorization", $.cookie('author_code'));
-//
-//         },
-//         success: function (data) {
-//             simpleTableGen.table.bootstrapTable('load', data);
-//         },
-//         error: function (err) {
-//         }
-//     });
-//
-// };
-
 SimpleTableGen.prototype.shortDateFormatter = function (value, row, index) {
     return value.substring(8, 19);
 }
