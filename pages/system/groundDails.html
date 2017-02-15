@@ -9,7 +9,6 @@ layout: base_page
 
     var tableGen = new TableGen();
     tableGen.editFields = new Array('id','machCode','orgName','workingType',  'machName','terminalCode', 'terminalName', 'sensor1', 'localTime','currentPosition', 'notes');
-
     tableGen.validates = {orgCode: "notEmpty", orgName: "notEmpty", orgContact: "notEmpty"};
 
     tableGen.setTable = function (inTable) {

@@ -202,6 +202,7 @@ TableGen.prototype.loadData = function () {
                     });
                 }
             }
+
             test(data);
         },
         error: function (err) {
