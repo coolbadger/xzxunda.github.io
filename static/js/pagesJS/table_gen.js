@@ -29,6 +29,9 @@ TableGen.prototype.bind = function () {
     this.setTable(this.table);
     this.loadData();
 }
+TableGen.prototype.reloadData = function (data){
+    tableGen.table.bootstrapTable('load', data);
+}
 
 //初始化Table的主函数
 TableGen.prototype.init = function () {
@@ -119,7 +122,7 @@ TableGen.prototype.init = function () {
 
 };
 
-if($.cookie('management')==1){
+if ($.cookie('management') == 1) {
     //预设初始化编辑列方法
     TableGen.prototype.operateFormatter = function (value, row, index) {
         return [
@@ -131,7 +134,7 @@ if($.cookie('management')==1){
             '</a>'
         ].join('');
     };
-}else{
+} else {
 }
 
 
@@ -171,6 +174,7 @@ TableGen.prototype.operationEvent = function () {
 
 TableGen.prototype.loadData = function () {
 
+    var defer = $.Deferred();
     $.ajax({
         url: API_URL + "/api/" + this.apiName,
         type: 'GET',
@@ -182,39 +186,13 @@ TableGen.prototype.loadData = function () {
 
         },
         success: function (data) {
-            var currentPosition;
-            for(var i=0;i<data.length;i++){
-                if(!data[i].firstLatFixed==""&&!data[i].firstLngFixed==""){
-                        var adds=new BMap.Point(data[i].firstLngFixed,data[i].firstLatFixed);
-                        Geocoder(adds,i);
-                }
-
-                /**
-                 * 根据坐标获取地址
-                 * @param point
-                 * @constructor
-                 */
-                function Geocoder(point,i) {
-                    var gc = new BMap.Geocoder();
-                    gc.getLocation(point, function (rs) {
-                        var addComp = rs.addressComponents;
-                        data[i].currentPosition=addComp.province + addComp.city  + addComp.district  + addComp.street  + addComp.streetNumber
-                    });
-                }
-            }
-
-            test(data);
+            tableGen.table.bootstrapTable('load', data);
+            defer.resolve(data);
         },
         error: function (err) {
         }
     });
-
-
-    function test(data) {
-        console.log(data)
-        tableGen.table.bootstrapTable('load', data);
-    }
-
+    return defer.promise();
 
 }
 

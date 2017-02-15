@@ -8,7 +8,7 @@ layout: base_page
 <script type="text/javascript">
 
     var tableGen = new TableGen();
-    tableGen.editFields = new Array('id','machCode','orgName','workingType',  'machName','terminalCode', 'terminalName', 'sensor1', 'localTime','currentPosition', 'notes');
+    tableGen.editFields = new Array('id', 'machCode', 'orgName', 'workingType', 'machName', 'terminalCode', 'terminalName', 'sensor1', 'localTime', 'currentPosition', 'notes');
     tableGen.validates = {orgCode: "notEmpty", orgName: "notEmpty", orgContact: "notEmpty"};
 
     tableGen.setTable = function (inTable) {
@@ -35,35 +35,35 @@ layout: base_page
                 },
 
                 {
-                title: '农机名称',
-                field: 'machName',
-                align: 'center',
-            },{
+                    title: '农机名称',
+                    field: 'machName',
+                    align: 'center',
+                }, {
                     title: '终端号',
                     field: 'terminalCode',
                     align: 'center',
-                },{
+                }, {
                     title: '终端名称',
                     field: 'terminalName',
                     align: 'center',
                 },
                 {
-                title: '工作状态',
-                field: 'sensor1',
-                align: 'center',
-            }, {
-                title: '上次运行时间',
-                field: 'localTime',
-                align: 'center',
-            },{
+                    title: '工作状态',
+                    field: 'sensor1',
+                    align: 'center',
+                }, {
+                    title: '上次运行时间',
+                    field: 'localTime',
+                    align: 'center',
+                }, {
                     title: '所在位置',
                     field: 'currentPosition',
                     align: 'center',
-                },{
-                title: '备注',
-                field: 'notes',
-                align: 'center',
-            }]
+                }, {
+                    title: '备注',
+                    field: 'notes',
+                    align: 'center',
+                }]
         });
     }
 
@@ -71,6 +71,32 @@ layout: base_page
     tableGen.apiName = 'CooperativeInfo';
 
     tableGen.bind();
+
+    //添加异步方法，在载入数据后执行，用于对获取到的数据进行后期处理
+    $.when(tableGen.loadData()).done(
+            function (data) {
+                for (var i = 0; i < data.length; i++) {
+                    if (!data[i].firstLatFixed == "" && !data[i].firstLngFixed == "") {
+                        var adds = new BMap.Point(data[i].firstLngFixed, data[i].firstLatFixed);
+                        Geocoder(adds, i);
+                    }
+
+                    /**
+                     * 根据坐标获取地址
+                     * @param point
+                     * @constructor
+                     */
+                    function Geocoder(point, i) {
+                        var gc = new BMap.Geocoder();
+                        gc.getLocation(point, function (rs) {
+                            var addComp = rs.addressComponents;
+                            data[i].currentPosition = addComp.province + addComp.city + addComp.district + addComp.street + addComp.streetNumber
+                            tableGen.reloadData(data);
+                        });
+                    }
+                }
+            }
+    )
 
 
     tableGen.onDblClickRow = function (row, $element) {
