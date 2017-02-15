@@ -1,13 +1,14 @@
 ---
 layout: base_page
 ---
-
+{% include mapScript.html %}
+{% include temp/control_head.html %}
 {% include temp/table.html inData = site.data.ground apiName = 'groundDails' %}
 
 <script type="text/javascript">
 
     var tableGen = new TableGen();
-    tableGen.editFields = new Array('id','machCode','orgName','workingType',  'machName','terminalCode', 'terminalName', 'sensor1', 'localTime', 'notes');
+    tableGen.editFields = new Array('id','machCode','orgName','workingType',  'machName','terminalCode', 'terminalName', 'sensor1', 'localTime','currentPosition', 'notes');
 
     tableGen.validates = {orgCode: "notEmpty", orgName: "notEmpty", orgContact: "notEmpty"};
 
@@ -56,6 +57,10 @@ layout: base_page
                 field: 'localTime',
                 align: 'center',
             },{
+                    title: '所在位置',
+                    field: 'currentPosition',
+                    align: 'center',
+                },{
                 title: '备注',
                 field: 'notes',
                 align: 'center',

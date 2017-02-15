@@ -1,7 +1,6 @@
 /**
  * Created by Badger on 16/7/27.
  */
-
 function TableGen() {
 }
 
@@ -183,11 +182,38 @@ TableGen.prototype.loadData = function () {
 
         },
         success: function (data) {
-            tableGen.table.bootstrapTable('load', data);
+            var currentPosition;
+            for(var i=0;i<data.length;i++){
+                if(!data[i].firstLatFixed==""&&!data[i].firstLngFixed==""){
+                        var adds=new BMap.Point(data[i].firstLngFixed,data[i].firstLatFixed);
+                        Geocoder(adds,i);
+                }
+
+                /**
+                 * 根据坐标获取地址
+                 * @param point
+                 * @constructor
+                 */
+                function Geocoder(point,i) {
+                    var gc = new BMap.Geocoder();
+                    gc.getLocation(point, function (rs) {
+                        var addComp = rs.addressComponents;
+                        data[i].currentPosition=addComp.province + addComp.city  + addComp.district  + addComp.street  + addComp.streetNumber
+                    });
+                }
+            }
+            test(data);
         },
         error: function (err) {
         }
     });
+
+
+    function test(data) {
+        console.log(data)
+        tableGen.table.bootstrapTable('load', data);
+    }
+
 
 }
 
