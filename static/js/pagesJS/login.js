@@ -2,11 +2,11 @@
  * Created by JLee on 16/7/20.
  */
 
-
+/*var test = window.location.href;
+alert(test);*/
 $.cookie('management', '', { expires: -1 }); // 删除 cookie
 
 var secondCtrl = angular.module('login', ['ngRoute', 'httpService']);
-
 
 
 

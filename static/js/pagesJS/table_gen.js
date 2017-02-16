@@ -1,7 +1,6 @@
 /**
  * Created by Badger on 16/7/27.
  */
-
 function TableGen() {
 }
 
@@ -29,6 +28,9 @@ TableGen.prototype.bind = function () {
     window.onload = this.init();
     this.setTable(this.table);
     this.loadData();
+}
+TableGen.prototype.reloadData = function (data){
+    tableGen.table.bootstrapTable('load', data);
 }
 
 //初始化Table的主函数
@@ -120,7 +122,7 @@ TableGen.prototype.init = function () {
 
 };
 
-if($.cookie('management')==1){
+if ($.cookie('management') == 1) {
     //预设初始化编辑列方法
     TableGen.prototype.operateFormatter = function (value, row, index) {
         return [
@@ -132,7 +134,7 @@ if($.cookie('management')==1){
             '</a>'
         ].join('');
     };
-}else{
+} else {
 }
 
 
@@ -172,6 +174,7 @@ TableGen.prototype.operationEvent = function () {
 
 TableGen.prototype.loadData = function () {
 
+    var defer = $.Deferred();
     $.ajax({
         url: API_URL + "/api/" + this.apiName,
         type: 'GET',
@@ -184,10 +187,12 @@ TableGen.prototype.loadData = function () {
         },
         success: function (data) {
             tableGen.table.bootstrapTable('load', data);
+            defer.resolve(data);
         },
         error: function (err) {
         }
     });
+    return defer.promise();
 
 }
 

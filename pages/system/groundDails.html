@@ -1,14 +1,14 @@
 ---
 layout: base_page
 ---
-
+{% include mapScript.html %}
+{% include temp/control_head.html %}
 {% include temp/table.html inData = site.data.ground apiName = 'groundDails' %}
 
 <script type="text/javascript">
 
     var tableGen = new TableGen();
-    tableGen.editFields = new Array('id','machCode','orgName','workingType',  'machName','terminalCode', 'terminalName', 'sensor1', 'localTime', 'notes');
-
+    tableGen.editFields = new Array('id', 'machCode', 'orgName', 'workingType', 'machName', 'terminalCode', 'terminalName', 'sensor1', 'localTime', 'currentPosition', 'notes');
     tableGen.validates = {orgCode: "notEmpty", orgName: "notEmpty", orgContact: "notEmpty"};
 
     tableGen.setTable = function (inTable) {
@@ -35,31 +35,35 @@ layout: base_page
                 },
 
                 {
-                title: '农机名称',
-                field: 'machName',
-                align: 'center',
-            },{
+                    title: '农机名称',
+                    field: 'machName',
+                    align: 'center',
+                }, {
                     title: '终端号',
                     field: 'terminalCode',
                     align: 'center',
-                },{
+                }, {
                     title: '终端名称',
                     field: 'terminalName',
                     align: 'center',
                 },
                 {
-                title: '工作状态',
-                field: 'sensor1',
-                align: 'center',
-            }, {
-                title: '上次运行时间',
-                field: 'localTime',
-                align: 'center',
-            },{
-                title: '备注',
-                field: 'notes',
-                align: 'center',
-            }]
+                    title: '工作状态',
+                    field: 'sensor1',
+                    align: 'center',
+                }, {
+                    title: '上次运行时间',
+                    field: 'localTime',
+                    align: 'center',
+                }, {
+                    title: '所在位置',
+                    field: 'currentPosition',
+                    align: 'center',
+                }, {
+                    title: '备注',
+                    field: 'notes',
+                    align: 'center',
+                }]
         });
     }
 
@@ -67,6 +71,69 @@ layout: base_page
     tableGen.apiName = 'CooperativeInfo';
 
     tableGen.bind();
+
+    //添加异步方法，在载入数据后执行，用于对获取到的数据进行后期处理
+    $.when(tableGen.loadData()).done(
+            function (data) {
+                console.log(data)
+                for (var i = 0; i < data.length; i++) {
+
+                    var str=data[i].localTime;
+
+                    if(str!=null){
+                        var oDate1= new Date(str);
+                        //取当前系统时间，转化成日期
+                        var timestamp = Date.parse(new Date());
+                        console.log(timestamp+"：timestamp")
+                        //时间转化为毫秒进行计算
+                        var systime=timestamp - oDate1.getTime();
+                        console.log("systime:"+systime)
+                        if(systime>=30*60*1000){
+                            data[i].sensor1="关机";
+                        }
+                    }
+
+
+                    if(data[i].orgName==null){
+                        data[i].orgName = "此农机没有合作社";
+                    }
+                    if(data[i].sensor1==0){
+                        data[i].sensor1="运行状态";
+                    }else if(data[i].sensor1==1){
+                        data[i].sensor1="工作状态";
+                    }else if(data[i].sensor1==null){
+                        data[i].sensor1="暂时无任何工作"
+                    }
+
+                    if(data[i].localTime==null){
+                        data[i].localTime = "无启动记录";
+                    }
+
+                    if(data[i].currentPosition==null){
+                        data[i].currentPosition = "暂无启动记录";
+                    }
+
+                    if (!data[i].firstLatFixed == "" && !data[i].firstLngFixed == "") {
+                        var adds = new BMap.Point(data[i].firstLngFixed, data[i].firstLatFixed);
+                        Geocoder(adds, i);
+                    }
+
+                    /**
+                     * 根据坐标获取地址
+                     * @param point
+                     * @constructor
+                     */
+                    function Geocoder(point, i) {
+                        var gc = new BMap.Geocoder();
+                        gc.getLocation(point, function (rs) {
+                            var addComp = rs.addressComponents;
+                            data[i].currentPosition = addComp.province + addComp.city + addComp.district + addComp.street + addComp.streetNumber
+                            tableGen.reloadData(data);
+                        });
+                    }
+                }
+            }
+    )
 
 
     tableGen.onDblClickRow = function (row, $element) {
