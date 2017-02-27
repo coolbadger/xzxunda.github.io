@@ -18,9 +18,9 @@ title: 农机跟踪
         <div class="col-md-12" style="height: 2%;">
 
         </div>
-            <div class="col-md-12" style="overflow: scroll; height: 100%">
-                {% include temp/simple_table.html %}
-            </div>
+        <div class="col-md-12" style="overflow: scroll; height: 100%">
+            {% include temp/simple_table.html %}
+        </div>
 
     </div>
 </div>
@@ -44,32 +44,44 @@ title: 农机跟踪
 </div>
 
 <script type="text/javascript">
-    var apiObjUrl = API_URL + '/api/gpsRecords';
+    var apiObjUrl = API_URL + '/api/DetailsPage';
     var general_data=new Object();
     var simpleTableGen = new SimpleTableGen();
     var settings = new Object();
     settings.columns = [{
-        field: 'machCode',
-        title: '车号',
+        field: 'id',
+        title: 'id',
+        align: 'center',
+    },{
+        field: 'orgName',
+        title: '合作社',
         align: 'center',
     }, {
-        field: 'machName',
-        title: '车型',
+        field: 'orgAddress',
+        title: '地址',
         align: 'center',
     }, {
-        field: 'workArea',
-        title: '作业面积/亩',
+        field: 'machSize',
+        title: '农机数/辆',
         align: 'center',
     }, {
-        field: 'workTime',
-        title: '作业时间/小时',
+        field: 'allDrivingArea',
+        title: '工作面积/亩',
         align: 'center',
-    }];
+    }
+        , {
+            field: 'allWorkArea',
+            title: '有效工作面积/亩',
+            align: 'center',
+        }
+        , {
+            field: 'allWorkTime',
+            title: '工作时间/小时',
+            align: 'center',
+        }
+    ];
 
-    var jsonData ="[";
-    var nm_drivingArea = 0;
-    var nm_workArea = 0;
-    var machCodes;
+
     settings.onDblClickRow = function (row, $element) {
 
         $("#process").fadeIn('fast', function () {
@@ -82,11 +94,20 @@ title: 农机跟踪
     }
 
     function onRowDbClick(row, $element) {
-        var a=1;
-        nm_drivingArea=row.drivingArea;
-        nm_workArea=row.workArea;
-        machCodes = row.machCode
-        columnChart(a);
+        $.ajax({
+            url: apiObjUrl+"/"+row.id,
+            type: 'GET',
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("Authorization", $.cookie('author_code'));
+            },
+            success: function (data) {
+                console.log(data)
+                simpleTableGen.table.bootstrapTable('removeAll');
+            },
+            error: function (err) {
+            }
+        });
+        columnChart(row,1);
 
     }
 
@@ -105,121 +126,22 @@ title: 农机跟踪
     simpleTableGen.initData = function () {
         var requestUrl = encodeURI(apiObjUrl + "?startTime=2016-12-04 00:00:00&endTime=" + currentTime + "&machCode=" + machCode);
         $.ajax({
-            url: apiObjUrl+"/gpsDataAnalysis",
+            url: apiObjUrl,
             type: 'GET',
             beforeSend: function (xhr) {
                 xhr.setRequestHeader("Authorization", $.cookie('author_code'));
             },
             success: function (data) {
-                var map = new BMap.Map("map_container");            // 创建地图实例
-                var point = new BMap.Point(117.606257, 34.042178);  // 创建点坐标(目前为双沟镇政府)
-                var temp_sensor1=[];
-                var temp=[];
-                var temp_data=[];
-                var distance;
-                var mm_distance = 0;
-                var workTime = 0;
-                var total_number = 0;
-                var reMachTerminalId;
-
+                var jsonData="[";
                 for(var i=0;i<data.length;i++){
-                    if(temp.length<1){
-                        if(i>0){
-                            temp.push(data[i]);
-                            temp.push(data[i-1]);
-                        }else{
-                            temp.push(data[i]);
-                        }
-                    }else{
-                        if(data[i].reMachTerminalId==data[i-1].reMachTerminalId){
-                            temp.push(data[i]);//相同农机GPS数据
-                        }else{
-                            temp_data.push("machCode"+temp[0].machCode)
-                            temp_data.push("machName"+temp[0].machName)
-                            temp_data.push("workTime"+((temp[temp.length-1].gpsTime-temp[0].gpsTime)/(1000*60*60)).toFixed(2))
-
-
-                            for(var ii=0;ii<temp.length;ii++){
-                                if(ii>=1){
-                                    //行驶距离
-                                    var pointA = new BMap.Point(temp[ii].lngFixed, temp[ii].latFixed);  // 创建点坐标
-                                    var pointB = new BMap.Point(temp[ii - 1].lngFixed, temp[ii - 1].latFixed);  // 创建点坐标
-                                    var mm = parseFloat((map.getDistance(pointA, pointB)).toFixed(2));
-                                    mm_distance +=mm;
-                                }
-
-                                if(temp[ii].sensor1=='1'){
-                                    temp_sensor1.push(temp[ii]);
-                                }else{
-                                    if(temp_sensor1.length>0){
-                                        for(var a=0;a<temp_sensor1.length;a++){
-                                            if(a>=1) {
-                                                //工作距离
-                                                var pointA = new BMap.Point(temp_sensor1[a].lngFixed, temp_sensor1[a].latFixed);  // 创建点坐标
-                                                var pointB = new BMap.Point(temp_sensor1[a - 1].lngFixed, temp_sensor1[a - 1].latFixed);  // 创建点坐标
-                                                var mm = parseFloat((map.getDistance(pointA, pointB)).toFixed(2));
-                                                distance += mm;//累加距离
-                                            }
-                                        }
-                                        total_number += distance;
-                                    }
-                                    distance=0;
-                                    temp_sensor1=[];
-                                }
-                            }
-
-                            console.log( temp.length)
-                            jsonData +="{"+ "drivingArea:"+((mm_distance*3*15)/10000).toPrecision(3)+","+"machCode:"+"'"+temp[0].machCode+"'"+","+"machName:"+"'"+temp[0].machName+"'"+","+"workTime:"+((temp[temp.length-1].gpsTime-temp[0].gpsTime)/(1000*60*60)).toFixed(2)+","+"workArea:"+((total_number*3*15)/10000).toPrecision(3) + "}"+",";
-                            temp_data.push("workArea"+((total_number*3*15)/10000).toPrecision(3))
-                            mm_distance=0
-                            total_number=0;
-                            temp=[];
-                        }
-                    }
-
+                    jsonData+="{"+"id:"+"'"+data[i].id+"'"+","+"orgName:"+"'"+data[i].orgName+"'"+","+"orgAddress:"+"'"+data[i].orgAddress+"'"+","+"machSize:"+"'"+data[i].machSize+"'"+","+"allDrivingArea:"+"'"+data[i].allDrivingArea+"'"+","+"allWorkArea:"+"'"+data[i].allWorkArea+"'"+","+"allWorkTime:"+"'"+data[i].allWorkTime+"'"+"}"+","
                 }
-
-                if(temp.length>0){
-                    var total_numbers=0;
-                    for(var ii=0;ii<temp.length;ii++){
-                        if(ii>=1){
-                            //行驶距离
-                            var pointA = new BMap.Point(temp[ii].lngFixed, temp[ii].latFixed);  // 创建点坐标
-                            var pointB = new BMap.Point(temp[ii - 1].lngFixed, temp[ii - 1].latFixed);  // 创建点坐标
-                            var mm = parseFloat((map.getDistance(pointA, pointB)).toFixed(2));
-                            mm_distance +=mm;
-                        }
-
-                        if(temp[ii].sensor1=='1'){
-                            temp_sensor1.push(temp[ii]);
-                        }else{
-                            if(temp_sensor1.length>0){
-                                for(var a=0;a<temp_sensor1.length;a++){
-                                    if(a>=1) {
-                                        var pointA = new BMap.Point(temp_sensor1[a].lngFixed, temp_sensor1[a].latFixed);  // 创建点坐标
-                                        var pointB = new BMap.Point(temp_sensor1[a - 1].lngFixed, temp_sensor1[a - 1].latFixed);  // 创建点坐标
-                                        var mm = parseFloat((map.getDistance(pointA, pointB)).toFixed(2));
-                                        distance += mm;//累加距离
-                                    }
-                                }
-                                total_numbers += distance;
-
-                            }
-                            distance=0;
-                            temp_sensor1=[];
-                        }
-                    }
-                    console.log( temp.length)
-                    jsonData +="{"+"drivingArea:"+((mm_distance*3*15)/10000).toPrecision(3)+","+"machCode:"+"'"+temp[0].machCode+"'"+","+"machName:"+"'"+temp[0].machName+"'"+","+"workTime:"+((temp[temp.length-1].gpsTime-temp[0].gpsTime)/(1000*60*60)).toFixed(2)+","+"workArea:"+((total_numbers*3*15)/10000).toPrecision(3)+"}"+",";
-                }
-
-                jsonData +="]";
-                console.log(jsonData)
+                jsonData+="]";
                 var json = eval('(' + jsonData + ')');
                 general_data=json;
                 simpleTableGen.table.bootstrapTable('load', json);
-                pieChart();
-                columnChart();
+               pieChart(data);
+                columnChart(data);
             },
             error: function (err) {
             }
@@ -237,7 +159,6 @@ title: 农机跟踪
         fullData.forEach(function (item) {
             if (item.machCode.indexOf(value) > 0 || item.machName.indexOf(value) > 0) {
                 newData.push(item);
-                console.log(newData)
             }
         });
         var checkCondition = value.length > machCode.length && value.indexOf(machCode) > 0 || (machCode.length == 0 && value.length > 0);
@@ -251,43 +172,37 @@ title: 农机跟踪
     }
 
 
-    function columnChart(a) {
-        if(a!=1) {
-             nm_drivingArea = 0;
-             nm_workArea = 0;
-
-            for (var i = 0; i < general_data.length; i++) {
-                nm_drivingArea += general_data[i].drivingArea;
-                nm_workArea += general_data[i].workArea;
+    function columnChart(data,a) {
+        var tempAllDrivingArea=0;
+        var tempAllWorkArea=0;
+            for(var i=0;i<data.length;i++){
+                tempAllDrivingArea += parseFloat(data[i].allDrivingArea);
+                tempAllWorkArea+=parseFloat(data[i].allWorkArea);
             }
-        }
-
+            if(a==1){
+                tempAllWorkArea=parseFloat(data.allWorkArea);
+                tempAllDrivingArea=parseFloat(data.allDrivingArea);
+            }
         var chart = new CanvasJS.Chart("columnChart");
         chart.options.title = {text: "所有作业面积分析柱形图"};
         chart.options.data = [];
         var series1 = {type: "column", name: "First Quarter"};
 
         chart.options.data.push(series1);
-        if(a!=1){
-        series1.dataPoints = [
-            {label: "农机工作面积", y: nm_drivingArea},
-            {label: "农机有效作业面积", y:nm_workArea }
-        ];}else{
             series1.dataPoints = [
-            {label: machCodes+"农机工作面积", y: nm_drivingArea},
-            {label: machCodes+"农机有效作业面积", y:nm_workArea }];
-        }
+                {label: "农机工作面积", y: tempAllDrivingArea},
+                {label: "农机有效作业面积", y:tempAllWorkArea }
+            ];
         chart.render();
     }
 
 
-    function pieChart() {
+    function pieChart(data) {
         var dataTime="[";
-        for(var i=0;i<general_data.length;i++){
-            dataTime +="{"+"y:"+general_data[i].workTime+","+"legendText:"+"'"+general_data[i].machName+general_data[i].machCode+"'"+","+"indexLabel:"+"'"+general_data[i].machName+general_data[i].machCode+"'"+"}"+","
+        for(var i=0;i<data.length;i++){
+            dataTime +="{"+"y:"+data[i].allWorkTime+","+"legendText:"+"'"+data[i].orgName+"'"+","+"indexLabel:"+"'"+data[i].orgName+"'"+"}"+","
         }
         dataTime +="]";
-console.log(dataTime)
         var j = eval('(' + dataTime + ')');
         var chart = new CanvasJS.Chart("pieChart",
                 {
