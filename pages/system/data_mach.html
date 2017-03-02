@@ -8,6 +8,8 @@ layout: base_data_charts
 <script type="text/javascript" src="/static/js/pagesJS/tableData.js"></script>
 <script type="text/javascript">
 
+
+
     var tableGen = new TableGen();
     tableGen.editFields = new Array('id', 'orgCode', 'orgName', 'orgContact', 'orgAddress', 'orgTell', 'orgFax', 'orgEmail', 'notes');
 
@@ -21,29 +23,25 @@ layout: base_data_charts
                 title: 'id',
                 align: 'center',
             },{
-                field: 'orgName',
-                title: '合作社',
+                field: 'machCode',
+                title: '农机号',
                 align: 'center',
             }, {
-                field: 'orgAddress',
-                title: '地址',
+                field: 'machName',
+                title: '农机类型',
                 align: 'center',
-            }, {
-                field: 'machSize',
-                title: '农机数/辆',
-                align: 'center',
-            }, {
-                field: 'allDrivingArea',
+            },  {
+                field: 'drivingArea',
                 title: '工作面积/亩',
                 align: 'center',
             }
                 , {
-                    field: 'allWorkArea',
+                    field: 'workArea',
                     title: '有效工作面积/亩',
                     align: 'center',
                 }
                 , {
-                    field: 'allWorkTime',
+                    field: 'workTime',
                     title: '工作时间/小时',
                     align: 'center',
                 }]
@@ -51,12 +49,7 @@ layout: base_data_charts
     }
 
     window.operateEvents = tableGen.operationEvent();
-    tableGen.apiName = 'DetailsPage';
-
+    tableGen.apiName = 'DetailsPage/1';
     tableGen.bind();
-
-
-
-
 
 </script>

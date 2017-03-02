@@ -1,34 +1,12 @@
 <script>
     var apiObjUrl = '{{ site.apiurl }}' + '/api/' + '{{ include.apiName }}';
+
 </script>
 
-<div  style="float: left;border: 1px solid red">
+<div style="width: 100%;height: 100%;border: solid 1px darkred">
 
-<div id="success" class="alert alert-success po">
-    <a href="#" class="close" data-dismiss="alert">&times;</a>
-    <strong>成功！&nbsp;</strong>操作成功！。
-</div>
+<div class="container"  style="float: left;width: 50%;height: 100%;">
 
-<div id="error" class="alert alert-danger po">
-    <a href="#" class="close" data-dismiss="alert">&times;</a>
-    <strong>失败！&nbsp;</strong>&nbsp;权限未开放
-</div>
-
-
-
-
-<div class="container" style="z-index: 1">
-    <div id="toolbar">
-        {% if(include.disableModal != 'true') %}
-        {% else %}
-        <button id="unBind" class="btn btn-primary" style="font-size: 12px">
-            <i class="glyphicon glyphicon-filter"></i> 未绑定
-        </button>
-        <button id="all" class="btn btn-primary hidden" style="font-size: 12px">
-            <i class="glyphicon glyphicon-refresh"></i> 全部
-        </button>
-        {% endif %}
-    </div>
     <table id="table"
            class="table table-hover table-bordered table-striped"
            data-toolbar="#toolbar"
@@ -41,113 +19,149 @@
            data-show-pagination-switch="true"
            data-pagination="true"
            data-id-field="id"
-           data-page-list="[10, 25, 50, 100, ALL]"
+           data-page-list="[10, 25, ALL]"
            datatype="json"
            data-local="zh-US"
             >
     </table>
 </div>
-{% if(include.disableModal != 'true') %}
-<!-- Modal -->
-<div ng-app="app" ng-controller="ctrl" class="modal fade" id="myModal" tabindex="-1" role="dialog"
-     aria-labelledby="myModalLabel" data-backdrop="static">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                        aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">添加信息</h4>
+
+    <div style="height: auto;background-color: #00a157;float: right" class="col-md-6">
+
+        <div id="row" style="width: 100%;height: 100%;float: right; border: 0px solid red; margin-top: 40px">
+            <div class="col-md-12" style="height: 4%;">
+
             </div>
-            <div class="modal-body">
-                <div id="myForm" action="#" method="post" class="form-horizontal">
-                    <!--定义上一个标签是否未完结-->
-                    {% assign isFinished = true %}
-                    {% for item in include.inData %}
-                    <!--如果当前为半长-->
-                    {% if item.span == 1 %}
-                    <!--判断上一个标签是否完结-->
-                    {% if isFinished %}
-                    <div class="form-group {% if item.visible == false %}hidden{% endif %}">
-                        <label for="{{ item.id }}" class="col-sm-2 control-label">{{ item.name }}</label>
-
-                        <div class="col-sm-4">
-                            <input type="{% if item.type == 'password' %}password{% else %}text{% endif %}"
-                                   class="form-control" id="{{ item.id }}" name="{{ item.id }}"
-                                   placeholder="{{ item.placeholder }}">
-                        </div>
-                        {% assign isFinished = false %}
-                        {% else %}
-                        <label for="{{ item.id }}" class="col-sm-2 control-label">{{ item.name }}</label>
-
-                        <div class="col-sm-4">
-                            <input type="{% if item.type == 'password' %}password{% else %}text{% endif %}"
-                                   class="form-control" id="{{ item.id }}" name="{{ item.id }}"
-                                   placeholder="{{ item.placeholder }}">
-                        </div>
-                    </div>
-                    {% assign isFinished = true %}
-                    {% endif %}
-                    <!--如果当前为全长-->
-                    {% else %}
-                    <!--判断上一个标签是否完结-->
-                    {% if isFinished %}
-                    <div class="form-group {% if item.visible == false %} hidden {% endif %}">
-                        <label for="{{ item.id }}" class="col-sm-2 control-label">{{ item.name }}</label>
-
-                        <div class="col-sm-10">
-                            <input type="{% if item.type == 'password' %}password{% else %}text{% endif %}"
-                                   class="form-control" id="{{ item.id }}" name="{{ item.id }}"
-                                   placeholder="{{ item.placeholder }}">
-                        </div>
-                    </div>
-                    {% else %}
-                </div>
-                <div class="form-group {% if item.visible == false %} hidden {% endif %}">
-                    <label for="{{ item.id }}" class="col-sm-2 control-label">{{ item.name }}</label>
-
-                    <div class="col-sm-10">
-                        <input type="{% if item.type == 'password' %}password{% else %}text{% endif %}"
-                               class="form-control" id="{{ item.id }}" name="{{ item.id }}"
-                               placeholder="{{ item.placeholder }}">
-                    </div>
-                </div>
-                {% endif %}
-                {% assign isFinished = true %}
-                {% endif %}
-                {% endfor %}
-                <!--判断结尾一个是否为半长,若为半长,则添加标签尾部-->
-                {% if !isFinished %}
+            <div class="col-md-12" id="columnChart-box" >
+                {% include temp/chart.html id='columnChart' heading='柱形图'%}
             </div>
-            {% endif%}
-            </form>
+
+            <div class="col-md-12" style="margin-top: 60px">
+
+            </div>
+
+
+            <div class="col-md-12">
+                {% include temp/chart.html id='pieChart' heading='饼图'%}
+            </div>
         </div>
-        <div class="modal-footer">
-            <button ng-click="saveObj()" class="btn btn-success">
-                <i class="glyphicon glyphicon-ok"></i> 保存
-            </button>
-            <button type="button" class="btn btn-primary" data-dismiss="modal">
-                <i class="glyphicon glyphicon-remove"></i> 取消
-            </button>
-        </div>
+
+
+
     </div>
+
 </div>
-{% else %}
-<!-- machTerminal Modal -->
-{% include temp/mach_terminal_modal.html %}
-{% endif %}
-</div>
-<script type="text/javascript" src="/static/js/pagesJS/table_gen.js" charset="utf-8"></script>
+
+
 
 <script>
+    var nm_drivingArea=0.0;
+    var nm_workArea=0.0;
+    var allWorkTime=0.0;
+    function getData(data) {
+        for(var i=0;i<data.length;i++){
+            nm_workArea+=parseFloat(data[i].allWorkArea)
+            nm_drivingArea+=parseFloat(data[i].allDrivingArea)
+            allWorkTime+=parseFloat(data[i].allWorkTime)
+        }
 
-    if($.cookie('management')==1){
-    }else{
-        $("#add").css('display','none');
-        $("#remove").css('display','none');
+        for(var i=0;i<data.length;i++){
+            if(data[i].workTime!=undefined){
+                nm_drivingArea=0.0;
+                nm_workArea=0.0;
+                allWorkTime=0.0;
+                nm_workArea+=parseFloat(data[i].workArea)
+                nm_drivingArea+=parseFloat(data[i].drivingArea)
+                allWorkTime+=parseFloat(data[i].workTime)
+            }
 
 
+        }
+
+
+        pieChart(data)
+        columnChart();
+    }
+
+    function  onClickData(row) {
+        nm_workArea=parseFloat(row.allWorkArea)
+        nm_drivingArea=parseFloat(row.allDrivingArea)
+        allWorkTime=parseFloat(row.allWorkTime)
+
+        if(row.workTime!=undefined){
+            nm_workArea=parseFloat(row.workArea)
+            nm_drivingArea=parseFloat(row.drivingArea)
+            allWorkTime=parseFloat(row.workTime)
+        }
+        columnChart();
+    }
+
+
+
+    function columnChart(a) {
+        var chart = new CanvasJS.Chart("columnChart");
+        chart.options.title = {text: "所有作业面积分析柱形图"};
+        chart.options.data = [];
+        var series1 = {type: "column", name: "First Quarter"};
+
+        chart.options.data.push(series1);
+
+            series1.dataPoints = [
+                {label: "农机工作面积", y: nm_drivingArea},
+                {label: "农机有效作业面积", y: nm_workArea}
+            ];
+        chart.render();
+    }
+
+
+    function pieChart(general_data) {
+        var dataTime="[";
+        for(var i=0;i<general_data.length;i++){
+            if(general_data[i].workTime!=undefined){
+
+                dataTime += "{" + "y:" + general_data[i].workTime + "," + "legendText:" + "'" + general_data[i].machCode + general_data[i].machName + "'" + "," + "indexLabel:" + "'" + general_data[i].machCode + general_data[i].machName + "'" + "}" + ","
+
+            }else {
+
+                dataTime += "{" + "y:" + general_data[i].allWorkTime + "," + "legendText:" + "'" + general_data[i].orgCode + general_data[i].orgName + "'" + "," + "indexLabel:" + "'" + general_data[i].orgCode + general_data[i].orgName + "'" + "}" + ","
+            }
+        }
+        dataTime +="]";
+        var j = eval('(' + dataTime + ')');
+        var chart = new CanvasJS.Chart("pieChart",
+                {
+                    title: {
+                        text: "农机工作时间"
+                    },
+                    animationEnabled: true,
+                    legend: {
+                        verticalAlign: "bottom",
+                        horizontalAlign: "center"
+                    },
+                    data: [
+                        {
+                            indexLabelFontSize: 20,
+                            indexLabelFontFamily: "Monospace",
+                            indexLabelFontColor: "darkgrey",
+                            indexLabelLineColor: "darkgrey",
+                            indexLabelPlacement: "outside",
+                            type: "pie",
+                            showInLegend: true,
+                            toolTipContent: "{y} - <strong>#percent%</strong>",
+                            dataPoints: j
+                        }
+                    ]
+                });
+        chart.render();
+    }
+
+    function  onclick_data(row) {
+        getId(row)
+        window.parent.universal()
     }
 
 
 
 </script>
+
+

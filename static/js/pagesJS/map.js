@@ -145,10 +145,10 @@ MachMap.prototype.addGpsRecords = function (row, cssClass) {
             xhr.setRequestHeader("Authorization", $.cookie('author_code'));
         },
         success: function (result) {
+            console.log(result)
             var markers=gpsRecordLine.addRecords(result);
             gpsRecordLine.setLineColor("#a2aea4");
             defer.resolve(ref_id,gpsRecordLine);
-            console.log(result[1])
             var arr=new Array();
             var temp=new Array();
             var area=new Array();
@@ -156,6 +156,8 @@ MachMap.prototype.addGpsRecords = function (row, cssClass) {
             var blocks_area=new Array();
             var m=0;
             var temp_area=[];//存入的面积
+            var orgNameS=[];
+            var names=[];
             for(var  i=0;i<result.length;i++){
                 var lat=result[i].latFixed;
                 var lng=result[i].lngFixed;
@@ -163,6 +165,8 @@ MachMap.prototype.addGpsRecords = function (row, cssClass) {
 
                     if(arr.length==0){
                         temp_area.push(((m*3*15)/10000).toPrecision(3));//计算面积
+                        orgNameS.push(result[i].orgName)
+                        names.push(result[i].name)
                         m=0;
                     }
 
@@ -196,15 +200,12 @@ MachMap.prototype.addGpsRecords = function (row, cssClass) {
                     }
                     arr.length=0;
                     area.length=0;
+
                 }
             }
 
-
-
             temp_area.push(((m*3*15)/10000).toPrecision(3));//计算面积
-/*            console.log("这个数据是什么？")
-            console.log(m);
-            console.log("blocks="+blocks.length)*/
+
             for (var i = 0; i < blocks.length; i++) {
                 (function(){
                     var point = temp[i];
@@ -217,10 +218,7 @@ MachMap.prototype.addGpsRecords = function (row, cssClass) {
                             title : row.machCode + row.machName + "-" + index// 信息窗口标题
                         };
 
-                        var infoWindow = new BMap.InfoWindow("作业面积："+temp_area[index+1]+"亩",opts);  // 创建信息窗口对象
-    /*                    infoWindow.setContent(
-                            "<div style='background-color: #001a35;height: 100px;width: 250px;'>"+row.machCode + row.machName+"作业面积："+temp_area[index+1]+"亩"+"</div>"
-                        );*/
+                        var infoWindow = new BMap.InfoWindow("作业面积："+temp_area[index+1]+"亩"+"；"+orgNameS[index]+"；"+"驾驶人："+names[index],opts);  // 创建信息窗口对象
                         var pts = new BMap.Point(point.lngFixed,point.latFixed);
                         map.openInfoWindow(infoWindow, pts);      // 打开信息窗口
                     }

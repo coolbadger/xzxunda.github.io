@@ -11,23 +11,29 @@
         console.log(jsonData)
         var Id=$.cookie("id")
 
+        console.log(password)
+        if(password.replace(/(^s*)|(s*$)/g, "").length ==0){
+            alert("不能为空！！")
+        }else{
+            $.ajax({
+                contentType: "application/json;charset=utf-8",
+                url: API_URL + "/api/orgUsers"+"/"+Id,
+                data: jsonData,
+                dataType: "json",
+                type: 'PUT',
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("Authorization", $.cookie('author_code'));
+                    alert("修改成功")
+                },
+                success: function (data) {
+                },
+                error: function (err) {
+                    console.log(err.status);
+                }
+            });
+        }
 
-        $.ajax({
-            contentType: "application/json;charset=utf-8",
-            url: API_URL + "/api/orgUsers"+"/"+Id,
-            data: jsonData,
-            dataType: "json",
-            type: 'PUT',
-            beforeSend: function (xhr) {
-                xhr.setRequestHeader("Authorization", $.cookie('author_code'));
-                alert("修改成功")
-            },
-            success: function (data) {
-            },
-            error: function (err) {
-                console.log(err.status);
-            }
-        });
+
 
     }
 
