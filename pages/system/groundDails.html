@@ -75,8 +75,16 @@ layout: base_page
     //添加异步方法，在载入数据后执行，用于对获取到的数据进行后期处理
     $.when(tableGen.loadData()).done(
             function (data) {
-                console.log(data)
                 for (var i = 0; i < data.length; i++) {
+
+                    if(data[i].sensor1==0){
+                        data[i].sensor1="运行状态";
+                    }else if(data[i].sensor1==1){
+                        data[i].sensor1="工作状态";
+                    }else if(data[i].sensor1==null){
+                        data[i].sensor1="暂时无任何工作"
+                    }
+
 
                     var str=data[i].localTime;
 
@@ -84,10 +92,8 @@ layout: base_page
                         var oDate1= new Date(str);
                         //取当前系统时间，转化成日期
                         var timestamp = Date.parse(new Date());
-                        console.log(timestamp+"：timestamp")
                         //时间转化为毫秒进行计算
                         var systime=timestamp - oDate1.getTime();
-                        console.log("systime:"+systime)
                         if(systime>=30*60*1000){
                             data[i].sensor1="关机";
                         }
@@ -96,13 +102,6 @@ layout: base_page
 
                     if(data[i].orgName==null){
                         data[i].orgName = "此农机没有合作社";
-                    }
-                    if(data[i].sensor1==0){
-                        data[i].sensor1="运行状态";
-                    }else if(data[i].sensor1==1){
-                        data[i].sensor1="工作状态";
-                    }else if(data[i].sensor1==null){
-                        data[i].sensor1="暂时无任何工作"
                     }
 
                     if(data[i].localTime==null){

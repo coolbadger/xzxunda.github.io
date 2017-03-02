@@ -174,7 +174,7 @@ layout: home_pages
         if($("#weizhi").length>0){
             $('#weizhi').trigger('click');
         }else{
-            var a="未知的东西";
+            var a="农机分析";
             var button=" <a href='javascript:;' class='menuTab'  onclick='ceshi()' style='padding-right: 15px;' id='weizhi'>"+a+"<i class='fa fa-remove'  onclick='ceshi_i()'></i></a>";
             $("#divs").append(button);
             document.getElementById('one').src = "3Html.html";
@@ -188,9 +188,9 @@ layout: home_pages
         var i=$("#divs a").size();
         if(i>2){
             $("#one").css('display','block');
-            document.getElementById('one').src = "default.html";
+            document.getElementById('one').src = "/pages/system/data_mach.html";
         }else{
-            document.getElementById('one').src = "default.html";
+            document.getElementById('one').src = "/pages/system/data_mach.html";
         }
     }
 
@@ -203,8 +203,6 @@ layout: home_pages
         $.cookie("islogin",null);
         $.cookie("author_code",null);
         var strCookie = document.cookie;
-        console.log(strCookie);
-        //alert(strCookie);
         window.close();
 
 

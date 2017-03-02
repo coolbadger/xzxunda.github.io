@@ -5,6 +5,7 @@ title: 农机跟踪
 
 {% include mapScript.html %}
 {% include temp/control_head.html %}
+{% include common/angular.html %}
 
 
 <div class="main_container">
@@ -75,6 +76,11 @@ title: 农机跟踪
 </div>
 
 <script type="text/javascript">
+    window.onload = function (){
+
+    }
+
+
     // 新建地图
     var machMap = new MachMap();
     // 新建表格
@@ -89,6 +95,8 @@ title: 农机跟踪
     var endTime_local;
     var carInfo_local;
 
+    var nm_drivingArea = 0;
+    var nm_workArea = 0;
     var settings = new Object();
     settings.columns = [{
         field: 'machCode',
@@ -154,6 +162,7 @@ title: 农机跟踪
 
     // 自动查询本地缓存结果
     function onAutoSearch(value) {
+        console.log(value)
         if (fullData == null) {
             fullData = simpleTableGen.table.bootstrapTable('getData');
         }
@@ -204,6 +213,7 @@ title: 农机跟踪
     }
     // 双击选中行事件
     function onRowDbClick(row, $element) {
+
         var defer = $.Deferred();
         var cssClass = $element.attr('class');
         if (cssClass) {
@@ -247,7 +257,6 @@ title: 农机跟踪
 
                             var dateLength=gpsLine.records.length;//取出数据的长度
                             var dataFirst=gpsLine.records[0].gpsTime;//取第一个时间
-                            //console.log("dataFirst="+dataFirst)
                             var  strFirst=dataFirst.toString();
                             strFirst =  strFirst.replace(/-/g,"/");
                             var oDate1First = new Date(strFirst);
@@ -358,5 +367,145 @@ title: 农机跟踪
 
     onSearchClick();
     goShuangGou();
+
+
+
+    /*处理gps数据，转化为面积*/
+    $.ajax({
+        url: apiObjUrl+"/getFinishingData",
+        dataType: "json",
+        type: 'GET',
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader("Authorization", $.cookie('author_code'));
+        },
+        success: function (data) {
+            var temp_sensor1=[];
+            var temp=[];
+            var temp_data=[];
+            var distance;
+            var mm_distance = 0;
+            var workTime = 0;
+            var total_number = 0;
+            var reMachTerminalId;
+
+            for(var i=0;i<data.length;i++){
+                if(temp.length<1){
+                    if(i>0){
+                        temp.push(data[i]);
+                        temp.push(data[i-1]);
+                    }else{
+                        temp.push(data[i]);
+                    }
+                }else{
+                    if(data[i].reMachTerminalId==data[i-1].reMachTerminalId){
+                        temp.push(data[i]);//相同农机GPS数据
+                    }else{
+                        temp_data.push("machCode"+temp[0].machCode)
+                        temp_data.push("machName"+temp[0].machName)
+                        temp_data.push("workTime"+((temp[temp.length-1].gpsTime-temp[0].gpsTime)/(1000*60*60)).toFixed(2))
+
+
+                        for(var ii=0;ii<temp.length;ii++){
+                            if(ii>=1){
+                                //行驶距离
+                                var pointA = new BMap.Point(temp[ii].lngFixed, temp[ii].latFixed);  // 创建点坐标
+                                var pointB = new BMap.Point(temp[ii - 1].lngFixed, temp[ii - 1].latFixed);  // 创建点坐标
+                                var mm = parseFloat((map.getDistance(pointA, pointB)).toFixed(2));
+                                mm_distance +=mm;
+                            }
+
+                            if(temp[ii].sensor1=='1'){
+                                temp_sensor1.push(temp[ii]);
+                            }else{
+                                if(temp_sensor1.length>0){
+                                    for(var a=0;a<temp_sensor1.length;a++){
+                                        if(a>=1) {
+                                            //工作距离
+                                            var pointA = new BMap.Point(temp_sensor1[a].lngFixed, temp_sensor1[a].latFixed);  // 创建点坐标
+                                            var pointB = new BMap.Point(temp_sensor1[a - 1].lngFixed, temp_sensor1[a - 1].latFixed);  // 创建点坐标
+                                            var mm = parseFloat((map.getDistance(pointA, pointB)).toFixed(2));
+                                            distance += mm;//累加距离
+                                        }
+                                    }
+                                    total_number += distance;
+                                }
+                                distance=0;
+                                temp_sensor1=[];
+                            }
+                        }
+
+                       // var jsonData="{"+'"'+"machCode"+'"'+":"+'"'+userName+'"'+","+'"'+"machName"+'"'+":"+'"'+password+'"'+"}"
+                        var temp1="{"+'"'+"workArea"+'"'+":"+'"'+((total_number*3*15)/10000).toPrecision(3)+'"'+","+'"'+"workTime"+'"'+":"+'"'+((temp[temp.length-1].gpsTime-temp[0].gpsTime)/(1000*60*60)).toFixed(2)+'"'+","+'"'+"drivingArea"+'"'+":"+'"'+((mm_distance*3*15)/10000).toPrecision(3)+'"'+"}"
+                        updateArea(temp1,temp[0].reMachTerminalId);
+                        temp_data.push("workArea"+((total_number*3*15)/10000).toPrecision(3))
+                        mm_distance=0
+                        total_number=0;
+                        temp=[];
+                    }
+                }
+
+            }
+
+            if(temp.length>0){
+                var total_numbers=0;
+                for(var ii=0;ii<temp.length;ii++){
+                    if(ii>=1){
+                        //行驶距离
+                        var pointA = new BMap.Point(temp[ii].lngFixed, temp[ii].latFixed);  // 创建点坐标
+                        var pointB = new BMap.Point(temp[ii - 1].lngFixed, temp[ii - 1].latFixed);  // 创建点坐标
+                        var mm = parseFloat((map.getDistance(pointA, pointB)).toFixed(2));
+                        mm_distance +=mm;
+                    }
+
+                    if(temp[ii].sensor1=='1'){
+                        temp_sensor1.push(temp[ii]);
+                    }else{
+                        if(temp_sensor1.length>0){
+                            for(var a=0;a<temp_sensor1.length;a++){
+                                if(a>=1) {
+                                    var pointA = new BMap.Point(temp_sensor1[a].lngFixed, temp_sensor1[a].latFixed);  // 创建点坐标
+                                    var pointB = new BMap.Point(temp_sensor1[a - 1].lngFixed, temp_sensor1[a - 1].latFixed);  // 创建点坐标
+                                    var mm = parseFloat((map.getDistance(pointA, pointB)).toFixed(2));
+                                    distance += mm;//累加距离
+                                }
+                            }
+                            total_numbers += distance;
+
+                        }
+                        distance=0;
+                        temp_sensor1=[];
+                    }
+                }
+
+                jsonData ="{"+'"'+"drivingArea"+'"'+":"+'"'+((mm_distance*3*15)/10000).toPrecision(3)+'"'+","+'"'+"workTime"+'"'+":"+'"'+((temp[temp.length-1].gpsTime-temp[0].gpsTime)/(1000*60*60)).toFixed(2)+'"'+","+'"'+"workArea"+'"'+":"+'"'+((total_numbers*3*15)/10000).toPrecision(3)+'"'+"}";
+            }
+            if(temp.length>1){
+                updateArea(jsonData,temp[0].reMachTerminalId);
+            }
+
+        },
+        error: function (err) {
+        }});
+
+
+    function  updateArea(jsonData,id) {
+        $.ajax({
+            contentType: "application/json;charset=utf-8",
+            url: apiObjUrl + "/"+id,
+            data: jsonData,
+            dataType: "json",
+            type: 'PUT',
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("Authorization", $.cookie('author_code'));
+            },
+            success: function (data) {
+            },
+            error: function (err) {
+                console.log(err.status);
+            }
+        });
+    }
+
+
 
 </script>
