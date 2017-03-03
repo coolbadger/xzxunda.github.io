@@ -155,9 +155,12 @@
         chart.render();
     }
 
+
+
     function  onclick_data(row) {
-        getId(row)
-        window.parent.universal()
+        if(row.allWorkTime!=undefined){
+            window.parent.universas(row)
+        }
     }
 
 

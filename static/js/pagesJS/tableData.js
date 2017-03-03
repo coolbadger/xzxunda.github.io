@@ -130,7 +130,7 @@ TableGen.prototype.init = function () {
 
 };
 
-if ($.cookie('management') == 1) {
+
     //预设初始化编辑列方法
     TableGen.prototype.operateFormatter = function (value, row, index) {
         return [
@@ -142,8 +142,6 @@ if ($.cookie('management') == 1) {
             '</a>'
         ].join('');
     };
-} else {
-}
 
 
 
@@ -176,35 +174,38 @@ TableGen.prototype.operationEvent = function () {
 };
 
 
-TableGen.prototype.loadData = function () {
+        TableGen.prototype.loadData = function () {
+            var defer = $.Deferred();
+            $.ajax({
 
-    var id;
-    function  getId(temps) {
-        alert("fghjk");
-    }
+                url: API_URL + "/api/" + this.apiName,
+                type: 'GET',
+                dataType: 'json',
+                contentType: 'application/json',
 
-    var defer = $.Deferred();
-    $.ajax({
-        url: API_URL + "/api/" + this.apiName,
-        type: 'GET',
-        dataType: 'json',
-        contentType: 'application/json',
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("Authorization", $.cookie('author_code'));
 
-        beforeSend: function (xhr) {
-            xhr.setRequestHeader("Authorization", $.cookie('author_code'));
+                },
+                success: function (data) {
+                    getData(data)
+                    tableGen.table.bootstrapTable('load', data);
+                    defer.resolve(data);
+                },
+                error: function (err) {
+                }
+            });
+            return defer.promise();
 
-        },
-        success: function (data) {
-            getData(data)
-            tableGen.table.bootstrapTable('load', data);
-            defer.resolve(data);
-        },
-        error: function (err) {
         }
-    });
-    return defer.promise();
 
-}
+
+
+
+
+
+
+
 
 //刷新数据的方法
 function refreshData(url) {

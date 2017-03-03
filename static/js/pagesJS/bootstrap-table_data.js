@@ -393,8 +393,6 @@
         },
         onDblClickCell: function (field, value, row, $element) {
             onclick_data(row);
-
-
         },
         onClickRow: function (item, $element) {
             return false;

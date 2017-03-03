@@ -122,7 +122,7 @@ TableGen.prototype.init = function () {
 
 };
 
-if ($.cookie('management') == 1) {
+
     //预设初始化编辑列方法
     TableGen.prototype.operateFormatter = function (value, row, index) {
         return [
@@ -134,8 +134,7 @@ if ($.cookie('management') == 1) {
             '</a>'
         ].join('');
     };
-} else {
-}
+
 
 
 //密码隐藏显示方法

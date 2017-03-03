@@ -1,6 +1,7 @@
 ---
 layout: base_data_charts
 ---
+
 {% include mapScript.html %}
 {% include temp/control_head.html %}
 {% include common/canvas.html %}
@@ -50,9 +51,11 @@ layout: base_data_charts
         });
     }
 
+
+    
+
     window.operateEvents = tableGen.operationEvent();
     tableGen.apiName = 'DetailsPage';
-
     tableGen.bind();
 
 
