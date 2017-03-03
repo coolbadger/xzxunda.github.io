@@ -18,16 +18,16 @@ title: 农机跟踪
                     <div class="col-md-4 map_operation">
                         <div id="operation">
                             <p>
-                                <input type="button" class="btn btn-info btn-mini" value="跳到当前位置"
+                                <input type="button" class="btn btn-info btn-mini" value="当前位置"
                                        onclick="goCurrentPosition()"/>
-                                <input type="button" class="btn btn-info btn-mini" value="跳转到双沟镇"
+                                <input type="button" class="btn btn-info btn-mini" value="到双沟镇"
                                        onclick="goShuangGou()"/>
                             </p>
                             <p>
-                                <input type="button" class="btn btn-info btn-mini" value="清除所有标记"
+                                <input type="button" class="btn btn-info btn-mini" value="清除标记"
                                        onclick="clearAll()"/>
 
-                                <input id="mapClickButton" type="button" class="btn btn-info btn-mini" value="启用点击坐标"
+                                <input id="mapClickButton" type="button" class="btn btn-info btn-mini" value="启用点击"
                                        onclick="shiftMapClick()"/>
                             </p>
                         </div>
@@ -56,9 +56,9 @@ title: 农机跟踪
                 </div>
             </div>
         </div>
-        <div class="col-md-3 info_part ">
+        <div class="col-md-4 info_part ">
             <div class="row">
-                <div class="col-md-12">
+                <div class="col-md-12" >
                     {% include temp/datetime.html id='dtp_start' addDays='-100' text='开始时间:' %}
                     {% include temp/datetime.html id='dtp_end' addDays='1' text='结束时间:' %}
                     {% include temp/textbox.html id='dtp_car' text='车牌号:' placeholder='请输入车牌号' showButton = true

@@ -19,16 +19,16 @@ title: 农机跟踪
                     <div class="col-md-4 map_operation">
                         <div id="operation" >
                             <p>
-                                <input type="button" class="btn btn-info btn-mini" value="跳到当前位置"
+                                <input type="button" class="btn btn-info btn-mini" value="当前位置"
                                        onclick="goCurrentPosition()" style="height: 5%;width: 30%;"/>
-                                <input type="button" class="btn btn-info btn-mini" value="跳转到双沟镇"
+                                <input type="button" class="btn btn-info btn-mini" value="到双沟镇"
                                        onclick="goShuangGou()" style="height: 5%;width: 30%;"/>
                             </p>
                             <p>
-                                <input type="button" class="btn btn-info btn-mini" value="清除所有标记"
+                                <input type="button" class="btn btn-info btn-mini" value="清除标记"
                                        onclick="clearAll()" style="height: 5%;width: 30%;"/>
 
-                                <input id="mapClickButton" type="button" class="btn btn-info btn-mini" value="启用点击坐标"
+                                <input id="mapClickButton" type="button" class="btn btn-info btn-mini" value="启用坐标"
                                        onclick="shiftMapClick()" style="height: 5%;width: 30%;"/>
                             </p>
                         </div>
@@ -61,9 +61,12 @@ title: 农机跟踪
             <div class="row">
                 <div class="col-md-12">
                     {% include temp/datetime.html id='dtp_start' addDays='-100' text='开始时间:' %}
+                    <br/>
                     {% include temp/datetime.html id='dtp_end' addDays='1' text='结束时间:' %}
+                    <br/>
                     {% include temp/textbox.html id='dtp_car' text='车牌号:' placeholder='请输入车牌号' showButton = true
                     onclick='onSearchClick()' onTextChange='onAutoSearch(value)' %}
+                    <br/>
                 </div>
             </div>
             <div class="row">
