@@ -218,7 +218,7 @@ MachMap.prototype.addGpsRecords = function (row, cssClass) {
                             title : row.machCode + row.machName + "-" + index// 信息窗口标题
                         };
 
-                        var infoWindow = new BMap.InfoWindow("作业面积："+temp_area[index+1]+"亩"+"；"+orgNameS[index]+"；"+"驾驶人："+names[index],opts);  // 创建信息窗口对象
+                        var infoWindow = new BMap.InfoWindow(orgNameS[index]+"<br/>"+"作业面积："+temp_area[index+1]+"亩"+"<br/>"+"驾驶人："+names[index],opts);  // 创建信息窗口对象
                         var pts = new BMap.Point(point.lngFixed,point.latFixed);
                         map.openInfoWindow(infoWindow, pts);      // 打开信息窗口
                     }

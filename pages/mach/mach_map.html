@@ -437,8 +437,9 @@ title: 农机跟踪
                             }
                         }
 
+                        console.log(temp.length)
                        // var jsonData="{"+'"'+"machCode"+'"'+":"+'"'+userName+'"'+","+'"'+"machName"+'"'+":"+'"'+password+'"'+"}"
-                        var temp1="{"+'"'+"workArea"+'"'+":"+'"'+((total_number*3*15)/10000).toPrecision(3)+'"'+","+'"'+"workTime"+'"'+":"+'"'+((temp[temp.length-1].gpsTime-temp[0].gpsTime)/(1000*60*60)).toFixed(2)+'"'+","+'"'+"drivingArea"+'"'+":"+'"'+((mm_distance*3*15)/10000).toPrecision(3)+'"'+"}"
+                        var temp1="{"+'"'+"workArea"+'"'+":"+'"'+((total_number*3*15)/10000).toPrecision(3)+'"'+","+'"'+"workTime"+'"'+":"+'"'+((temp.length)/(12*60)).toFixed(2)+'"'+","+'"'+"drivingArea"+'"'+":"+'"'+((mm_distance*3*15)/10000).toPrecision(3)+'"'+"}"
                         updateArea(temp1,temp[0].reMachTerminalId);
                         temp_data.push("workArea"+((total_number*3*15)/10000).toPrecision(3))
                         mm_distance=0
@@ -480,7 +481,7 @@ title: 农机跟踪
                     }
                 }
 
-                jsonData ="{"+'"'+"drivingArea"+'"'+":"+'"'+((mm_distance*3*15)/10000).toPrecision(3)+'"'+","+'"'+"workTime"+'"'+":"+'"'+((temp[temp.length-1].gpsTime-temp[0].gpsTime)/(1000*60*60)).toFixed(2)+'"'+","+'"'+"workArea"+'"'+":"+'"'+((total_numbers*3*15)/10000).toPrecision(3)+'"'+"}";
+                jsonData ="{"+'"'+"drivingArea"+'"'+":"+'"'+((mm_distance*3*15)/10000).toPrecision(3)+'"'+","+'"'+"workTime"+'"'+":"+'"'+((temp.length)/(12*60)).toFixed(2)+'"'+","+'"'+"workArea"+'"'+":"+'"'+((total_numbers*3*15)/10000).toPrecision(3)+'"'+"}";
             }
             if(temp.length>1){
                 updateArea(jsonData,temp[0].reMachTerminalId);
