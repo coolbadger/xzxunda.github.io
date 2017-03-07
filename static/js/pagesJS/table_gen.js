@@ -185,6 +185,7 @@ TableGen.prototype.loadData = function () {
 
         },
         success: function (data) {
+            console.log(data)
             tableGen.table.bootstrapTable('load', data);
             defer.resolve(data);
         },
