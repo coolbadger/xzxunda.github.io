@@ -354,7 +354,7 @@
                                 "F_EnCode" : "AreaManage",
                                 "F_FullName" : "作业跟踪",
                                 "F_Icon" : "fa fa-leaf",
-                                "F_UrlAddress" : "../pages/userMach/mach_map.html",
+                                "F_UrlAddress" : "../pages/mach/mach_map.html",
                                 "F_Target" : "iframe",
                                 "F_IsMenu" : 1,
                                 "F_AllowExpand" : 1,
