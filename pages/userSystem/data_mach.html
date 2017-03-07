@@ -1,0 +1,65 @@
+---
+layout: base_data_charts
+---
+
+{% include mapScript.html %}
+{% include temp/control_head.html %}
+{% include common/canvas.html %}
+{% include temp/tableData.html %}
+<script type="text/javascript" src="/static/js/pagesJS/tableData.js"></script>
+<script type="text/javascript">
+
+
+
+    var tableGen = new TableGen();
+    tableGen.editFields = new Array('id', 'orgCode', 'orgName', 'orgContact', 'orgAddress', 'orgTell', 'orgFax', 'orgEmail', 'notes');
+
+    tableGen.validates = {orgCode: "notEmpty", orgName: "notEmpty", orgContact: "notEmpty"};
+
+    tableGen.setTable = function (inTable) {
+        inTable.bootstrapTable({
+            height: $(window).height(),
+            columns: [{
+                field: 'id',
+                title: 'id',
+                align: 'center',
+            },{
+                field: 'machCode',
+                title: '农机号',
+                align: 'center',
+            }, {
+                field: 'machName',
+                title: '农机类型',
+                align: 'center',
+            },  {
+                field: 'drivingArea',
+                title: '工作面积/亩',
+                align: 'center',
+            }
+                , {
+                    field: 'workArea',
+                    title: '有效工作面积/亩',
+                    align: 'center',
+                }
+                , {
+                    field: 'workTime',
+                    title: '工作时间/小时',
+                    align: 'center',
+                }]
+        });
+    }
+
+
+
+    window.operateEvents = tableGen.operationEvent();
+    tableGen.apiName = 'DetailsPage'+'/'+$("#org_id" , parent.document).val();
+    tableGen.bind();
+    console.log($("#tabReload" , parent.document))
+    $("#org_id" , parent.document).click
+
+
+
+
+
+
+</script>

@@ -1,0 +1,56 @@
+---
+layout: base_page
+---
+
+{% include temp/user_table.html inData = site.data.Maintainrecord apiName = 'MaintainRecord' %}
+
+<script type="text/javascript">
+
+    var tableGen = new TableGen();
+    tableGen.editFields = new Array('id', 'machId','machCode', 'machName', 'workingType', 'maintainInfo');
+
+    tableGen.validates = {machCode: "notEmpty", machName: "notEmpty", workingType: "notEmpty"};
+    tableGen.setTable = function (inTable) {
+        inTable.bootstrapTable({
+            height: $(window).height(),
+            columns: [{
+                field: 'state',
+                checkbox: true,
+                align: 'center',
+                valign: 'middle'
+            }, {
+                title: 'ID',
+                field: 'id',
+                align: 'center',
+                sortable: true,
+            }, {
+                               title: '所属编号',
+                               field: 'machId',
+                               align: 'center',
+                           },
+                           {
+                title: '车牌号',
+                field: 'machCode',
+                align: 'center',
+            },  {
+                title: '农机名称',
+                field: 'machName',
+                align: 'center',
+            }, {
+                title: '农机类型',
+                field: 'workingType',
+                align: 'center',
+            },  {
+                title: '原因',
+                field: 'maintainInfo',
+                align: 'center',
+            }]
+        });
+    }
+
+    window.operateEvents = tableGen.operationEvent();
+
+    tableGen.apiName = 'MaintainRecord';
+    tableGen.bind();
+
+</script>

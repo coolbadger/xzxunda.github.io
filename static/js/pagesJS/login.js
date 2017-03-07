@@ -34,7 +34,11 @@ secondCtrl.controller('loginCtrl', function ($scope, $location, httpService) {
                     if(data[i].password==password&&data[i].userName==userName){
                         $.cookie('id',data[i].id)
                         $.cookie('management',data[i].management);
-
+                        if(data[i].management=="1"){
+                            window.location.href = "/pages/home.html";
+                        }else{
+                            window.location.href = "/pages/userHome.html";
+                        }
                     }
                 }
                 $.cookie('userName',userName);
@@ -42,7 +46,6 @@ secondCtrl.controller('loginCtrl', function ($scope, $location, httpService) {
                 $.cookie('islogin', 'true', {path: '/'});
                 $.cookie('author_code', author_code, {path: '/'});
                 /*alert($.cookie('id'))*/
-                window.location.href = "/pages/home.html";
             },
             error: function (err) {
                 console.log(err.status);
