@@ -48,6 +48,7 @@ secondCtrl.controller('loginCtrl', function ($scope, $location, httpService) {
                 /*alert($.cookie('id'))*/
             },
             error: function (err) {
+                alert("登录失败！！")
                 console.log(err.status);
             }
         });

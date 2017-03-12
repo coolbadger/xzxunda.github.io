@@ -185,7 +185,7 @@ TableGen.prototype.loadData = function () {
 
         },
         success: function (data) {
-            console.log(data)
+            //console.log(data)
             tableGen.table.bootstrapTable('load', data);
             defer.resolve(data);
         },
@@ -237,9 +237,9 @@ TableGen.prototype.createOrUpdate = function () {
                     params = "{" + params + "}";
                     params = JSON.parse(params);
                     var id = $('#id').val();//取得隐藏id控件的值，用来判断saveObj方法是创建记录，还是还是修改记录
-                    console.log("id:" + id);
-                    console.log("input json object:" + JSON.stringify(params));
-                    console.log(params)
+                    //console.log("id:" + id);
+                    //console.log("input json object:" + JSON.stringify(params));
+                    //console.log(params)
                     if (id != "") {  //修改
                         var url = apiObjUrl + '/' + id;
                         updateItem(url, params, $http);
@@ -262,8 +262,8 @@ function saveItem(url, params, $http) {
     $http.post(url, params, {
         'Content-Type': "application/json",
     }).success(function (data, state) {
-        console.log("state:" + state);
-        console.log("success result:" + JSON.stringify(data));
+        //console.log("state:" + state);
+        //console.log("success result:" + JSON.stringify(data));
         if (state == '201') {
             alertTip(TableGen.prototype.success);
             refreshData(apiObjUrl);
@@ -271,15 +271,15 @@ function saveItem(url, params, $http) {
             alertTip(TableGen.prototype.error);
         }
     }).error(function (data) {
-        console.log("error result:" + JSON.stringify(data));
+        //console.log("error result:" + JSON.stringify(data));
         alertTip(TableGen.prototype.error);
     });
 }
 
 //修改一条记录的方法
 function updateItem(url, params, $http) {
-    console.log(url);
-    console.log(params)
+    //console.log(url);
+    //console.log(params)
     var $table = $('#' + TableGen.prototype.tableID);
     $http.defaults.headers.common = {'Authorization': $.cookie('author_code')};
     $http.put(url, params, {
@@ -287,8 +287,8 @@ function updateItem(url, params, $http) {
         'Content-Type': "application/json",
         "X-HTTP-Method-Override": "PUT"
     }).success(function (data, state) {
-        console.log("state:" + state);
-        console.log("success result:" + JSON.stringify(data));
+        //console.log("state:" + state);
+        //console.log("success result:" + JSON.stringify(data));
         if (state == '205') {
             alertTip(TableGen.prototype.success);
             //$table.bootstrapTable('refresh', {url: apiObjUrl});
@@ -297,7 +297,7 @@ function updateItem(url, params, $http) {
             alertTip(TableGen.prototype.error);
         }
     }).error(function (data) {
-        console.log("error result:" + JSON.stringify(data));
+        //console.log("error result:" + JSON.stringify(data));
         alertTip(TableGen.prototype.error);
     });
 }
@@ -314,8 +314,8 @@ function deleteItem(apiUrl, id) {
             xhr.setRequestHeader("Authorization", $.cookie('author_code'));
         },
         success: function (data, state, result) {
-            console.log("state: " + state + ", status:" + result.status + ", statusText:" + result.statusText);
-            console.log("success data:" + JSON.stringify(data));
+            //console.log("state: " + state + ", status:" + result.status + ", statusText:" + result.statusText);
+            //console.log("success data:" + JSON.stringify(data));
             if (state == 'success') {
                 alertTip(TableGen.prototype.success);
                 $table.bootstrapTable('remove', {
@@ -325,7 +325,7 @@ function deleteItem(apiUrl, id) {
             }
         },
         error: function (result, state) {
-            console.log("state: " + state + ", status: " + result.status + ", statusText: " + result.statusText);
+            //console.log("state: " + state + ", status: " + result.status + ", statusText: " + result.statusText);
             alertTip(TableGen.prototype.error);
         }
     });

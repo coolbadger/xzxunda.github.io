@@ -70,7 +70,7 @@ title: 农机跟踪
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-12">
+                <div class="col-md-12" style="min-height:250px;overflow-y:auto;max-height:300px;">
                     {% include temp/simple_table.html %}
                 </div>
             </div>
@@ -165,7 +165,7 @@ title: 农机跟踪
 
     // 自动查询本地缓存结果
     function onAutoSearch(value) {
-        console.log(value)
+        //console.log(value)
         if (fullData == null) {
             fullData = simpleTableGen.table.bootstrapTable('getData');
         }
@@ -437,9 +437,9 @@ title: 农机跟踪
                             }
                         }
 
-                        console.log(temp.length)
+                        //console.log(temp.length)
                        // var jsonData="{"+'"'+"machCode"+'"'+":"+'"'+userName+'"'+","+'"'+"machName"+'"'+":"+'"'+password+'"'+"}"
-                        var temp1="{"+'"'+"workArea"+'"'+":"+'"'+((total_number*3*15)/10000).toPrecision(3)+'"'+","+'"'+"workTime"+'"'+":"+'"'+((temp.length)/(12*60)).toFixed(2)+'"'+","+'"'+"drivingArea"+'"'+":"+'"'+((mm_distance*3*15)/10000).toPrecision(3)+'"'+"}"
+                        var temp1="{"+'"'+"workArea"+'"'+":"+'"'+((total_number*data[i].machineryWidth*15)/10000).toPrecision(3)+'"'+","+'"'+"workTime"+'"'+":"+'"'+((temp.length)/(12*60)).toFixed(2)+'"'+","+'"'+"drivingArea"+'"'+":"+'"'+((mm_distance*3*15)/10000).toPrecision(3)+'"'+"}"
                         updateArea(temp1,temp[0].reMachTerminalId);
                         temp_data.push("workArea"+((total_number*3*15)/10000).toPrecision(3))
                         mm_distance=0
@@ -451,6 +451,7 @@ title: 农机跟踪
             }
 
             if(temp.length>0){
+                var machineryWidths=0;
                 var total_numbers=0;
                 for(var ii=0;ii<temp.length;ii++){
                     if(ii>=1){
@@ -479,9 +480,10 @@ title: 农机跟踪
                         distance=0;
                         temp_sensor1=[];
                     }
+                    machineryWidths=temp[ii].machineryWidth;
                 }
 
-                jsonData ="{"+'"'+"drivingArea"+'"'+":"+'"'+((mm_distance*3*15)/10000).toPrecision(3)+'"'+","+'"'+"workTime"+'"'+":"+'"'+((temp.length)/(12*60)).toFixed(2)+'"'+","+'"'+"workArea"+'"'+":"+'"'+((total_numbers*3*15)/10000).toPrecision(3)+'"'+"}";
+                jsonData ="{"+'"'+"drivingArea"+'"'+":"+'"'+((mm_distance*machineryWidths*15)/10000).toPrecision(3)+'"'+","+'"'+"workTime"+'"'+":"+'"'+((temp.length)/(12*60)).toFixed(2)+'"'+","+'"'+"workArea"+'"'+":"+'"'+((total_numbers*3*15)/10000).toPrecision(3)+'"'+"}";
             }
             if(temp.length>1){
                 updateArea(jsonData,temp[0].reMachTerminalId);

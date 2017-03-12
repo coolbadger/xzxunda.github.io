@@ -88,7 +88,7 @@
         var id = $("#id").val();
         var machId = $("#machId").val();
         var terminalId = row.id;
-        console.log("machTerminalId:" + id + ", machId:" + machId + ", terminalId:" + terminalId);
+        //console.log("machTerminalId:" + id + ", machId:" + machId + ", terminalId:" + terminalId);
         var url = apiObjUrl;
         console.log(url);
         $.ajax({
@@ -101,8 +101,8 @@
                 xhr.setRequestHeader("Authorization", $.cookie('author_code'));
             },
             success: function (data, state, result) {
-                console.log("state: " + state + ", status:" + result.status + ", statusText:" + result.statusText);
-                console.log("success data:" + JSON.stringify(data));
+                //console.log("state: " + state + ", status:" + result.status + ", statusText:" + result.statusText);
+                //console.log("success data:" + JSON.stringify(data));
                 if (state == 'success') {
                     $('#machTerminalModal').modal('hide');
                     loadTerminalData(terminalDataURL);
@@ -112,7 +112,7 @@
             },
             error: function (result, state) {
                 alertTip('error');
-                console.log("state: " + state + ", status: " + result.status + ", statusText: " + result.statusText);
+                //console.log("state: " + state + ", status: " + result.status + ", statusText: " + result.statusText);
             }
         });
     }

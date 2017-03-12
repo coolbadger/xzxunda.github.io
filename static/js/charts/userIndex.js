@@ -607,7 +607,7 @@
 						"F_EnCode" : "农机管理",
 						"F_FullName" : "农机管理",
 						"F_Icon" : "fa fa-hourglass-half",
-						"F_UrlAddress" : "../pages/system/machine.html",
+						"F_UrlAddress" : "../pages/userSystem/machine.html",
 						"F_Target" : "iframe",
 						"F_IsMenu" : 1,
 						"F_AllowExpand" : 1,
@@ -624,7 +624,30 @@
 						"F_ModifyDate" : "",
 						"F_ModifyUserId" : "24a055d6-5924-44c5-be52-3715cdd68011",
 						"F_ModifyUserName" : ""
-					},
+					},{
+                                "F_ModuleId" : "0d296398-bc0e-4f38-996a-6e24bc88cc53",
+                                "F_ParentId" : "5",
+                                "F_EnCode" : "农机宽度",
+                                "F_FullName" : "农机宽度",
+                                "F_Icon" : "fa fa-edit",
+                                "F_UrlAddress" : "../pages/userSystem/machineWidth.html",
+                                "F_Target" : "iframe",
+                                "F_IsMenu" : 1,
+                                "F_AllowExpand" : 1,
+                                "F_IsPublic" : 0,
+                                "F_AllowEdit" : null,
+                                "F_AllowDelete" : null,
+                                "F_SortCode" : 4,
+                                "F_DeleteMark" : 0,
+                                "F_EnabledMark" : 1,
+                                "F_Description" : null,
+                                "F_CreateDate" : "2015-11-23 22:13:39",
+                                "F_CreateUserId" : "System",
+                                "F_CreateUserName" : "",
+                                "F_ModifyDate" : "",
+                                "F_ModifyUserId" : "24a055d6-5924-44c5-be52-3715cdd68011",
+                                "F_ModifyUserName" : ""
+                            },
 
 
 

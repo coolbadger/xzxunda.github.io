@@ -248,9 +248,9 @@ TableGen.prototype.createOrUpdate = function () {
                     params = "{" + params + "}";
                     params = JSON.parse(params);
                     var id = $('#id').val();//取得隐藏id控件的值，用来判断saveObj方法是创建记录，还是还是修改记录
-                    console.log("id:" + id);
-                    console.log("input json object:" + JSON.stringify(params));
-                    console.log(params)
+                    //console.log("id:" + id);
+                    //console.log("input json object:" + JSON.stringify(params));
+                    //console.log(params)
                     if (id != "") {  //修改
                         var url = apiObjUrl + '/' + id;
                         updateItem(url, params, $http);

@@ -145,7 +145,7 @@ MachMap.prototype.addGpsRecords = function (row, cssClass) {
             xhr.setRequestHeader("Authorization", $.cookie('author_code'));
         },
         success: function (result) {
-            console.log(result)
+            //console.log(result)
             var markers=gpsRecordLine.addRecords(result);
             gpsRecordLine.setLineColor("#a2aea4");
             defer.resolve(ref_id,gpsRecordLine);
@@ -158,13 +158,14 @@ MachMap.prototype.addGpsRecords = function (row, cssClass) {
             var temp_area=[];//存入的面积
             var orgNameS=[];
             var names=[];
+            var machineryWidths=0;
             for(var  i=0;i<result.length;i++){
                 var lat=result[i].latFixed;
                 var lng=result[i].lngFixed;
                 if(result[i].sensor1=='1'){
 
                     if(arr.length==0){
-                        temp_area.push(((m*3*15)/10000).toPrecision(3));//计算面积
+                        temp_area.push(((m*result[i].machineryWidth*15)/10000).toPrecision(3));//计算面积
                         orgNameS.push(result[i].orgName)
                         names.push(result[i].name)
                         m=0;
@@ -202,9 +203,10 @@ MachMap.prototype.addGpsRecords = function (row, cssClass) {
                     area.length=0;
 
                 }
+                machineryWidths=result[i].machineryWidth;
             }
 
-            temp_area.push(((m*3*15)/10000).toPrecision(3));//计算面积
+            temp_area.push(((m*machineryWidths*15)/10000).toPrecision(3));//计算面积
 
             for (var i = 0; i < blocks.length; i++) {
                 (function(){
@@ -271,7 +273,7 @@ function goCurrentPosition() {
     geolocation.getCurrentPosition(function (position) {
         if (this.getStatus() == BMAP_STATUS_SUCCESS) {
             var mk = new BMap.Marker(position.point);//添加标记点
-            console.log(position.point)
+            //console.log(position.point)
             map.addOverlay(mk);
             map.panTo(position.point);
             map.setCenter(position.point);

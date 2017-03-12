@@ -67,10 +67,10 @@ layout: base_page
         window.operateEvents = {
             'click .bind': function (e, value, row, index) {
                 if (row.id != null && row.terminalId != null) {
-                    console.log("machTerminalId:" + row.id + ", machId:" + row.machId);
+                    //console.log("machTerminalId:" + row.id + ", machId:" + row.machId);
                     alertInfoTip('info', '对不起!', '该农机已绑定，请先解除。');
                 } else {
-                    console.log("machTerminalId:" + row.id + ", machId:" + row.machId);
+                    //console.log("machTerminalId:" + row.id + ", machId:" + row.machId);
                     $("#id").val(row.id);
                     $("#machId").val(row.machId);
                     $modal.modal('show');
@@ -80,7 +80,7 @@ layout: base_page
                 var id = row.id;
                 var machId = row.machId;
                 if (id != null && row.terminalId != null) {
-                    console.log("machTerminalId:" + id + ", machId:" + machId);
+                    //console.log("machTerminalId:" + id + ", machId:" + machId);
                     bootbox.setLocale("zh_CN");
                     bootbox.confirm({
                         size: 'small',
@@ -98,8 +98,8 @@ layout: base_page
                                         xhr.setRequestHeader("Authorization", $.cookie('author_code'));
                                     },
                                     success: function (data, state, result) {
-                                        console.log("state: " + state + ", status:" + result.status + ", statusText:" + result.statusText);
-                                        console.log("success data:" + JSON.stringify(data));
+                                        //console.log("state: " + state + ", status:" + result.status + ", statusText:" + result.statusText);
+                                        //console.log("success data:" + JSON.stringify(data));
                                         if (state == 'success') {
                                             refreshData(apiObjUrl);
                                             loadTerminalData(terminalDataURL);
@@ -108,14 +108,14 @@ layout: base_page
                                     },
                                     error: function (result, state) {
                                         alertTip('error');
-                                        console.log("state: " + state + ", status: " + result.status + ", statusText: " + result.statusText);
+                                        //console.log("state: " + state + ", status: " + result.status + ", statusText: " + result.statusText);
                                     }
                                 });
                             }
                         }
                     });
                 } else {
-                    console.log("machTerminalId:" + row.id + ", machId:" + row.machId);
+                    //console.log("machTerminalId:" + row.id + ", machId:" + row.machId);
                     alertInfoTip('info', '对不起！', '该农机未被绑定。');
                 }
             }
