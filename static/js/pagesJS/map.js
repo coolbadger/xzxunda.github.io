@@ -217,10 +217,10 @@ MachMap.prototype.addGpsRecords = function (row, cssClass) {
                         var opts = {
                             width : 250,    // 信息窗口宽度
                             height: 100,    // 信息窗口高度
-                            title : row.machCode + row.machName + "-" + index// 信息窗口标题
+                            //title : row.machCode + row.machName + "-" + index// 信息窗口标题
                         };
 
-                        var infoWindow = new BMap.InfoWindow(orgNameS[index]+"<br/>"+"作业面积："+temp_area[index+1]+"亩"+"<br/>"+"驾驶人："+names[index],opts);  // 创建信息窗口对象
+                        var infoWindow = new BMap.InfoWindow("<div style='border: #e6e6e6 1px solid;width: 250px;height: 100px'>"+"<div style='margin-left: 8px;margin-top: 5px'>"+row.machCode + row.machName + "-" + index+"<br/>"+orgNameS[index]+"<br/>"+"作业面积："+temp_area[index+1]+"亩"+"<br/>"+"驾驶人："+names[index]+"</div>"+"</div>",opts);  // 创建信息窗口对象
                         var pts = new BMap.Point(point.lngFixed,point.latFixed);
                         map.openInfoWindow(infoWindow, pts);      // 打开信息窗口
                     }
