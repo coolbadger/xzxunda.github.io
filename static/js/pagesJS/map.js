@@ -89,7 +89,15 @@ MachMap.prototype.initMap = function (containerID) {
 }
 
 function mapClick(e) {
-    alert(e.point.lng + ", " + e.point.lat);
+    var adds = new BMap.Point(e.point.lng , e.point.lat);
+    Geocoder(adds);
+    function Geocoder(point, i) {
+        var gc = new BMap.Geocoder();
+        gc.getLocation(point, function (rs) {
+            var addComp = rs.addressComponents;
+            alert(addComp.province + addComp.city + addComp.district + addComp.street + addComp.streetNumber)
+        });
+    }
 }
 // 自定义地图点击事件
 MachMap.prototype.enableMapClick = function (enableClick) {
@@ -220,7 +228,7 @@ MachMap.prototype.addGpsRecords = function (row, cssClass) {
                             //title : row.machCode + row.machName + "-" + index// 信息窗口标题
                         };
 
-                        var infoWindow = new BMap.InfoWindow("<div style='border: #e6e6e6 1px solid;width: 250px;height: 100px'>"+"<div style='margin-left: 8px;margin-top: 5px'>"+row.machCode + row.machName + "-" + index+"<br/>"+orgNameS[index]+"<br/>"+"作业面积："+temp_area[index+1]+"亩"+"<br/>"+"驾驶人："+names[index]+"</div>"+"</div>",opts);  // 创建信息窗口对象
+                        var infoWindow = new BMap.InfoWindow('<div>'+"<div style='border: #e6e6e6 1px solid;width: 250px;height: 100px;'>"+"<div style='margin-left: 8px;margin-top: 5px'>"+"<div>"+row.machCode + row.machName + "-" + index+"</div>"+"<br/>"+orgNameS[index]+"<br/>"+"作业面积："+temp_area[index+1]+"亩"+"<br/>"+"驾驶人："+names[index]+"</div>"+"</div>"+'</div>',opts);  // 创建信息窗口对象
                         var pts = new BMap.Point(point.lngFixed,point.latFixed);
                         map.openInfoWindow(infoWindow, pts);      // 打开信息窗口
                     }
