@@ -10,7 +10,8 @@ title: 农机管理系统
 #apiurl: 'http://lekoxnfx.oicp.net:18020'
 #apiurl: 'http://server.xunda.tech:8080'
 #apiurl: 'http://192.168.3.180:8080'
-apiurl: 'http://localhost:8080'
+#apiurl: 'http://localhost:8080'
+apiurl: 'http://120.195.40.207:8083'
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "http://xunda.tech" # the base hostname & protocol for your site
 twitter_username:

@@ -19,7 +19,7 @@ title: 农机跟踪
                     <div class="col-md-4 map_operation">
                         <div id="operation" >
                             <p>
-                                <input type="button" class="btn btn-info btn-mini" value="当前位置"
+                                <input type="button" class="btn btn-info btn-mini" value="刷新页面"
                                        onclick="goCurrentPosition()" style="height: 5%;width: 30%;"/>
                                 <input type="button" class="btn btn-info btn-mini" value="到双沟镇"
                                        onclick="goShuangGou()" style="height: 5%;width: 30%;"/>
@@ -384,7 +384,7 @@ title: 农机跟踪
             var temp_sensor1=[];
             var temp=[];
             var temp_data=[];
-            var distance;
+            var distance=0.0;
             var mm_distance = 0;
             var workTime = 0;
             var total_number = 0;
@@ -435,10 +435,10 @@ title: 农机跟踪
                                 temp_sensor1=[];
                             }
                         }
-
+                        //console.log("shang"+data[i].machineryWidth)
                         //console.log(temp.length)
                        // var jsonData="{"+'"'+"machCode"+'"'+":"+'"'+userName+'"'+","+'"'+"machName"+'"'+":"+'"'+password+'"'+"}"
-                        var temp1="{"+'"'+"workArea"+'"'+":"+'"'+((total_number*data[i].machineryWidth*15)/10000).toPrecision(3)+'"'+","+'"'+"workTime"+'"'+":"+'"'+((temp.length)/(12*60)).toFixed(2)+'"'+","+'"'+"drivingArea"+'"'+":"+'"'+((mm_distance*3*15)/10000).toPrecision(3)+'"'+"}"
+                        var temp1="{"+'"'+"workArea"+'"'+":"+'"'+((total_number*data[i].machineryWidth*15)/10000).toFixed(2)+'"'+","+'"'+"workTime"+'"'+":"+'"'+((temp.length)/(12*60)).toFixed(2)+'"'+","+'"'+"drivingArea"+'"'+":"+'"'+((mm_distance*3*15)/10000).toFixed(2)+'"'+"}"
                         updateArea(temp1,temp[0].reMachTerminalId);
                         temp_data.push("workArea"+((total_number*3*15)/10000).toPrecision(3))
                         mm_distance=0
@@ -471,6 +471,7 @@ title: 农机跟踪
                                     var pointB = new BMap.Point(temp_sensor1[a - 1].lngFixed, temp_sensor1[a - 1].latFixed);  // 创建点坐标
                                     var mm = parseFloat((map.getDistance(pointA, pointB)).toFixed(2));
                                     distance += mm;//累加距离
+                                    //console.log("qwe"+distance)
                                 }
                             }
                             total_numbers += distance;
@@ -481,8 +482,9 @@ title: 农机跟踪
                     }
                     machineryWidths=temp[ii].machineryWidth;
                 }
-
-                jsonData ="{"+'"'+"drivingArea"+'"'+":"+'"'+((mm_distance*machineryWidths*15)/10000).toPrecision(3)+'"'+","+'"'+"workTime"+'"'+":"+'"'+((temp.length)/(12*60)).toFixed(2)+'"'+","+'"'+"workArea"+'"'+":"+'"'+((total_numbers*3*15)/10000).toPrecision(3)+'"'+"}";
+                //console.log("xia"+total_numbers)
+                //console.log("xia"+machineryWidths)
+                jsonData ="{"+'"'+"drivingArea"+'"'+":"+'"'+((mm_distance*machineryWidths*15)/10000).toFixed(2)+'"'+","+'"'+"workTime"+'"'+":"+'"'+((temp.length)/(12*60)).toFixed(2)+'"'+","+'"'+"workArea"+'"'+":"+'"'+((total_numbers*3*15)/10000).toFixed(2)+'"'+"}";
             }
             if(temp.length>1){
                 updateArea(jsonData,temp[0].reMachTerminalId);

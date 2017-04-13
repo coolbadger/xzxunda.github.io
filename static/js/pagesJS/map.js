@@ -277,20 +277,21 @@ function goShuangGou() {
 
 // 跳转到当前位置,并添加标记点
 function goCurrentPosition() {
-    var geolocation = new BMap.Geolocation();
-    geolocation.getCurrentPosition(function (position) {
-        if (this.getStatus() == BMAP_STATUS_SUCCESS) {
-            var mk = new BMap.Marker(position.point);//添加标记点
-            //console.log(position.point)
-            map.addOverlay(mk);
-            map.panTo(position.point);
-            map.setCenter(position.point);
+    location=location
+    /*    var geolocation = new BMap.Geolocation();
+        geolocation.getCurrentPosition(function (position) {
+            if (this.getStatus() == BMAP_STATUS_SUCCESS) {
+                var mk = new BMap.Marker(position.point);//添加标记点
+                //console.log(position.point)
+                map.addOverlay(mk);
+                map.panTo(position.point);
+                map.setCenter(position.point);
 
-        }
-        else {
-            alert('无法定位到当前位置:' + this.getStatus());
-        }
-    });
+            }
+            else {
+                alert('无法定位到当前位置:' + this.getStatus());
+            }
+        });*/
     //关于状态码
     //BMAP_STATUS_SUCCESS	检索成功。对应数值“0”。
     //BMAP_STATUS_CITY_LIST	城市列表。对应数值“1”。
