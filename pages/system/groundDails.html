@@ -75,6 +75,7 @@ layout: base_page
     //添加异步方法，在载入数据后执行，用于对获取到的数据进行后期处理
     $.when(tableGen.loadData()).done(
             function (data) {
+                console.log(data)
                 for (var i = 0; i < data.length; i++) {
 
                     if(data[i].sensor1==0){

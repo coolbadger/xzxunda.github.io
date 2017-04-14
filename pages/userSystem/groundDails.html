@@ -76,7 +76,6 @@ layout: base_page
     $.when(tableGen.loadData()).done(
             function (data) {
                 for (var i = 0; i < data.length; i++) {
-
                     if(data[i].sensor1==0){
                         data[i].sensor1="运行状态";
                     }else if(data[i].sensor1==1){
@@ -84,6 +83,7 @@ layout: base_page
                     }else if(data[i].sensor1==null){
                         data[i].sensor1="暂时无任何工作"
                     }
+
 
 
                     var str=data[i].localTime;

@@ -452,7 +452,7 @@
 						"F_EnCode" : "OrganizeManage",
 						"F_FullName" : "业务人员",
 						"F_Icon" : "fa fa-sitemap",
-						"F_UrlAddress" : "../pages/system/orgUser.html",
+						"F_UrlAddress" : "../pages/userSystem/orgUser.html",
 						"F_Target" : "iframe",
 						"F_IsMenu" : 1,
 						"F_AllowExpand" : 1,
