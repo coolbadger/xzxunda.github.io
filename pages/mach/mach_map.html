@@ -387,7 +387,7 @@ title: 农机跟踪
             var distance=0.0;
             var mm_distance = 0;
             var workTime = 0;
-            var total_number = 0;
+            var total_number = 0.0;
             var reMachTerminalId;
 
             for(var i=0;i<data.length;i++){
@@ -413,8 +413,11 @@ title: 农机跟踪
                                 var pointA = new BMap.Point(temp[ii].lngFixed, temp[ii].latFixed);  // 创建点坐标
                                 var pointB = new BMap.Point(temp[ii - 1].lngFixed, temp[ii - 1].latFixed);  // 创建点坐标
                                 var mm = parseFloat((map.getDistance(pointA, pointB)).toFixed(2));
-                                mm_distance +=mm;
+                                if(temp[ii].lngFixed!=null&temp[ii].latFixed!=null){
+                                    mm_distance +=mm;
+                                }
                             }
+
 
                             if(temp[ii].sensor1=='1'){
                                 temp_sensor1.push(temp[ii]);
@@ -426,11 +429,15 @@ title: 农机跟踪
                                             var pointA = new BMap.Point(temp_sensor1[a].lngFixed, temp_sensor1[a].latFixed);  // 创建点坐标
                                             var pointB = new BMap.Point(temp_sensor1[a - 1].lngFixed, temp_sensor1[a - 1].latFixed);  // 创建点坐标
                                             var mm = parseFloat((map.getDistance(pointA, pointB)).toFixed(2));
-                                            distance += mm;//累加距离
+                                            if(temp_sensor1[a].lngFixed!=null&temp_sensor1[a].latFixed!=null){
+                                                distance += mm;//累加距离
+                                            }
+
                                         }
                                     }
                                     total_number += distance;
                                 }
+
                                 distance=0;
                                 temp_sensor1=[];
                             }
@@ -438,7 +445,7 @@ title: 农机跟踪
                         //console.log("shang"+data[i].machineryWidth)
                         //console.log(temp.length)
                        // var jsonData="{"+'"'+"machCode"+'"'+":"+'"'+userName+'"'+","+'"'+"machName"+'"'+":"+'"'+password+'"'+"}"
-                        var temp1="{"+'"'+"workArea"+'"'+":"+'"'+((total_number*data[i].machineryWidth*15)/10000).toFixed(2)+'"'+","+'"'+"workTime"+'"'+":"+'"'+((temp.length)/(12*60)).toFixed(2)+'"'+","+'"'+"drivingArea"+'"'+":"+'"'+((mm_distance*data[i].machineryWidth*15)/10000).toFixed(2)+'"'+"}"
+                        var temp1="{"+'"'+"workArea"+'"'+":"+'"'+((total_number*data[i].machineryWidth*15)/10000).toFixed(2)+'"'+","+'"'+"workTime"+'"'+":"+'"'+((temp.length)/(12*60)).toFixed(2)+'"'+","+'"'+"drivingArea"+'"'+":"+'"'+mm_distance.toFixed(2)+'"'+"}"
                         updateArea(temp1,temp[0].reMachTerminalId);
                         temp_data.push("workArea"+((total_number*3*15)/10000).toPrecision(3))
                         mm_distance=0
@@ -484,7 +491,7 @@ title: 农机跟踪
                 }
                 //console.log("xia"+total_numbers)
                 //console.log("xia"+machineryWidths)
-                jsonData ="{"+'"'+"drivingArea"+'"'+":"+'"'+((mm_distance*machineryWidths*15)/10000).toFixed(2)+'"'+","+'"'+"workTime"+'"'+":"+'"'+((temp.length)/(12*60)).toFixed(2)+'"'+","+'"'+"workArea"+'"'+":"+'"'+((total_numbers*machineryWidths*15)/10000).toFixed(2)+'"'+"}";
+                jsonData ="{"+'"'+"drivingArea"+'"'+":"+'"'+mm_distance.toFixed(2)+'"'+","+'"'+"workTime"+'"'+":"+'"'+((temp.length)/(12*60)).toFixed(2)+'"'+","+'"'+"workArea"+'"'+":"+'"'+((total_numbers*machineryWidths*15)/10000).toFixed(2)+'"'+"}";
             }
             if(temp.length>1){
                 updateArea(jsonData,temp[0].reMachTerminalId);
