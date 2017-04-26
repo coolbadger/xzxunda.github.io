@@ -235,6 +235,46 @@ MachMap.prototype.addGpsRecords = function (row, cssClass) {
                 })();
             }
 
+            if(arr.length>1){
+                for(var a=1;a<area.length;a++){
+                        var pointA = new BMap.Point(arr[a].lng, arr[a].lat);  // 创建点坐标
+                        var pointB = new BMap.Point(arr[a-1].lng, arr[a-1].lat);  // 创建点坐标
+                        var mm=parseFloat((map.getDistance(pointA,pointB)).toFixed(2));
+                        m=mm+m;//累加距离
+                }
+
+                var area_temp=((m*(result[i].machineryWidth)*15)/10000).toPrecision(3);
+                blocks_area.push(area);
+                var flightPath= new BMap.Polyline(arr, { strokeColor: "#05ab21", strokeOpacity: 0.5, strokeWeight: 25 });
+                blocks.push(flightPath);
+                temp.push(result[i])
+                map.addOverlay(flightPath);
+                arr.length=0;
+                area.length=0;
+                machineryWidths=result[i].machineryWidth;
+                temp_area.push(((m*3*15)/10000).toPrecision(3));//计算面积
+                for (var i = 0; i < blocks.length; i++) {
+                    (function(){
+                        var point = temp[i];
+                        var index = i;
+                        blocks[i].addEventListener("click",clickAttribute);
+                        function clickAttribute() {
+                            var opts = {
+                                width : 250,    // 信息窗口宽度
+                                height: 100,    // 信息窗口高度
+                                //title : row.machCode + row.machName + "-" + index// 信息窗口标题
+                            };
+
+                            var infoWindow = new BMap.InfoWindow('<div>'+"<div style='border: #e6e6e6 1px solid;width: 250px;height: 100px;'>"+"<div style='margin-left: 8px;margin-top: 5px'>"+"<div>"+row.machCode + row.machName + "-" + index+"</div>"+"<br/>"+orgNameS[index]+"<br/>"+"作业面积："+area_temp+"亩"+"<br/>"+"驾驶人："+names[index]+"</div>"+"</div>"+'</div>',opts);  // 创建信息窗口对象
+                            var pts = new BMap.Point(point.lngFixed,point.latFixed);
+                            map.openInfoWindow(infoWindow, pts);      // 打开信息窗口
+                        }
+                    })();
+                }
+            }
+
+
+
         }
     });
 
