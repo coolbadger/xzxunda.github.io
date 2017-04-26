@@ -173,7 +173,7 @@ MachMap.prototype.addGpsRecords = function (row, cssClass) {
                 if(result[i].sensor1=='1'){
 
                     if(arr.length==0){
-                        temp_area.push(((m*result[i].machineryWidth*15)/10000).toPrecision(3));//计算面积
+                        temp_area.push(((m*result[i].machineryWidth*15)/10000).toFixed(2));//计算面积
                         orgNameS.push(result[i].orgName)
                         names.push(result[i].name)
                         m=0;
@@ -214,7 +214,7 @@ MachMap.prototype.addGpsRecords = function (row, cssClass) {
                 machineryWidths=result[i].machineryWidth;
             }
 
-            temp_area.push(((m*machineryWidths*15)/10000).toPrecision(3));//计算面积
+            temp_area.push(((m*machineryWidths*15)/10000).toFixed(2));//计算面积
 
             for (var i = 0; i < blocks.length; i++) {
                 (function(){
@@ -242,8 +242,10 @@ MachMap.prototype.addGpsRecords = function (row, cssClass) {
                         var mm=parseFloat((map.getDistance(pointA,pointB)).toFixed(2));
                         m=mm+m;//累加距离
                 }
-
-                var area_temp=((m*(result[i].machineryWidth)*15)/10000).toPrecision(3);
+                console.log(m)
+                console.log((result[i].machineryWidth*m*15)/1000)
+                var area_temp=((m*(result[i].machineryWidth)*15)/10000).toFixed(2);
+                console.log(area_temp)
                 blocks_area.push(area);
                 var flightPath= new BMap.Polyline(arr, { strokeColor: "#05ab21", strokeOpacity: 0.5, strokeWeight: 25 });
                 blocks.push(flightPath);
