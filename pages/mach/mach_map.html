@@ -434,7 +434,6 @@ title: 农机跟踪
                                             }
 
                                         }
-                                        /*console.log(distance)*/
                                     }
                                     total_number += distance;
                                 }
@@ -443,8 +442,8 @@ title: 农机跟踪
                                 temp_sensor1=[];
                             }
                         }
-/*                        console.log("shang"+data[i].machineryWidth)
-                        console.log(temp.length)*/
+                        //console.log("shang"+data[i].machineryWidth)
+                        //console.log(temp.length)
                        // var jsonData="{"+'"'+"machCode"+'"'+":"+'"'+userName+'"'+","+'"'+"machName"+'"'+":"+'"'+password+'"'+"}"
                         var temp1="{"+'"'+"workArea"+'"'+":"+'"'+((total_number*data[i].machineryWidth*15)/10000).toFixed(2)+'"'+","+'"'+"workTime"+'"'+":"+'"'+((temp.length)/(12*60)).toFixed(2)+'"'+","+'"'+"drivingArea"+'"'+":"+'"'+((mm_distance*data[i].machineryWidth*15)/10000).toFixed(2)+'"'+"}"
                         updateArea(temp1,temp[0].reMachTerminalId);
@@ -478,10 +477,7 @@ title: 农机跟踪
                                     var pointA = new BMap.Point(temp_sensor1[a].lngFixed, temp_sensor1[a].latFixed);  // 创建点坐标
                                     var pointB = new BMap.Point(temp_sensor1[a - 1].lngFixed, temp_sensor1[a - 1].latFixed);  // 创建点坐标
                                     var mm = parseFloat((map.getDistance(pointA, pointB)).toFixed(2));
-                                    if(temp_sensor1[a].lngFixed!=null&temp_sensor1[a].latFixed!=null){
-                                        distance += mm;//累加距离
-                                    }
-                                  //  distance += mm;//累加距离
+                                    distance += mm;//累加距离
                                     //console.log("qwe"+distance)
                                 }
                             }
