@@ -17,7 +17,7 @@ GpsRecordLine.prototype.addRecords = function (records) {
     this.records = records;
     this.workingLins = new Array();
     this.points = new Array();
-    this.lines= new Array();
+    this.lines = new Array();
     // 现根据预定义规则进行排序
     records.sort(Sorts);
     for (var i = 0; i < records.length; i++) {
@@ -41,7 +41,7 @@ GpsRecordLine.prototype.addRecords = function (records) {
                 workingPoints.push(point);
             }
         }
-        else if(records[i].sensor1 == '1'){
+        else if (records[i].sensor1 == '1') {
             workingPoints.push(point);
         }
     }
@@ -89,15 +89,7 @@ MachMap.prototype.initMap = function (containerID) {
 }
 
 function mapClick(e) {
-    var adds = new BMap.Point(e.point.lng , e.point.lat);
-    Geocoder(adds);
-    function Geocoder(point, i) {
-        var gc = new BMap.Geocoder();
-        gc.getLocation(point, function (rs) {
-            var addComp = rs.addressComponents;
-            alert(addComp.province + addComp.city + addComp.district + addComp.street + addComp.streetNumber)
-        });
-    }
+    alert(e.point.lng + ", " + e.point.lat);
 }
 // 自定义地图点击事件
 MachMap.prototype.enableMapClick = function (enableClick) {
@@ -153,48 +145,47 @@ MachMap.prototype.addGpsRecords = function (row, cssClass) {
             xhr.setRequestHeader("Authorization", $.cookie('author_code'));
         },
         success: function (result) {
-            //console.log(result)
-            var markers=gpsRecordLine.addRecords(result);
+            var markers = gpsRecordLine.addRecords(result);
             gpsRecordLine.setLineColor("#a2aea4");
-            defer.resolve(ref_id,gpsRecordLine);
-            var arr=new Array();
-            var temp=new Array();
-            var area=new Array();
+            defer.resolve(ref_id, gpsRecordLine);
+            console.log(result[1])
+            var arr = new Array();
+            var temp = new Array();
+            var area = new Array();
             var blocks = [];
-            var blocks_area=new Array();
-            var m=0;
-            var temp_area=[];//存入的面积
-            var orgNameS=[];
-            var names=[];
-            var machineryWidths=0;
-            for(var  i=0;i<result.length;i++){
-                var lat=result[i].latFixed;
-                var lng=result[i].lngFixed;
-                if(result[i].sensor1=='1'){
+            var blocks_area = new Array();
+            var m = 0;
+            var temp_area = [];//存入的面积
+            for (var i = 0; i < result.length; i++) {
+                var lat = result[i].latFixed;
+                var lng = result[i].lngFixed;
+                if (result[i].sensor1 == '1') {
 
-                    if(arr.length==0){
-                        temp_area.push(((m*result[i].machineryWidth*15)/10000).toFixed(2));//计算面积
-                        orgNameS.push(result[i].orgName)
-                        names.push(result[i].name)
-                        m=0;
+                    if (arr.length == 0) {
+                        temp_area.push(((m * 3 * 15) / 10000).toPrecision(3));//计算面积
+                        m = 0;
                     }
 
-                    var point1= new BMap.Point(lng, lat);
+                    var point1 = new BMap.Point(lng, lat);
                     arr.push(point1);
                     area.push(result[i]);
-                }else{
-                    if(arr.length>0){
-                        for(var a=0;a<area.length;a++){
-                            if(a=='0'){
-                            }else {
+                } else {
+                    if (arr.length > 0) {
+                        for (var a = 0; a < area.length; a++) {
+                            if (a == '0') {
+                            } else {
                                 var pointA = new BMap.Point(area[a].lngFixed, area[a].latFixed);  // 创建点坐标
-                                var pointB = new BMap.Point(area[a-1].lngFixed, area[a-1].latFixed);  // 创建点坐标
-                                var mm=parseFloat((map.getDistance(pointA,pointB)).toFixed(2));
-                                m=mm+m;//累加距离
+                                var pointB = new BMap.Point(area[a - 1].lngFixed, area[a - 1].latFixed);  // 创建点坐标
+                                var mm = parseFloat((map.getDistance(pointA, pointB)).toFixed(2));
+                                m = mm + m;//累加距离
                             }
                         }
                         blocks_area.push(area);
-                        var flightPath= new BMap.Polyline(arr, { strokeColor: "#05ab21", strokeOpacity: 0.5, strokeWeight: 25 });
+                        var flightPath = new BMap.Polyline(arr, {
+                            strokeColor: "#05ab21",
+                            strokeOpacity: 0.5,
+                            strokeWeight: 25
+                        });
                         blocks.push(flightPath);
                         temp.push(result[i])
                         map.addOverlay(flightPath);
@@ -207,75 +198,37 @@ MachMap.prototype.addGpsRecords = function (row, cssClass) {
                         //     flightPath.setStrokeColor("#000000");
                         // }
                     }
-                    arr.length=0;
-                    area.length=0;
-
+                    arr.length = 0;
+                    area.length = 0;
                 }
-                machineryWidths=result[i].machineryWidth;
             }
 
-            temp_area.push(((m*machineryWidths*15)/10000).toFixed(2));//计算面积
 
+            temp_area.push(((m * 3 * 15) / 10000).toPrecision(3));//计算面积
+            /*            console.log("这个数据是什么？")
+             console.log(m);
+             console.log("blocks="+blocks.length)*/
             for (var i = 0; i < blocks.length; i++) {
-                (function(){
+                (function () {
                     var point = temp[i];
                     var index = i;
-                    blocks[i].addEventListener("click",clickAttribute);
+                    blocks[i].addEventListener("click", clickAttribute);
                     function clickAttribute() {
                         var opts = {
-                            width : 250,    // 信息窗口宽度
+                            width: 250,    // 信息窗口宽度
                             height: 100,    // 信息窗口高度
-                            //title : row.machCode + row.machName + "-" + index// 信息窗口标题
+                            title: row.machCode + row.machName + "-" + index// 信息窗口标题
                         };
 
-                        var infoWindow = new BMap.InfoWindow('<div>'+"<div style='border: #e6e6e6 1px solid;width: 250px;height: 100px;'>"+"<div style='margin-left: 8px;margin-top: 5px'>"+"<div>"+row.machCode + row.machName + "-" + index+"</div>"+"<br/>"+orgNameS[index]+"<br/>"+"作业面积："+temp_area[index+1]+"亩"+"<br/>"+"驾驶人："+names[index]+"</div>"+"</div>"+'</div>',opts);  // 创建信息窗口对象
-                        var pts = new BMap.Point(point.lngFixed,point.latFixed);
+                        var infoWindow = new BMap.InfoWindow("作业面积：" + temp_area[index + 1] + "亩", opts);  // 创建信息窗口对象
+                        /*                    infoWindow.setContent(
+                         "<div style='background-color: #001a35;height: 100px;width: 250px;'>"+row.machCode + row.machName+"作业面积："+temp_area[index+1]+"亩"+"</div>"
+                         );*/
+                        var pts = new BMap.Point(point.lngFixed, point.latFixed);
                         map.openInfoWindow(infoWindow, pts);      // 打开信息窗口
                     }
                 })();
             }
-
-            if(arr.length>1){
-                for(var a=1;a<area.length;a++){
-                        var pointA = new BMap.Point(arr[a].lng, arr[a].lat);  // 创建点坐标
-                        var pointB = new BMap.Point(arr[a-1].lng, arr[a-1].lat);  // 创建点坐标
-                        var mm=parseFloat((map.getDistance(pointA,pointB)).toFixed(2));
-                        m=mm+m;//累加距离
-                }
-                console.log(m)
-                console.log((result[i].machineryWidth*m*15)/1000)
-                var area_temp=((m*(result[i].machineryWidth)*15)/10000).toFixed(2);
-                console.log(area_temp)
-                blocks_area.push(area);
-                var flightPath= new BMap.Polyline(arr, { strokeColor: "#05ab21", strokeOpacity: 0.5, strokeWeight: 25 });
-                blocks.push(flightPath);
-                temp.push(result[i])
-                map.addOverlay(flightPath);
-                arr.length=0;
-                area.length=0;
-                machineryWidths=result[i].machineryWidth;
-                temp_area.push(((m*3*15)/10000).toPrecision(3));//计算面积
-                for (var i = 0; i < blocks.length; i++) {
-                    (function(){
-                        var point = temp[i];
-                        var index = i;
-                        blocks[i].addEventListener("click",clickAttribute);
-                        function clickAttribute() {
-                            var opts = {
-                                width : 250,    // 信息窗口宽度
-                                height: 100,    // 信息窗口高度
-                                //title : row.machCode + row.machName + "-" + index// 信息窗口标题
-                            };
-
-                            var infoWindow = new BMap.InfoWindow('<div>'+"<div style='border: #e6e6e6 1px solid;width: 250px;height: 100px;'>"+"<div style='margin-left: 8px;margin-top: 5px'>"+"<div>"+row.machCode + row.machName + "-" + index+"</div>"+"<br/>"+orgNameS[index]+"<br/>"+"作业面积："+area_temp+"亩"+"<br/>"+"驾驶人："+names[index]+"</div>"+"</div>"+'</div>',opts);  // 创建信息窗口对象
-                            var pts = new BMap.Point(point.lngFixed,point.latFixed);
-                            map.openInfoWindow(infoWindow, pts);      // 打开信息窗口
-                        }
-                    })();
-                }
-            }
-
-
 
         }
     });
@@ -291,7 +244,7 @@ MachMap.prototype.removeGpsRecords = function (row) {
         this.gpsRecordLines.delete(ref_id);
         this.map.removeOverlay(line);
     }
-    catch(e) {
+    catch (e) {
 
     }
 }
@@ -316,24 +269,47 @@ function goShuangGou() {
 }
 
 
-
 // 跳转到当前位置,并添加标记点
 function goCurrentPosition() {
-    location=location
-    /*    var geolocation = new BMap.Geolocation();
-        geolocation.getCurrentPosition(function (position) {
-            if (this.getStatus() == BMAP_STATUS_SUCCESS) {
-                var mk = new BMap.Marker(position.point);//添加标记点
-                //console.log(position.point)
-                map.addOverlay(mk);
-                map.panTo(position.point);
-                map.setCenter(position.point);
 
-            }
-            else {
-                alert('无法定位到当前位置:' + this.getStatus());
-            }
-        });*/
+    if (navigator.geolocation) {
+        // alert("浏览器支持!");
+        // navigator.geolocation.getCurrentPosition(onSuccess);
+        var geolocation = new BMap.Geolocation();
+
+        geolocation.getCurrentPosition(function (r) {
+            console.log(r);
+            var currentLat = r.latitude;
+            var currentLon = r.longitude;
+            var gpsPoint = new BMap.Point(currentLon, currentLat);
+
+            var mk = new BMap.Marker(gpsPoint);//添加标记点
+            map.addOverlay(mk);
+            map.panTo(gpsPoint);
+            map.setCenter(gpsPoint);
+        });
+
+
+    }
+    else {
+        // alert("浏览器不支持!");
+    }
+
+
+    // var geolocation = new BMap.Geolocation();
+    // geolocation.getCurrentPosition(function (position) {
+    //     if (this.getStatus() == BMAP_STATUS_SUCCESS) {
+    //         var mk = new BMap.Marker(position.point);//添加标记点
+    //         console.log(position.point)
+    //         map.addOverlay(mk);
+    //         map.panTo(position.point);
+    //         map.setCenter(position.point);
+    //
+    //     }
+    //     else {
+    //         alert('无法定位到当前位置:' + this.getStatus());
+    //     }
+    // });
     //关于状态码
     //BMAP_STATUS_SUCCESS	检索成功。对应数值“0”。
     //BMAP_STATUS_CITY_LIST	城市列表。对应数值“1”。
@@ -348,44 +324,44 @@ function goCurrentPosition() {
 
 
 /*
-//百度地图获取坐标
+ //百度地图获取坐标
 
-function goCurrentPosition() {
-    var geolocation = new BMap.Geolocation();
-    var pt;
-    geolocation.getCurrentPosition(function (r) {
-        if (this.getStatus() == BMAP_STATUS_SUCCESS) {
-            alert(r.point.lng + " ， " + r.point.lat);
-            pt = r;
-            showPosition(pt);
-        }
+ function goCurrentPosition() {
+ var geolocation = new BMap.Geolocation();
+ var pt;
+ geolocation.getCurrentPosition(function (r) {
+ if (this.getStatus() == BMAP_STATUS_SUCCESS) {
+ alert(r.point.lng + " ， " + r.point.lat);
+ pt = r;
+ showPosition(pt);
+ }
 
-    });
+ });
 
-}
-//百度地图WebAPI 坐标转地址
+ }
+ //百度地图WebAPI 坐标转地址
 
-function showPosition(r) {
-    // ak = appkey 访问次数流量有限制
-    var url = 'http://api.map.baidu.com/geocoder/v2/?ak=7b788c5ea45cc4b3ac6331a4b0643d5b&callback=?&location=' + r.point.lat + ',' + r.point.lng + '&output=json&pois=1';
-    $.getJSON(url, function (res) {
-        $("#msg").html(url);
-        alert(res.result.addressComponent.city);
-    });
-}
-//百度地图JS API 坐标转地址，没有加载地图时获取不到rs,总是null
+ function showPosition(r) {
+ // ak = appkey 访问次数流量有限制
+ var url = 'http://api.map.baidu.com/geocoder/v2/?ak=7b788c5ea45cc4b3ac6331a4b0643d5b&callback=?&location=' + r.point.lat + ',' + r.point.lng + '&output=json&pois=1';
+ $.getJSON(url, function (res) {
+ $("#msg").html(url);
+ alert(res.result.addressComponent.city);
+ });
+ }
+ //百度地图JS API 坐标转地址，没有加载地图时获取不到rs,总是null
 
-function getLocation(myGeo,pt,rs) {
-    // 根据坐标得到地址描述
-    myGeo.getLocation(pt, function (rs) {
-        if (rs) {
-            var addComp = rs.addressComponents;
-            window.clearInterval(interval);
-            alert(addComp);
-        }
-        return rs;
-    });
-}
+ function getLocation(myGeo,pt,rs) {
+ // 根据坐标得到地址描述
+ myGeo.getLocation(pt, function (rs) {
+ if (rs) {
+ var addComp = rs.addressComponents;
+ window.clearInterval(interval);
+ alert(addComp);
+ }
+ return rs;
+ });
+ }
 
-*/
+ */
 

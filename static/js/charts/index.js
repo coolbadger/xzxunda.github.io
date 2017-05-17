@@ -1,4 +1,4 @@
-﻿(function ($) {
+﻿﻿(function ($) {
     $.learuntab = {
         requestFullScreen: function () {
             var de = document.documentElement;
@@ -295,444 +295,410 @@
                 }
             });
             return reval;
-        },/*
-        		F_ModuleId父列表      F_ParentId= F_ModuleId  属于的子列表
-          */
+        }, /*
+         F_ModuleId父列表      F_ParentId= F_ModuleId  属于的子列表
+         */
         loadMenu: function () {
-			            var data = [
-                            {
-                                "F_ModuleId" : "3",
-                                "F_ParentId" : "0",
-                                "F_EnCode" : "SysManage",
-                                "F_FullName" : "农机跟踪",
-                                "F_Icon" : "fa fa fa-book",
-                                "F_UrlAddress" : null,
-                                "F_Target" : "expand",
-                                "F_IsMenu" : 0,
-                                "F_AllowExpand" : 1,
-                                "F_IsPublic" : 0,
-                                "F_AllowEdit" : null,
-                                "F_AllowDelete" : null,
-                                "F_SortCode" : 1,
-                                "F_DeleteMark" : 0,
-                                "F_EnabledMark" : 1,
-                                "F_Description" : null,
-                                "F_CreateDate" : null,
-                                "F_CreateUserId" : null,
-                                "F_CreateUserName" : null,
-                                "F_ModifyDate" : "",
-                                "F_ModifyUserId" : "System",
-                                "F_ModifyUserName" : ""
-                            },
-                            {
-                                "F_ModuleId" : "7ae94059-9aa5-48eb-8330-4e2a6565b193",
-                                "F_ParentId" : "3",
-                                "F_EnCode" : "AreaManage",
-                                "F_FullName" : "农机详情",
-                                "F_Icon" : "fa fa-jsfiddle",
-                                "F_UrlAddress" : "../pages/system/groundDails.html",
-                                "F_Target" : "iframe",
-                                "F_IsMenu" : 1,
-                                "F_AllowExpand" : 1,
-                                "F_IsPublic" : 0,
-                                "F_AllowEdit" : null,
-                                "F_AllowDelete" : null,
-                                "F_SortCode" : 1,
-                                "F_DeleteMark" : 0,
-                                "F_EnabledMark" : 1,
-                                "F_Description" : "",
-                                "F_CreateDate" : "",
-                                "F_CreateUserId" : "System",
-                                "F_CreateUserName" : "",
-                                "F_ModifyDate" : "2016-04-29 14:05:33",
-                                "F_ModifyUserId" : "System",
-                                "F_ModifyUserName" : ""
-                            },
-                            {
-                                "F_ModuleId" : "7ae94059-9aa5-48eb-8330-4e2a6565b193",
-                                "F_ParentId" : "3",
-                                "F_EnCode" : "AreaManage",
-                                "F_FullName" : "作业跟踪",
-                                "F_Icon" : "fa fa-leaf",
-                                "F_UrlAddress" : "../pages/mach/mach_map.html",
-                                "F_Target" : "iframe",
-                                "F_IsMenu" : 1,
-                                "F_AllowExpand" : 1,
-                                "F_IsPublic" : 0,
-                                "F_AllowEdit" : null,
-                                "F_AllowDelete" : null,
-                                "F_SortCode" : 1,
-                                "F_DeleteMark" : 0,
-                                "F_EnabledMark" : 1,
-                                "F_Description" : "",
-                                "F_CreateDate" : "",
-                                "F_CreateUserId" : "System",
-                                "F_CreateUserName" : "",
-                                "F_ModifyDate" : "2016-04-29 14:05:33",
-                                "F_ModifyUserId" : "System",
-                                "F_ModifyUserName" : ""
-                            },
-                            {
-                                "F_ModuleId" : "4",
-                                "F_ParentId" : "0",
-                                "F_EnCode" : "SysManage",
-                                "F_FullName" : "数据分析",
-                                "F_Icon" : "fa fa-cogs",
-                                "F_UrlAddress" : null,
-                                "F_Target" : "expand",
-                                "F_IsMenu" : 0,
-                                "F_AllowExpand" : 1,
-                                "F_IsPublic" : 0,
-                                "F_AllowEdit" : null,
-                                "F_AllowDelete" : null,
-                                "F_SortCode" : 1,
-                                "F_DeleteMark" : 0,
-                                "F_EnabledMark" : 1,
-                                "F_Description" : null,
-                                "F_CreateDate" : null,
-                                "F_CreateUserId" : null,
-                                "F_CreateUserName" : null,
-                                "F_ModifyDate" : "",
-                                "F_ModifyUserId" : "System",
-                                "F_ModifyUserName" : ""
-                            },
+            var data = [
+                {
+                    "F_ModuleId": "3",
+                    "F_ParentId": "0",
+                    "F_EnCode": "SysManage",
+                    "F_FullName": "农机跟踪",
+                    "F_Icon": "fa fa fa-book",
+                    "F_UrlAddress": null,
+                    "F_Target": "expand",
+                    "F_IsMenu": 0,
+                    "F_AllowExpand": 1,
+                    "F_IsPublic": 0,
+                    "F_AllowEdit": null,
+                    "F_AllowDelete": null,
+                    "F_SortCode": 1,
+                    "F_DeleteMark": 0,
+                    "F_EnabledMark": 1,
+                    "F_Description": null,
+                    "F_CreateDate": null,
+                    "F_CreateUserId": null,
+                    "F_CreateUserName": null,
+                    "F_ModifyDate": "",
+                    "F_ModifyUserId": "System",
+                    "F_ModifyUserName": ""
+                },
+                {
+                    "F_ModuleId": "7ae94059-9aa5-48eb-8330-4e2a6565b193",
+                    "F_ParentId": "3",
+                    "F_EnCode": "AreaManage",
+                    "F_FullName": "农机详情",
+                    "F_Icon": "fa fa-jsfiddle",
+                    "F_UrlAddress": "../pages/system/groundDails.html",
+                    "F_Target": "iframe",
+                    "F_IsMenu": 1,
+                    "F_AllowExpand": 1,
+                    "F_IsPublic": 0,
+                    "F_AllowEdit": null,
+                    "F_AllowDelete": null,
+                    "F_SortCode": 1,
+                    "F_DeleteMark": 0,
+                    "F_EnabledMark": 1,
+                    "F_Description": "",
+                    "F_CreateDate": "",
+                    "F_CreateUserId": "System",
+                    "F_CreateUserName": "",
+                    "F_ModifyDate": "2016-04-29 14:05:33",
+                    "F_ModifyUserId": "System",
+                    "F_ModifyUserName": ""
+                },
+                {
+                    "F_ModuleId": "7ae94059-9aa5-48eb-8330-4e2a6565b193",
+                    "F_ParentId": "3",
+                    "F_EnCode": "AreaManage",
+                    "F_FullName": "作业跟踪",
+                    "F_Icon": "fa fa-leaf",
+                    "F_UrlAddress": "../pages/mach/mach_map.html",
+                    "F_Target": "iframe",
+                    "F_IsMenu": 1,
+                    "F_AllowExpand": 1,
+                    "F_IsPublic": 0,
+                    "F_AllowEdit": null,
+                    "F_AllowDelete": null,
+                    "F_SortCode": 1,
+                    "F_DeleteMark": 0,
+                    "F_EnabledMark": 1,
+                    "F_Description": "",
+                    "F_CreateDate": "",
+                    "F_CreateUserId": "System",
+                    "F_CreateUserName": "",
+                    "F_ModifyDate": "2016-04-29 14:05:33",
+                    "F_ModifyUserId": "System",
+                    "F_ModifyUserName": ""
+                },
+                {
+                    "F_ModuleId": "4",
+                    "F_ParentId": "0",
+                    "F_EnCode": "SysManage",
+                    "F_FullName": "数据分析",
+                    "F_Icon": "fa fa-cogs",
+                    "F_UrlAddress": null,
+                    "F_Target": "expand",
+                    "F_IsMenu": 0,
+                    "F_AllowExpand": 1,
+                    "F_IsPublic": 0,
+                    "F_AllowEdit": null,
+                    "F_AllowDelete": null,
+                    "F_SortCode": 1,
+                    "F_DeleteMark": 0,
+                    "F_EnabledMark": 1,
+                    "F_Description": null,
+                    "F_CreateDate": null,
+                    "F_CreateUserId": null,
+                    "F_CreateUserName": null,
+                    "F_ModifyDate": "",
+                    "F_ModifyUserId": "System",
+                    "F_ModifyUserName": ""
+                },
 
-                            {
-                                "F_ModuleId" : "7ae94059-9aa5-48eb-8330-4e2a6565b193",
-                                "F_ParentId" : "4",
-                                "F_EnCode" : "AreaManage",
-                                "F_FullName" : "数据统计",
-                                "F_Icon" : "fa fa-bar-chart",
-                                "F_UrlAddress" : "../pages/system/OrgData.html",
-                                "F_Target" : "iframe",
-                                "F_IsMenu" : 1,
-                                "F_AllowExpand" : 1,
-                                "F_IsPublic" : 0,
-                                "F_AllowEdit" : null,
-                                "F_AllowDelete" : null,
-                                "F_SortCode" : 1,
-                                "F_DeleteMark" : 0,
-                                "F_EnabledMark" : 1,
-                                "F_Description" : "",
-                                "F_CreateDate" : "",
-                                "F_CreateUserId" : "System",
-                                "F_CreateUserName" : "",
-                                "F_ModifyDate" : "2016-04-29 14:05:33",
-                                "F_ModifyUserId" : "System",
-                                "F_ModifyUserName" : ""
-                            },
+                {
+                    "F_ModuleId": "7ae94059-9aa5-48eb-8330-4e2a6565b193",
+                    "F_ParentId": "4",
+                    "F_EnCode": "AreaManage",
+                    "F_FullName": "数据统计",
+                    "F_Icon": "fa fa-bar-chart",
+                    "F_UrlAddress": "../pages/system/OrgData.html",
+                    "F_Target": "iframe",
+                    "F_IsMenu": 1,
+                    "F_AllowExpand": 1,
+                    "F_IsPublic": 0,
+                    "F_AllowEdit": null,
+                    "F_AllowDelete": null,
+                    "F_SortCode": 1,
+                    "F_DeleteMark": 0,
+                    "F_EnabledMark": 1,
+                    "F_Description": "",
+                    "F_CreateDate": "",
+                    "F_CreateUserId": "System",
+                    "F_CreateUserName": "",
+                    "F_ModifyDate": "2016-04-29 14:05:33",
+                    "F_ModifyUserId": "System",
+                    "F_ModifyUserName": ""
+                },
 
-					{
-						"F_ModuleId" : "1",
-						"F_ParentId" : "0",
-						"F_EnCode" : "SysManage",
-						"F_FullName" : "组织机构",
-						"F_Icon" : "fa fa-desktop",
-						"F_UrlAddress" : null,
-						"F_Target" : "expand",
-						"F_IsMenu" : 0,
-						"F_AllowExpand" : 1,
-						"F_IsPublic" : 0,
-						"F_AllowEdit" : null,
-						"F_AllowDelete" : null,
-						"F_SortCode" : 1,
-						"F_DeleteMark" : 0,
-						"F_EnabledMark" : 1,
-						"F_Description" : null,
-						"F_CreateDate" : null,
-						"F_CreateUserId" : null,
-						"F_CreateUserName" : null,
-						"F_ModifyDate" : "",
-						"F_ModifyUserId" : "System",
-						"F_ModifyUserName" : ""
-					},
-					{
-						"F_ModuleId" : "8",
-						"F_ParentId" : "2",
-						"F_EnCode" : "OrganizeManage",
-						"F_FullName" : "业务人员",
-						"F_Icon" : "fa fa-sitemap",
-						"F_UrlAddress" : "../pages/userSystem/orgUser.html",
-						"F_Target" : "iframe",
-						"F_IsMenu" : 1,
-						"F_AllowExpand" : 1,
-						"F_IsPublic" : 0,
-						"F_AllowEdit" : null,
-						"F_AllowDelete" : null,
-						"F_SortCode" : 1,
-						"F_DeleteMark" : 0,
-						"F_EnabledMark" : 1,
-						"F_Description" : null,
-						"F_CreateDate" : null,
-						"F_CreateUserId" : null,
-						"F_CreateUserName" : null,
-						"F_ModifyDate" : "",
-						"F_ModifyUserId" : "System",
-						"F_ModifyUserName" : ""
-					},
-					{
-						"F_ModuleId" : "7ae94059-9aa5-48eb-8330-4e2a6565b193",
-						"F_ParentId" : "1",
-						"F_EnCode" : "AreaManage",
-						"F_FullName" : "机构维护",
-						"F_Icon" : "fa fa-leaf",
-						"F_UrlAddress" : "../pages/system/baseOrg.html",
-						"F_Target" : "iframe",
-						"F_IsMenu" : 1,
-						"F_AllowExpand" : 1,
-						"F_IsPublic" : 0,
-						"F_AllowEdit" : null,
-						"F_AllowDelete" : null,
-						"F_SortCode" : 1,
-						"F_DeleteMark" : 0,
-						"F_EnabledMark" : 1,
-						"F_Description" : "",
-						"F_CreateDate" : "",
-						"F_CreateUserId" : "System",
-						"F_CreateUserName" : "",
-						"F_ModifyDate" : "2016-04-29 14:05:33",
-						"F_ModifyUserId" : "System",
-						"F_ModifyUserName" : ""
-					},
-
-
+                {
+                    "F_ModuleId": "1",
+                    "F_ParentId": "0",
+                    "F_EnCode": "SysManage",
+                    "F_FullName": "组织机构",
+                    "F_Icon": "fa fa-desktop",
+                    "F_UrlAddress": null,
+                    "F_Target": "expand",
+                    "F_IsMenu": 0,
+                    "F_AllowExpand": 1,
+                    "F_IsPublic": 0,
+                    "F_AllowEdit": null,
+                    "F_AllowDelete": null,
+                    "F_SortCode": 1,
+                    "F_DeleteMark": 0,
+                    "F_EnabledMark": 1,
+                    "F_Description": null,
+                    "F_CreateDate": null,
+                    "F_CreateUserId": null,
+                    "F_CreateUserName": null,
+                    "F_ModifyDate": "",
+                    "F_ModifyUserId": "System",
+                    "F_ModifyUserName": ""
+                },
+                {
+                    "F_ModuleId": "8",
+                    "F_ParentId": "2",
+                    "F_EnCode": "OrganizeManage",
+                    "F_FullName": "业务人员",
+                    "F_Icon": "fa fa-sitemap",
+                    "F_UrlAddress": "../pages/system/orgUser.html",
+                    "F_Target": "iframe",
+                    "F_IsMenu": 1,
+                    "F_AllowExpand": 1,
+                    "F_IsPublic": 0,
+                    "F_AllowEdit": null,
+                    "F_AllowDelete": null,
+                    "F_SortCode": 1,
+                    "F_DeleteMark": 0,
+                    "F_EnabledMark": 1,
+                    "F_Description": null,
+                    "F_CreateDate": null,
+                    "F_CreateUserId": null,
+                    "F_CreateUserName": null,
+                    "F_ModifyDate": "",
+                    "F_ModifyUserId": "System",
+                    "F_ModifyUserName": ""
+                },
+                {
+                    "F_ModuleId": "7ae94059-9aa5-48eb-8330-4e2a6565b193",
+                    "F_ParentId": "1",
+                    "F_EnCode": "AreaManage",
+                    "F_FullName": "机构维护",
+                    "F_Icon": "fa fa-leaf",
+                    "F_UrlAddress": "../pages/system/baseOrg.html",
+                    "F_Target": "iframe",
+                    "F_IsMenu": 1,
+                    "F_AllowExpand": 1,
+                    "F_IsPublic": 0,
+                    "F_AllowEdit": null,
+                    "F_AllowDelete": null,
+                    "F_SortCode": 1,
+                    "F_DeleteMark": 0,
+                    "F_EnabledMark": 1,
+                    "F_Description": "",
+                    "F_CreateDate": "",
+                    "F_CreateUserId": "System",
+                    "F_CreateUserName": "",
+                    "F_ModifyDate": "2016-04-29 14:05:33",
+                    "F_ModifyUserId": "System",
+                    "F_ModifyUserName": ""
+                },
 
 
+                {
+                    "F_ModuleId": "691f3810-a602-4523-8518-ce5856482d48",
+                    "F_ParentId": "5",
+                    "F_EnCode": "农机-终端",
+                    "F_FullName": "农机-终端",
+                    "F_Icon": "fa fa-file-text-o",
+                    "F_UrlAddress": "../pages/system/machTerminal.html",
+                    "F_Target": "iframe",
+                    "F_IsMenu": 1,
+                    "F_AllowExpand": 1,
+                    "F_IsPublic": 0,
+                    "F_AllowEdit": null,
+                    "F_AllowDelete": null,
+                    "F_SortCode": 2,
+                    "F_DeleteMark": 0,
+                    "F_EnabledMark": 1,
+                    "F_Description": null,
+                    "F_CreateDate": "2015-11-23 22:13:21",
+                    "F_CreateUserId": "System",
+                    "F_CreateUserName": "",
+                    "F_ModifyDate": "",
+                    "F_ModifyUserId": "24a055d6-5924-44c5-be52-3715cdd68011",
+                    "F_ModifyUserName": ""
+                },
+                {
+                    "F_ModuleId": "9",
+                    "F_ParentId": "2",
+                    "F_EnCode": "DepartmentManage",
+                    "F_FullName": "司机管理",
+                    "F_Icon": "fa fa-th-list",
+                    "F_UrlAddress": "../pages/system/worker.html",
+                    "F_Target": "iframe",
+                    "F_IsMenu": 1,
+                    "F_AllowExpand": 1,
+                    "F_IsPublic": 0,
+                    "F_AllowEdit": null,
+                    "F_AllowDelete": null,
+                    "F_SortCode": 2,
+                    "F_DeleteMark": 0,
+                    "F_EnabledMark": 1,
+                    "F_Description": null,
+                    "F_CreateDate": null,
+                    "F_CreateUserId": null,
+                    "F_CreateUserName": null,
+                    "F_ModifyDate": "2",
+                    "F_ModifyUserId": "System",
+                    "F_ModifyUserName": ""
+                },
+                {
+                    "F_ModuleId": "2",
+                    "F_ParentId": "0",
+                    "F_EnCode": "BaseManage",
+                    "F_FullName": "用户管理",
+                    "F_Icon": "fa fa-coffee",
+                    "F_UrlAddress": null,
+                    "F_Target": "expand",
+                    "F_IsMenu": 0,
+                    "F_AllowExpand": 1,
+                    "F_IsPublic": 0,
+                    "F_AllowEdit": null,
+                    "F_AllowDelete": null,
+                    "F_SortCode": 2,
+                    "F_DeleteMark": 0,
+                    "F_EnabledMark": 1,
+                    "F_Description": null,
+                    "F_CreateDate": null,
+                    "F_CreateUserId": null,
+                    "F_CreateUserName": null,
+                    "F_ModifyDate": "",
+                    "F_ModifyUserId": "0f36148c-719f-41e0-8c8c-16ffbc40d0e0",
+                    "F_ModifyUserName": ""
+                },
+
+                {
+                    "F_ModuleId": "5",
+                    "F_ParentId": "0",
+                    "F_EnCode": "FlowManage",
+                    "F_FullName": "设备管理",
+                    "F_Icon": "fa fa-share-alt",
+                    "F_UrlAddress": null,
+                    "F_Target": "expand",
+                    "F_IsMenu": 0,
+                    "F_AllowExpand": 1,
+                    "F_IsPublic": 0,
+                    "F_AllowEdit": null,
+                    "F_AllowDelete": null,
+                    "F_SortCode": 3,
+                    "F_DeleteMark": 0,
+                    "F_EnabledMark": 1,
+                    "F_Description": null,
+                    "F_CreateDate": null,
+                    "F_CreateUserId": null,
+                    "F_CreateUserName": null,
+                    "F_ModifyDate": "",
+                    "F_ModifyUserId": "System",
+                    "F_ModifyUserName": ""
+                },
 
 
-					{
-						"F_ModuleId" : "691f3810-a602-4523-8518-ce5856482d48",
-						"F_ParentId" : "5",
-						"F_EnCode" : "农机-终端",
-						"F_FullName" : "农机-终端",
-						"F_Icon" : "fa fa-file-text-o",
-						"F_UrlAddress" : "../pages/system/machTerminal.html",
-						"F_Target" : "iframe",
-						"F_IsMenu" : 1,
-						"F_AllowExpand" : 1,
-						"F_IsPublic" : 0,
-						"F_AllowEdit" : null,
-						"F_AllowDelete" : null,
-						"F_SortCode" : 2,
-						"F_DeleteMark" : 0,
-						"F_EnabledMark" : 1,
-						"F_Description" : null,
-						"F_CreateDate" : "2015-11-23 22:13:21",
-						"F_CreateUserId" : "System",
-						"F_CreateUserName" : "",
-						"F_ModifyDate" : "",
-						"F_ModifyUserId" : "24a055d6-5924-44c5-be52-3715cdd68011",
-						"F_ModifyUserName" : ""
-					},
-					{
-						"F_ModuleId" : "9",
-						"F_ParentId" : "2",
-						"F_EnCode" : "DepartmentManage",
-						"F_FullName" : "司机管理",
-						"F_Icon" : "fa fa-th-list",
-						"F_UrlAddress" : "../pages/system/worker.html",
-						"F_Target" : "iframe",
-						"F_IsMenu" : 1,
-						"F_AllowExpand" : 1,
-						"F_IsPublic" : 0,
-						"F_AllowEdit" : null,
-						"F_AllowDelete" : null,
-						"F_SortCode" : 2,
-						"F_DeleteMark" : 0,
-						"F_EnabledMark" : 1,
-						"F_Description" : null,
-						"F_CreateDate" : null,
-						"F_CreateUserId" : null,
-						"F_CreateUserName" : null,
-						"F_ModifyDate" : "2",
-						"F_ModifyUserId" : "System",
-						"F_ModifyUserName" : ""
-					},
-					{
-						"F_ModuleId" : "2",
-						"F_ParentId" : "0",
-						"F_EnCode" : "BaseManage",
-						"F_FullName" : "用户管理",
-						"F_Icon" : "fa fa-coffee",
-						"F_UrlAddress" : null,
-						"F_Target" : "expand",
-						"F_IsMenu" : 0,
-						"F_AllowExpand" : 1,
-						"F_IsPublic" : 0,
-						"F_AllowEdit" : null,
-						"F_AllowDelete" : null,
-						"F_SortCode" : 2,
-						"F_DeleteMark" : 0,
-						"F_EnabledMark" : 1,
-						"F_Description" : null,
-						"F_CreateDate" : null,
-						"F_CreateUserId" : null,
-						"F_CreateUserName" : null,
-						"F_ModifyDate" : "",
-						"F_ModifyUserId" : "0f36148c-719f-41e0-8c8c-16ffbc40d0e0",
-						"F_ModifyUserName" : ""
-					},
-
-					{
-						"F_ModuleId" : "5",
-						"F_ParentId" : "0",
-						"F_EnCode" : "FlowManage",
-						"F_FullName" : "设备管理",
-						"F_Icon" : "fa fa-share-alt",
-						"F_UrlAddress" : null,
-						"F_Target" : "expand",
-						"F_IsMenu" : 0,
-						"F_AllowExpand" : 1,
-						"F_IsPublic" : 0,
-						"F_AllowEdit" : null,
-						"F_AllowDelete" : null,
-						"F_SortCode" : 3,
-						"F_DeleteMark" : 0,
-						"F_EnabledMark" : 1,
-						"F_Description" : null,
-						"F_CreateDate" : null,
-						"F_CreateUserId" : null,
-						"F_CreateUserName" : null,
-						"F_ModifyDate" : "",
-						"F_ModifyUserId" : "System",
-						"F_ModifyUserName" : ""
-					},
+                {
+                    "F_ModuleId": "0d296398-bc0e-4f38-996a-6e24bc88cc53",
+                    "F_ParentId": "5",
+                    "F_EnCode": "农机管理",
+                    "F_FullName": "农机管理",
+                    "F_Icon": "fa fa-hourglass-half",
+                    "F_UrlAddress": "../pages/system/machine.html",
+                    "F_Target": "iframe",
+                    "F_IsMenu": 1,
+                    "F_AllowExpand": 1,
+                    "F_IsPublic": 0,
+                    "F_AllowEdit": null,
+                    "F_AllowDelete": null,
+                    "F_SortCode": 4,
+                    "F_DeleteMark": 0,
+                    "F_EnabledMark": 1,
+                    "F_Description": null,
+                    "F_CreateDate": "2015-11-23 22:13:39",
+                    "F_CreateUserId": "System",
+                    "F_CreateUserName": "",
+                    "F_ModifyDate": "",
+                    "F_ModifyUserId": "24a055d6-5924-44c5-be52-3715cdd68011",
+                    "F_ModifyUserName": ""
+                },
 
 
+                {
+                    "F_ModuleId": "923f7d65-e307-45f7-8f96-73ecbf23b324",
+                    "F_ParentId": "5",
+                    "F_EnCode": "终端管理",
+                    "F_FullName": "终端管理",
+                    "F_Icon": "fa fa-flag",
+                    "F_UrlAddress": "../pages/system/terminal.html",
+                    "F_Target": "iframe",
+                    "F_IsMenu": 1,
+                    "F_AllowExpand": 1,
+                    "F_IsPublic": 0,
+                    "F_AllowEdit": null,
+                    "F_AllowDelete": null,
+                    "F_SortCode": 5,
+                    "F_DeleteMark": 0,
+                    "F_EnabledMark": 1,
+                    "F_Description": null,
+                    "F_CreateDate": "",
+                    "F_CreateUserId": "System",
+                    "F_CreateUserName": "",
+                    "F_ModifyDate": "",
+                    "F_ModifyUserId": "System",
+                    "F_ModifyUserName": ""
+                },
+
+                {
+                    "F_ModuleId": "923f7d65-e307-45f7-8f96-73ecbf23b324",
+                    "F_ParentId": "5",
+                    "F_EnCode": "农机维护",
+                    "F_FullName": "农机维护",
+                    "F_Icon": "fa fa-cogs",
+                    "F_UrlAddress": "../pages/system/machineMaintenance.html",
+                    "F_Target": "iframe",
+                    "F_IsMenu": 1,
+                    "F_AllowExpand": 1,
+                    "F_IsPublic": 0,
+                    "F_AllowEdit": null,
+                    "F_AllowDelete": null,
+                    "F_SortCode": 5,
+                    "F_DeleteMark": 0,
+                    "F_EnabledMark": 1,
+                    "F_Description": null,
+                    "F_CreateDate": "",
+                    "F_CreateUserId": "System",
+                    "F_CreateUserName": "",
+                    "F_ModifyDate": "",
+                    "F_ModifyUserId": "System",
+                    "F_ModifyUserName": ""
+                },
 
 
-					{
-						"F_ModuleId" : "0d296398-bc0e-4f38-996a-6e24bc88cc53",
-						"F_ParentId" : "5",
-						"F_EnCode" : "农机管理",
-						"F_FullName" : "农机管理",
-						"F_Icon" : "fa fa-hourglass-half",
-						"F_UrlAddress" : "../pages/system/machine.html",
-						"F_Target" : "iframe",
-						"F_IsMenu" : 1,
-						"F_AllowExpand" : 1,
-						"F_IsPublic" : 0,
-						"F_AllowEdit" : null,
-						"F_AllowDelete" : null,
-						"F_SortCode" : 4,
-						"F_DeleteMark" : 0,
-						"F_EnabledMark" : 1,
-						"F_Description" : null,
-						"F_CreateDate" : "2015-11-23 22:13:39",
-						"F_CreateUserId" : "System",
-						"F_CreateUserName" : "",
-						"F_ModifyDate" : "",
-						"F_ModifyUserId" : "24a055d6-5924-44c5-be52-3715cdd68011",
-						"F_ModifyUserName" : ""
-					},{
-                                "F_ModuleId" : "0d296398-bc0e-4f38-996a-6e24bc88cc53",
-                                "F_ParentId" : "5",
-                                "F_EnCode" : "农机宽度",
-                                "F_FullName" : "农机宽度",
-                                "F_Icon" : "fa fa-edit",
-                                "F_UrlAddress" : "../pages/system/machineWidth.html",
-                                "F_Target" : "iframe",
-                                "F_IsMenu" : 1,
-                                "F_AllowExpand" : 1,
-                                "F_IsPublic" : 0,
-                                "F_AllowEdit" : null,
-                                "F_AllowDelete" : null,
-                                "F_SortCode" : 4,
-                                "F_DeleteMark" : 0,
-                                "F_EnabledMark" : 1,
-                                "F_Description" : null,
-                                "F_CreateDate" : "2015-11-23 22:13:39",
-                                "F_CreateUserId" : "System",
-                                "F_CreateUserName" : "",
-                                "F_ModifyDate" : "",
-                                "F_ModifyUserId" : "24a055d6-5924-44c5-be52-3715cdd68011",
-                                "F_ModifyUserName" : ""
-                            },
+            ];
+            /*
+             *
+             *
+             *       左边导航栏的结构
+             *
+             *
+             <li>
+             <a><i></i><span></span><i></i></a>
+
+             <ul>
+             <li>
+             <a><i></i></a>
+             <ul>
+             <li>
+             <a><i></i></a>
+             </li>
+             </ul>
+             </li>
+             </ul>
+             </li>
+
+             *
+             *
+             */
 
 
-
-
-					{
-						"F_ModuleId" : "923f7d65-e307-45f7-8f96-73ecbf23b324",
-						"F_ParentId" : "5",
-						"F_EnCode" : "终端管理",
-						"F_FullName" : "终端管理",
-						"F_Icon" : "fa fa-flag",
-						"F_UrlAddress" : "../pages/system/terminal.html",
-						"F_Target" : "iframe",
-						"F_IsMenu" : 1,
-						"F_AllowExpand" : 1,
-						"F_IsPublic" : 0,
-						"F_AllowEdit" : null,
-						"F_AllowDelete" : null,
-						"F_SortCode" : 5,
-						"F_DeleteMark" : 0,
-						"F_EnabledMark" : 1,
-						"F_Description" : null,
-						"F_CreateDate" : "",
-						"F_CreateUserId" : "System",
-						"F_CreateUserName" : "",
-						"F_ModifyDate" : "",
-						"F_ModifyUserId" : "System",
-						"F_ModifyUserName" : ""
-					},
-
-                            {
-                                "F_ModuleId" : "923f7d65-e307-45f7-8f96-73ecbf23b324",
-                                "F_ParentId" : "5",
-                                "F_EnCode" : "农机维护",
-                                "F_FullName" : "农机维护",
-                                "F_Icon" : "fa fa-cogs",
-                                "F_UrlAddress" : "../pages/system/machineMaintenance.html",
-                                "F_Target" : "iframe",
-                                "F_IsMenu" : 1,
-                                "F_AllowExpand" : 1,
-                                "F_IsPublic" : 0,
-                                "F_AllowEdit" : null,
-                                "F_AllowDelete" : null,
-                                "F_SortCode" : 5,
-                                "F_DeleteMark" : 0,
-                                "F_EnabledMark" : 1,
-                                "F_Description" : null,
-                                "F_CreateDate" : "",
-                                "F_CreateUserId" : "System",
-                                "F_CreateUserName" : "",
-                                "F_ModifyDate" : "",
-                                "F_ModifyUserId" : "System",
-                                "F_ModifyUserName" : ""
-                            },
-
-
-
-
-					];
-			/*
-			 * 
-			 *           
-			 *       左边导航栏的结构    
-			 *           
-			 *           
-			                  <li>
-	                	<a><i></i><span></span><i></i></a>
-	
-	                 				<ul>
-	                 					<li>
-	                 						<a><i></i></a>
-	                 									<ul>
-	                 										<li>
-	                 											<a><i></i></a>
-	                 										</li>
-	                 									</ul>
-	                 					</li>
-	                 				</ul>
-	                 </li> 
-	                 
-	                 *
-	                 *
-	                 */
-	                
-			            
-			            
             var _html = "";
             $.each(data, function (i) {
                 var row = data[i];
@@ -742,15 +708,19 @@
                     } else {
                         _html += '<li class="treeview">';
                     }
-                    _html += '<a href="#">'+ '<i class="' + row.F_Icon + '"></i><span>' + row.F_FullName + '</span><i class="fa fa-angle-left pull-right"></i>'+'</a>';
-                   
-                 
-                    var childNodes = $.learunindex.jsonWhere(data, function (v) { return v.F_ParentId == row.F_ModuleId});
+                    _html += '<a href="#">' + '<i class="' + row.F_Icon + '"></i><span>' + row.F_FullName + '</span><i class="fa fa-angle-left pull-right"></i>' + '</a>';
+
+
+                    var childNodes = $.learunindex.jsonWhere(data, function (v) {
+                        return v.F_ParentId == row.F_ModuleId
+                    });
                     if (childNodes.length > 0) {
                         _html += '<ul class="treeview-menu">';
                         $.each(childNodes, function (i) {
                             var subrow = childNodes[i];
-                            var subchildNodes = $.learunindex.jsonWhere(data, function (v) { return v.F_ParentId == subrow.F_ModuleId});
+                            var subchildNodes = $.learunindex.jsonWhere(data, function (v) {
+                                return v.F_ParentId == subrow.F_ModuleId
+                            });
                             _html += '<li>';
                             if (subchildNodes.length > 0) {
                                 _html += '<a href="#"><i class="' + subrow.F_Icon + '"></i>' + subrow.F_FullName + '';
@@ -758,14 +728,14 @@
                                 _html += '<ul class="treeview-menu">';
                                 $.each(subchildNodes, function (i) {
                                     var subchildNodesrow = subchildNodes[i];
-                                    
-                             /* 页面路径   subrow.F_UrlAddress */  
+
+                                    /* 页面路径   subrow.F_UrlAddress */
                                     _html += '<li><a class="menuItem" data-id="' + subrow.F_ModuleId + '" href="' + subrow.F_UrlAddress + '"><i class="' + subchildNodesrow.F_Icon + '"></i>' + subchildNodesrow.F_FullName + '</a></li>';
                                 });
                                 _html += '</ul>';
 
                             } else {
-                            	   /* 页面路径   subrow.F_UrlAddress */
+                                /* 页面路径   subrow.F_UrlAddress */
                                 _html += '<a class="menuItem" data-id="' + subrow.F_ModuleId + '" href="' + subrow.F_UrlAddress + '"><i class="' + subrow.F_Icon + '"></i>' + subrow.F_FullName + '</a>';
                             }
                             _html += '</li>';
@@ -782,17 +752,17 @@
                     e.slideUp(500, function () {
                         e.removeClass("menu-open");
                     }),
-                    e.parent("li").removeClass("active");
+                        e.parent("li").removeClass("active");
                 } else if (e.is(".treeview-menu") && !e.is(":visible")) {
                     var f = d.parents("ul").first(),
-                    g = f.find("ul:visible").slideUp(500);
+                        g = f.find("ul:visible").slideUp(500);
                     g.removeClass("menu-open");
                     var h = d.parent("li");
                     e.slideDown(500, function () {
                         e.addClass("menu-open"),
-                        f.find("li.active").removeClass("active"),
-                        h.addClass("active");
-                       
+                            f.find("li.active").removeClass("active"),
+                            h.addClass("active");
+
 
                         var _height1 = $(window).height() - $("#sidebar-menu >li.active").position().top - 41;
                         var _height2 = $("#sidebar-menu li > ul.menu-open").height() + 10;
@@ -800,7 +770,7 @@
                             $("#sidebar-menu >li > ul.menu-open").css({
                                 overflow: "auto",
                                 height: _height1
-                                
+
                             });
                         }
                     });
