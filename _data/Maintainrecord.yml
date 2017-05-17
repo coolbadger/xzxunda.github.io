@@ -8,6 +8,6 @@
   placeholder: 请输入原因
 
 
-- name: 所属编号
+- name: 农机ID
   id: machId
-  placeholder: 请输入所属编号
+  placeholder: 请输入农机ID

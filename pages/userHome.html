@@ -1,5 +1,5 @@
 ---
-layout: home_pages
+layout: user_pages
 ---
 
 <!--<body class="hold-transition skin-blue sidebar-mini" style="overflow:hidden;">-->
@@ -171,8 +171,6 @@ layout: home_pages
     }
 
     function sexit() {
-/*        $.cookie("islogin",null);
-        $.cookie("author_code",null);*/
         var strCookie = document.cookie;
         window.location="/pages/login.html";
     }
@@ -183,13 +181,6 @@ layout: home_pages
         document.getElementById('UserNameRight').innerHTML ="欢迎您,"+$.cookie('userName');
 
     }
-
-    if($.cookie('management') == '1'){
-
-    }else{
-        window.location.href = "/pages/userHome.html";
-    }
-
 
 </script>
 

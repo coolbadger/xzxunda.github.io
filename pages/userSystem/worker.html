@@ -2,17 +2,17 @@
 layout: base_page
 ---
 
-{% include temp/table.html inData = site.data.orgUser apiName = 'orgUsers' %}
+{% include temp/user_table.html inData = site.data.worker apiName = 'workers' %}
 
 <script type="text/javascript">
 
     var tableGen = new TableGen();
-    tableGen.editFields = new Array('id', 'userName', 'password', 'fullName', 'post', 'tell', 'email', 'state', 'notes');
+    tableGen.editFields = new Array('id', 'userName', 'password', 'tell', 'name', 'email', 'post', 'states', 'notes');
 
     tableGen.validates = {userName: "notEmpty", password: "notEmpty"};
     tableGen.setTable = function (inTable) {
         inTable.bootstrapTable({
-        height: $(window).height(),
+            height: $(window).height(),
             columns: [{
                 field: 'state',
                 checkbox: true,
@@ -27,45 +27,42 @@ layout: base_page
                 title: '用户名',
                 field: 'userName',
                 align: 'center'
-            },  {
-                title: '真实姓名',
-                field: 'fullName',
-                align: 'center'
             }, {
-                title: '职位',
-                field: 'post',
-                align: 'center'
+                title: '密码',
+                field: 'password',
+                align: 'center',
+                formatter: tableGen.pwdFormatter
             }, {
                 title: '联系电话',
                 field: 'tell',
+                align: 'center'
+            }, {
+                title: '真实姓名',
+                field: 'name',
                 align: 'center'
             }, {
                 title: '邮箱',
                 field: 'email',
                 align: 'center'
             }, {
+                title: '职位',
+                field: 'post',
+                align: 'center'
+            }, {
                 title: '状态',
-                field: 'state',
+                field: 'states',
                 align: 'center'
             }, {
                 title: '备注',
                 field: 'notes',
                 align: 'center'
-            }, {
-                title: '操作',
-                field: 'operate',
-                align: 'center',
-                valign: 'middle',
-                //调用内置默认的operateFormatter
-                formatter: tableGen.operateFormatter,
-                events: operateEvents
             }]
         });
     }
 
     window.operateEvents = tableGen.operationEvent();
 
-    tableGen.apiName = 'orgUsers';
+    tableGen.apiName = 'workers';
     tableGen.bind();
 
 </script>

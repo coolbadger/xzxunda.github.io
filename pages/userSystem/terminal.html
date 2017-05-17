@@ -2,19 +2,19 @@
 layout: base_page
 ---
 
-{% include temp/table.html inData = site.data.machine apiName = 'machines' %}
+{% include temp/user_table.html inData = site.data.terminal apiName = 'terminals' %}
 
 <script type="text/javascript">
 
     var tableGen = new TableGen();
-    tableGen.editFields = new Array('id', 'machCode', 'machName', 'workingType', 'state', 'notes');
+    tableGen.editFields = new Array('id', 'terminalCode', 'terminalName', 'callNo', 'state', 'notes');
 
-    tableGen.validates = {machCode: "notEmpty", machName: "notEmpty", workingType: "notEmpty"};
+    tableGen.validates = {terminalCode: "notEmpty", terminalName: "notEmpty"};
     tableGen.setTable = function (inTable) {
         inTable.bootstrapTable({
             height: $(window).height(),
             columns: [{
-                field: 'states',
+                field: 'state',
                 checkbox: true,
                 align: 'center',
                 valign: 'middle'
@@ -24,16 +24,16 @@ layout: base_page
                 align: 'center',
                 sortable: true,
             }, {
-                title: '车牌号',
-                field: 'machCode',
+                title: '终端号',
+                field: 'terminalCode',
                 align: 'center',
             }, {
-                title: '农机名称',
-                field: 'machName',
+                title: '终端名称',
+                field: 'terminalName',
                 align: 'center',
             }, {
-                title: '农机类型',
-                field: 'workingType',
+                title: '手机号码',
+                field: 'callNo',
                 align: 'center',
             }, {
                 title: '状态',
@@ -43,20 +43,13 @@ layout: base_page
                 title: '备注',
                 field: 'notes',
                 align: 'center',
-            }, {
-                title: '操作',
-                field: 'operate',
-                align: 'center',
-                valign: 'middle',
-                formatter: tableGen.operateFormatter,
-                events: operateEvents
             }]
         });
     }
 
     window.operateEvents = tableGen.operationEvent();
 
-    tableGen.apiName = 'machines';
+    tableGen.apiName = 'terminals';
     tableGen.bind();
 
 </script>

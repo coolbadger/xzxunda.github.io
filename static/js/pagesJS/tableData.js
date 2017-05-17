@@ -130,7 +130,7 @@ TableGen.prototype.init = function () {
 
 };
 
-if ($.cookie('management') == 1) {
+
     //预设初始化编辑列方法
     TableGen.prototype.operateFormatter = function (value, row, index) {
         return [
@@ -142,8 +142,6 @@ if ($.cookie('management') == 1) {
             '</a>'
         ].join('');
     };
-} else {
-}
 
 
 
@@ -176,35 +174,38 @@ TableGen.prototype.operationEvent = function () {
 };
 
 
-TableGen.prototype.loadData = function () {
+        TableGen.prototype.loadData = function () {
+            var defer = $.Deferred();
+            $.ajax({
 
-    var id;
-    function  getId(temps) {
-        alert("fghjk");
-    }
+                url: API_URL + "/api/" + this.apiName,
+                type: 'GET',
+                dataType: 'json',
+                contentType: 'application/json',
 
-    var defer = $.Deferred();
-    $.ajax({
-        url: API_URL + "/api/" + this.apiName,
-        type: 'GET',
-        dataType: 'json',
-        contentType: 'application/json',
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("Authorization", $.cookie('author_code'));
 
-        beforeSend: function (xhr) {
-            xhr.setRequestHeader("Authorization", $.cookie('author_code'));
+                },
+                success: function (data) {
+                    getData(data)
+                    tableGen.table.bootstrapTable('load', data);
+                    defer.resolve(data);
+                },
+                error: function (err) {
+                }
+            });
+            return defer.promise();
 
-        },
-        success: function (data) {
-            getData(data)
-            tableGen.table.bootstrapTable('load', data);
-            defer.resolve(data);
-        },
-        error: function (err) {
         }
-    });
-    return defer.promise();
 
-}
+
+
+
+
+
+
+
 
 //刷新数据的方法
 function refreshData(url) {
@@ -247,9 +248,9 @@ TableGen.prototype.createOrUpdate = function () {
                     params = "{" + params + "}";
                     params = JSON.parse(params);
                     var id = $('#id').val();//取得隐藏id控件的值，用来判断saveObj方法是创建记录，还是还是修改记录
-                    console.log("id:" + id);
-                    console.log("input json object:" + JSON.stringify(params));
-                    console.log(params)
+                    //console.log("id:" + id);
+                    //console.log("input json object:" + JSON.stringify(params));
+                    //console.log(params)
                     if (id != "") {  //修改
                         var url = apiObjUrl + '/' + id;
                         updateItem(url, params, $http);

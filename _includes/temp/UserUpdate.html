@@ -8,10 +8,10 @@
         var userName=document.getElementById("username").value;
         var password=document.getElementById("passWord").value;
         var jsonData="{"+'"'+"userName"+'"'+":"+'"'+userName+'"'+","+'"'+"password"+'"'+":"+'"'+password+'"'+"}"
-        console.log(jsonData)
+        //console.log(jsonData)
         var Id=$.cookie("id")
 
-        console.log(password)
+        //console.log(password)
         if(password.replace(/(^s*)|(s*$)/g, "").length ==0){
             alert("不能为空！！")
         }else{

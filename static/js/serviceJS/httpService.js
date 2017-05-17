@@ -22,7 +22,7 @@
                 'Content-Type': "application/json"
             }).success(function (responseData) {
                 successFunc(responseData);  //成功处理信息
-                console.log(responseData);
+                //console.log(responseData);
             }).error(function (errorData) {
 
             })

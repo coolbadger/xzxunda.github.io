@@ -2,12 +2,12 @@
 layout: base_page
 ---
 
-{% include temp/table.html inData = site.data.machine apiName = 'machines' %}
+{% include temp/table.html inData = site.data.machineWidth apiName = 'RefMachTerminal' %}
 
 <script type="text/javascript">
 
     var tableGen = new TableGen();
-    tableGen.editFields = new Array('id', 'machCode', 'machName', 'workingType', 'state', 'notes');
+    tableGen.editFields = new Array('id', 'machCode', 'machName', 'workingType', 'machineryWidth', 'states');
 
     tableGen.validates = {machCode: "notEmpty", machName: "notEmpty", workingType: "notEmpty"};
     tableGen.setTable = function (inTable) {
@@ -36,12 +36,12 @@ layout: base_page
                 field: 'workingType',
                 align: 'center',
             }, {
-                title: '状态',
-                field: 'state',
+                title: '机械宽度',
+                field: 'machineryWidth',
                 align: 'center',
             }, {
-                title: '备注',
-                field: 'notes',
+                title: '状态',
+                field: 'states',
                 align: 'center',
             }, {
                 title: '操作',
@@ -56,7 +56,7 @@ layout: base_page
 
     window.operateEvents = tableGen.operationEvent();
 
-    tableGen.apiName = 'machines';
+    tableGen.apiName = 'RefMachTerminal';
     tableGen.bind();
 
 </script>

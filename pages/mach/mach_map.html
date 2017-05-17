@@ -19,16 +19,16 @@ title: 农机跟踪
                     <div class="col-md-4 map_operation">
                         <div id="operation" >
                             <p>
-                                <input type="button" class="btn btn-info btn-mini" value="跳到当前位置"
+                                <input type="button" class="btn btn-info btn-mini" value="刷新页面"
                                        onclick="goCurrentPosition()" style="height: 5%;width: 30%;"/>
-                                <input type="button" class="btn btn-info btn-mini" value="跳转到双沟镇"
+                                <input type="button" class="btn btn-info btn-mini" value="到双沟镇"
                                        onclick="goShuangGou()" style="height: 5%;width: 30%;"/>
                             </p>
                             <p>
-                                <input type="button" class="btn btn-info btn-mini" value="清除所有标记"
+                                <input type="button" class="btn btn-info btn-mini" value="清除标记"
                                        onclick="clearAll()" style="height: 5%;width: 30%;"/>
 
-                                <input id="mapClickButton" type="button" class="btn btn-info btn-mini" value="启用点击坐标"
+                                <input id="mapClickButton" type="button" class="btn btn-info btn-mini" value="启用坐标"
                                        onclick="shiftMapClick()" style="height: 5%;width: 30%;"/>
                             </p>
                         </div>
@@ -61,13 +61,16 @@ title: 农机跟踪
             <div class="row">
                 <div class="col-md-12">
                     {% include temp/datetime.html id='dtp_start' addDays='-100' text='开始时间:' %}
+                    <br/>
                     {% include temp/datetime.html id='dtp_end' addDays='1' text='结束时间:' %}
+                    <br/>
                     {% include temp/textbox.html id='dtp_car' text='车牌号:' placeholder='请输入车牌号' showButton = true
                     onclick='onSearchClick()' onTextChange='onAutoSearch(value)' %}
+                    <br/>
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-12">
+                <div class="col-md-12" style="min-height:250px;overflow-y:auto;max-height:300px;">
                     {% include temp/simple_table.html %}
                 </div>
             </div>
@@ -162,7 +165,7 @@ title: 农机跟踪
 
     // 自动查询本地缓存结果
     function onAutoSearch(value) {
-        console.log(value)
+        //console.log(value)
         if (fullData == null) {
             fullData = simpleTableGen.table.bootstrapTable('getData');
         }
@@ -213,7 +216,6 @@ title: 农机跟踪
     }
     // 双击选中行事件
     function onRowDbClick(row, $element) {
-
         var defer = $.Deferred();
         var cssClass = $element.attr('class');
         if (cssClass) {
@@ -334,7 +336,7 @@ title: 农机跟踪
                 }
             });
             gpsCount = gpsLine.records.length;
-            infoStr = info.machName + "\t" + info.machCode + ",总路长:" + totalLength.toFixed(2) + "米,作业宽度:" + width + "米,作业面积:" + (totalLength * width * co).toFixed(2) + "亩";
+            infoStr = info.machName + "\t" + info.machCode + ",总路长:" + totalLength.toFixed(2) + "米,作业宽度:" + gpsLine.records[0].machineryWidth + "米,作业面积:" + (totalLength * gpsLine.records[0].machineryWidth * co).toFixed(2) + "亩";
         }
         countStr = '<span class="badge">' + gpsCount + '</span>'
         itemInfo.html(countStr + infoStr);
@@ -382,10 +384,10 @@ title: 农机跟踪
             var temp_sensor1=[];
             var temp=[];
             var temp_data=[];
-            var distance;
+            var distance=0.0;
             var mm_distance = 0;
             var workTime = 0;
-            var total_number = 0;
+            var total_number = 0.0;
             var reMachTerminalId;
 
             for(var i=0;i<data.length;i++){
@@ -411,8 +413,11 @@ title: 农机跟踪
                                 var pointA = new BMap.Point(temp[ii].lngFixed, temp[ii].latFixed);  // 创建点坐标
                                 var pointB = new BMap.Point(temp[ii - 1].lngFixed, temp[ii - 1].latFixed);  // 创建点坐标
                                 var mm = parseFloat((map.getDistance(pointA, pointB)).toFixed(2));
-                                mm_distance +=mm;
+                                if(temp[ii].lngFixed!=null&temp[ii].latFixed!=null){
+                                    mm_distance +=mm;
+                                }
                             }
+
 
                             if(temp[ii].sensor1=='1'){
                                 temp_sensor1.push(temp[ii]);
@@ -424,18 +429,23 @@ title: 农机跟踪
                                             var pointA = new BMap.Point(temp_sensor1[a].lngFixed, temp_sensor1[a].latFixed);  // 创建点坐标
                                             var pointB = new BMap.Point(temp_sensor1[a - 1].lngFixed, temp_sensor1[a - 1].latFixed);  // 创建点坐标
                                             var mm = parseFloat((map.getDistance(pointA, pointB)).toFixed(2));
-                                            distance += mm;//累加距离
+                                            if(temp_sensor1[a].lngFixed!=null&temp_sensor1[a].latFixed!=null){
+                                                distance += mm;//累加距离
+                                            }
+
                                         }
                                     }
                                     total_number += distance;
                                 }
+
                                 distance=0;
                                 temp_sensor1=[];
                             }
                         }
-
+                        //console.log("shang"+data[i].machineryWidth)
+                        //console.log(temp.length)
                        // var jsonData="{"+'"'+"machCode"+'"'+":"+'"'+userName+'"'+","+'"'+"machName"+'"'+":"+'"'+password+'"'+"}"
-                        var temp1="{"+'"'+"workArea"+'"'+":"+'"'+((total_number*3*15)/10000).toPrecision(3)+'"'+","+'"'+"workTime"+'"'+":"+'"'+((temp[temp.length-1].gpsTime-temp[0].gpsTime)/(1000*60*60)).toFixed(2)+'"'+","+'"'+"drivingArea"+'"'+":"+'"'+((mm_distance*3*15)/10000).toPrecision(3)+'"'+"}"
+                        var temp1="{"+'"'+"workArea"+'"'+":"+'"'+((total_number*data[i].machineryWidth*15)/10000).toFixed(2)+'"'+","+'"'+"workTime"+'"'+":"+'"'+((temp.length)/(12*60)).toFixed(2)+'"'+","+'"'+"drivingArea"+'"'+":"+'"'+((mm_distance*data[i].machineryWidth*15)/10000).toFixed(2)+'"'+"}"
                         updateArea(temp1,temp[0].reMachTerminalId);
                         temp_data.push("workArea"+((total_number*3*15)/10000).toPrecision(3))
                         mm_distance=0
@@ -447,6 +457,7 @@ title: 农机跟踪
             }
 
             if(temp.length>0){
+                var machineryWidths=0;
                 var total_numbers=0;
                 for(var ii=0;ii<temp.length;ii++){
                     if(ii>=1){
@@ -467,6 +478,7 @@ title: 农机跟踪
                                     var pointB = new BMap.Point(temp_sensor1[a - 1].lngFixed, temp_sensor1[a - 1].latFixed);  // 创建点坐标
                                     var mm = parseFloat((map.getDistance(pointA, pointB)).toFixed(2));
                                     distance += mm;//累加距离
+                                    //console.log("qwe"+distance)
                                 }
                             }
                             total_numbers += distance;
@@ -475,9 +487,11 @@ title: 农机跟踪
                         distance=0;
                         temp_sensor1=[];
                     }
+                    machineryWidths=temp[ii].machineryWidth;
                 }
-
-                jsonData ="{"+'"'+"drivingArea"+'"'+":"+'"'+((mm_distance*3*15)/10000).toPrecision(3)+'"'+","+'"'+"workTime"+'"'+":"+'"'+((temp[temp.length-1].gpsTime-temp[0].gpsTime)/(1000*60*60)).toFixed(2)+'"'+","+'"'+"workArea"+'"'+":"+'"'+((total_numbers*3*15)/10000).toPrecision(3)+'"'+"}";
+                //console.log("xia"+total_numbers)
+                //console.log("xia"+machineryWidths)
+                jsonData ="{"+'"'+"drivingArea"+'"'+":"+'"'+((mm_distance*machineryWidths*15)/10000).toFixed(2)+'"'+","+'"'+"workTime"+'"'+":"+'"'+((temp.length)/(12*60)).toFixed(2)+'"'+","+'"'+"workArea"+'"'+":"+'"'+((total_numbers*machineryWidths*15)/10000).toFixed(2)+'"'+"}";
             }
             if(temp.length>1){
                 updateArea(jsonData,temp[0].reMachTerminalId);
@@ -505,7 +519,4 @@ title: 农机跟踪
             }
         });
     }
-
-
-
 </script>

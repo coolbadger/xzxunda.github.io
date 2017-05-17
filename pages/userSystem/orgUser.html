@@ -2,7 +2,7 @@
 layout: base_page
 ---
 
-{% include temp/table.html inData = site.data.orgUser apiName = 'orgUsers' %}
+{% include temp/user_table.html inData = site.data.orgUser apiName = 'orgUsers' %}
 
 <script type="text/javascript">
 
@@ -27,7 +27,7 @@ layout: base_page
                 title: '用户名',
                 field: 'userName',
                 align: 'center'
-            },  {
+            }, {
                 title: '真实姓名',
                 field: 'fullName',
                 align: 'center'
@@ -51,14 +51,6 @@ layout: base_page
                 title: '备注',
                 field: 'notes',
                 align: 'center'
-            }, {
-                title: '操作',
-                field: 'operate',
-                align: 'center',
-                valign: 'middle',
-                //调用内置默认的operateFormatter
-                formatter: tableGen.operateFormatter,
-                events: operateEvents
             }]
         });
     }

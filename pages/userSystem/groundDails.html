@@ -3,7 +3,7 @@ layout: base_page
 ---
 {% include mapScript.html %}
 {% include temp/control_head.html %}
-{% include temp/table.html inData = site.data.ground apiName = 'groundDails' %}
+{% include temp/user_table.html inData = site.data.ground apiName = 'groundDails' %}
 
 <script type="text/javascript">
 
@@ -75,9 +75,7 @@ layout: base_page
     //添加异步方法，在载入数据后执行，用于对获取到的数据进行后期处理
     $.when(tableGen.loadData()).done(
             function (data) {
-                console.log(data)
                 for (var i = 0; i < data.length; i++) {
-
                     if(data[i].sensor1==0){
                         data[i].sensor1="运行状态";
                     }else if(data[i].sensor1==1){
@@ -85,6 +83,7 @@ layout: base_page
                     }else if(data[i].sensor1==null){
                         data[i].sensor1="暂时无任何工作"
                     }
+
 
 
                     var str=data[i].localTime;
