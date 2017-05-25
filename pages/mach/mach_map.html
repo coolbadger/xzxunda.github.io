@@ -241,29 +241,32 @@ title: 农机跟踪
                 cssClass = cssRemain.pop();
                 cssRemain.sort(sortCss);
                 $element.addClass(cssClass);
-                var gpsLine = machMap.addGpsRecords(row, cssClass);
                 $.when(machMap.addGpsRecords(row, cssClass)).done(
-                        function (id,line) {
-                            var gpsLine = line;
-                            machMap.gpsRecordLines.set(id, gpsLine);
-                            machMap.map.addOverlay(gpsLine.line);
-                            writeInfo(row, cssClass, gpsLine);
+                        function (id,lines) {
+                            var gpsLines = lines.lines; //array[GpsLine]
+                            console.log(gpsLines);
+                            machMap.gpsRecordLines.set(id, gpsLines);
+                            for(lineIndex in gpsLines){
+                                var gpsLine = gpsLines[lineIndex];
+                                var polyline = new BMap.Polyline(gpsLine.points);
+                                polyline.setStrokeColor(gpsLine.colorString);
+                                machMap.map.addOverlay(polyline);
+
+                            }
+                            writeInfo(row, cssClass, gpsLines);
                             //跳转到线路最后一个点位
-                            gotoPosition(gpsLine.points[gpsLine.points.length - 1]);
-
-                            /**
-                             * 我需要做的地方  路线定位
-                             */
+//                            var gpsLine = gpsLines[gpsLines.length - 1];
                             var last_point=gpsLine.points[gpsLine.points.length - 1];
+                            gotoPosition(last_point);
 
 
-                            var dateLength=gpsLine.records.length;//取出数据的长度
-                            var dataFirst=gpsLine.records[0].gpsTime;//取第一个时间
-                            var  strFirst=dataFirst.toString();
-                            strFirst =  strFirst.replace(/-/g,"/");
-                            var oDate1First = new Date(strFirst);
-                            var dataFirst_getTime=oDate1First.getTime();//时间戳
-                            var  custom_getTime=1000*60*60*3;//相隔时间定点时间戳
+//                            var dateLength=gpsLines.points.length;//取出数据的长度
+//                            var dataFirst=gpsLines.records[0].gpsTime;//取第一个时间
+//                            var  strFirst=dataFirst.toString();
+//                            strFirst =  strFirst.replace(/-/g,"/");
+//                            var oDate1First = new Date(strFirst);
+//                            var dataFirst_getTime=oDate1First.getTime();//时间戳
+//                            var  custom_getTime=1000*60*60*3;//相隔时间定点时间戳
                             var point = new BMap.Point(last_point.lng,last_point.lat);
                             map.centerAndZoom(point, 15);
                             var myIcon = new BMap.Icon("/static/images/image4.png", new BMap.Size(16,15));
@@ -271,22 +274,22 @@ title: 农机跟踪
                             map.addOverlay(marker2);
 
 
-                            var opts = {
-                                position : point,    // 指定文本标注所在的地理位置
-                                offset   : new BMap.Size(30, -30)    //设置文本偏移量
-                            }
-                            var label = new BMap.Label(row.machCode+row.machName, opts);  // 创建文本标注对象
-                            label.setStyle( {
-                                color : "red",
-                                fontSize : "12px",
-                                height : "20px",
-                                width:"none",
-                                wrap:"break-word",
-                                break :"break-all",
-                                lineHeight : "20px",
-                                fontFamily:"微软雅黑",
-
-                            });
+//                            var opts = {
+//                                position : point,    // 指定文本标注所在的地理位置
+//                                offset   : new BMap.Size(30, -30)    //设置文本偏移量
+//                            }
+//                            var label = new BMap.Label(row.machCode+row.machName, opts);  // 创建文本标注对象
+//                            label.setStyle( {
+//                                color : "red",
+//                                fontSize : "12px",
+//                                height : "20px",
+//                                width:"none",
+//                                wrap:"break-word",
+//                                break :"break-all",
+//                                lineHeight : "20px",
+//                                fontFamily:"微软雅黑",
+//
+//                            });
                             //map.addOverlay(label);
                             defer.resolve();
                         }
@@ -312,10 +315,10 @@ title: 农机跟踪
      *
      * @param info
      * @param cssClass
-     * @param gpsLine
+     * @param gpsLines
      */
     // 写入页面GPS信息
-    function writeInfo(info, cssClass, gpsLine) {
+    function writeInfo(info, cssClass, gpsLines) {
         var itemInfo = $("#" + cssClass + "Info");
         var countStr;
         var infoStr = '<label></label>';
@@ -326,17 +329,30 @@ title: 农机跟踪
         if (info != '') {
             var totalLength = 0;
             var oldPoint = null;
-            gpsLine.points.forEach(function (point) {
-                if (oldPoint == null) {
-                    oldPoint = point;
+            for(lineIndex in gpsLines){
+                var gpsLine = gpsLines[lineIndex];
+                for(pointIndex in gpsLine.points){
+                    var point = gpsLine.points[pointIndex];
+                    if (oldPoint == null) {
+                        oldPoint = point;
+                    }
+                    else {
+                        totalLength += machMap.map.getDistance(point, oldPoint);
+                        oldPoint = point;
+                    }
                 }
-                else {
-                    totalLength += machMap.map.getDistance(point, oldPoint);
-                    oldPoint = point;
-                }
-            });
-            gpsCount = gpsLine.records.length;
-            infoStr = info.machName + "\t" + info.machCode + ",总路长:" + totalLength.toFixed(2) + "米,作业宽度:" + gpsLine.records[0].machineryWidth + "米,作业面积:" + (totalLength * gpsLine.records[0].machineryWidth * co).toFixed(2) + "亩";
+//                gpsLine.forEach(function (point) {
+//                    if (oldPoint == null) {
+//                        oldPoint = point;
+//                    }
+//                    else {
+//                        totalLength += machMap.map.getDistance(point, oldPoint);
+//                        oldPoint = point;
+//                    }
+//                });
+                gpsCount = gpsLine.points.length;
+            }
+            infoStr = info.machName + "\t" + info.machCode + ",总路长:" + totalLength.toFixed(2) + "米,作业宽度:" + "TODO" + "米,作业面积:" + (totalLength * 2 * co).toFixed(2) + "亩";
         }
         countStr = '<span class="badge">' + gpsCount + '</span>'
         itemInfo.html(countStr + infoStr);

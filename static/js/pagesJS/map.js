@@ -2,6 +2,24 @@
  * Created by Badger on 16/7/25.
  */
 
+function GpsLine(){
+    this.points = new Array();
+}
+
+GpsLine.prototype.points;
+GpsLine.prototype.sensor1;
+GpsLine.prototype.colorString;
+GpsLine.prototype.setSensor1 = function (sensor1) {
+    this.sensor1 = sensor1;
+    if(sensor1 == "0"){
+        this.colorString = "gray";
+    }
+    else{
+        this.colorString = "#a2aea4";
+    }
+}
+
+
 function GpsRecordLine(mach_terminal) {
     this.mach_terminal_info = mach_terminal;
 
@@ -9,47 +27,109 @@ function GpsRecordLine(mach_terminal) {
 GpsRecordLine.prototype.mach_terminal_info;
 GpsRecordLine.prototype.records;
 GpsRecordLine.prototype.points;
-GpsRecordLine.prototype.line;
 GpsRecordLine.prototype.lines;
-GpsRecordLine.prototype.workingLins;
+// GpsRecordLine.prototype.workingLins;
 
 GpsRecordLine.prototype.addRecords = function (records) {
     this.records = records;
-    this.workingLins = new Array();
+    // this.workingLins = neww Array();
     this.points = new Array();
     this.lines = new Array();
     // 现根据预定义规则进行排序
     records.sort(Sorts);
+    // console.log("获取共"+records.length+"点");
+    // console.log(records);
+
+    var lineItems = new Array(); //线记录
     for (var i = 0; i < records.length; i++) {
         var item = records[i];
+
         /**
          * 利用prototype共用数据
          * @type {BMap.Point}
          */
-        var point = new BMap.Point(item.lngFixed, item.latFixed);
-        this.points.push(point);
-
-        // 记录工作点
-        var workingPoints = new Array();
-        if (i > 0 && records[i].sensor1 == '1') {
-            var lastTime = new Date(Date.parse(records[i - 1].gpsTime.replace(/-/g, "/")));
-            var thisTime = new Date(Date.parse(item.gpsTime.replace(/-/g, "/")));
-
-            var spanTime = thisTime - lastTime;
-            // GPS间隔在5分钟以内,作为同一批次作业
-            if (spanTime <= 5 * 1000 * 60) {
-                workingPoints.push(point);
+        if(lineItems.length==0){//第一个点添加上去
+            lineItems.push(item);
+            // var point = new BMap.Point(item.lngFixed, item.latFixed);
+            // line.push(point);
+        }
+        else {//与上一个点比对，判断是否是第二条线
+            //工作状态，距离，时间 划线
+            var isAnother = false;
+            var lastItem = lineItems[lineItems.length-1];
+            //工作状态相同
+            if(isAnother == false && lastItem.sensor1 != item.sensor1){
+                isAnother = true;
             }
+            // GPS间隔在5分钟以内,作为同一批次作业
+            var lastTime = new Date(Date.parse(lastItem.gpsTime.replace(/-/g, "/")));
+            var thisTime = new Date(Date.parse(item.gpsTime.replace(/-/g, "/")));
+            var spanTime = thisTime - lastTime;
+            if (isAnother == false && spanTime > 5 * 1000 * 60) {
+                isAnother = true;
+            }
+            //距离大于150米，则是第二条线
+            var lastBPoint = new BMap.Point(lastItem.lngFixed, lastItem.latFixed);
+            var thisBPoint = new BMap.Point(item.lngFixed, item.latFixed);
+            var distance = machMap.map.getDistance(lastBPoint,thisBPoint);
+            if(isAnother == false && distance>15){
+                isAnother = true;
+            }
+            //当是另一条线或是最后一个点时，划线
+            if(isAnother||i==records.length-1){
+                //划线
+                // console.log("端点");
+
+                if(lineItems.length<3){
+                    //TODO:N个点内的线段过滤
+                    lineItems = [item];
+                }
+                else {
+                    var line = new GpsLine();
+                    for(var j=0;j<lineItems.length;j++) {
+                        if(j==0){
+                            line.setSensor1(lineItems[j].sensor1);
+                        }
+                        var point = new BMap.Point(lineItems[j].lngFixed, lineItems[j].latFixed);
+                        line.points.push(point);
+                    }
+                    this.lines.push(line);
+                    //清除记录
+                    lineItems = [item];
+                }
+            }
+            else {
+                lineItems.push(item)
+            }
+
         }
-        else if (records[i].sensor1 == '1') {
-            workingPoints.push(point);
-        }
+
+
+
+        // // 记录工作点
+        // var workingPoints = new Array();
+        // if (i > 0 && records[i].sensor1 == '1') {
+        //     var lastTime = new Date(Date.parse(records[i - 1].gpsTime.replace(/-/g, "/")));
+        //     var thisTime = new Date(Date.parse(item.gpsTime.replace(/-/g, "/")));
+        //
+        //     var spanTime = thisTime - lastTime;
+        //     // GPS间隔在5分钟以内,作为同一批次作业
+        //     if (spanTime <= 5 * 1000 * 60) {
+        //         workingPoints.push(point);
+        //     }
+        // }
+        // else if (records[i].sensor1 == '1') {
+        //     workingPoints.push(point);
+        // }
     }
 
-    this.line = new BMap.Polyline(this.points);
-    this.lines.push(new BMap.Polyline(this.points));
+    //
 
-    return this.line;
+    // this.line = new BMap.Polyline(this.points);
+    // this.lines.push(new BMap.Polyline(this.points));
+    // console.log("分割完毕");
+    // console.log(this.lines);
+    return this.lines;
 }
 GpsRecordLine.prototype.setLineColor = function (linecolor) {
 
@@ -146,89 +226,11 @@ MachMap.prototype.addGpsRecords = function (row, cssClass) {
         },
         success: function (result) {
             var markers = gpsRecordLine.addRecords(result);
+
+            console.log(result)
+
             gpsRecordLine.setLineColor("#a2aea4");
             defer.resolve(ref_id, gpsRecordLine);
-            console.log(result[1])
-            var arr = new Array();
-            var temp = new Array();
-            var area = new Array();
-            var blocks = [];
-            var blocks_area = new Array();
-            var m = 0;
-            var temp_area = [];//存入的面积
-            for (var i = 0; i < result.length; i++) {
-                var lat = result[i].latFixed;
-                var lng = result[i].lngFixed;
-                if (result[i].sensor1 == '1') {
-
-                    if (arr.length == 0) {
-                        temp_area.push(((m * 3 * 15) / 10000).toPrecision(3));//计算面积
-                        m = 0;
-                    }
-
-                    var point1 = new BMap.Point(lng, lat);
-                    arr.push(point1);
-                    area.push(result[i]);
-                } else {
-                    if (arr.length > 0) {
-                        for (var a = 0; a < area.length; a++) {
-                            if (a == '0') {
-                            } else {
-                                var pointA = new BMap.Point(area[a].lngFixed, area[a].latFixed);  // 创建点坐标
-                                var pointB = new BMap.Point(area[a - 1].lngFixed, area[a - 1].latFixed);  // 创建点坐标
-                                var mm = parseFloat((map.getDistance(pointA, pointB)).toFixed(2));
-                                m = mm + m;//累加距离
-                            }
-                        }
-                        blocks_area.push(area);
-                        var flightPath = new BMap.Polyline(arr, {
-                            strokeColor: "#05ab21",
-                            strokeOpacity: 0.5,
-                            strokeWeight: 25
-                        });
-                        blocks.push(flightPath);
-                        temp.push(result[i])
-                        map.addOverlay(flightPath);
-                        // flightPath.addEventListener("mouseover",overattribute);
-                        // function overattribute() {
-                        //     flightPath.setStrokeColor("#ffffff");
-                        // }
-                        // flightPath.addEventListener("mouseout",outattribute);
-                        // function outattribute() {
-                        //     flightPath.setStrokeColor("#000000");
-                        // }
-                    }
-                    arr.length = 0;
-                    area.length = 0;
-                }
-            }
-
-
-            temp_area.push(((m * 3 * 15) / 10000).toPrecision(3));//计算面积
-            /*            console.log("这个数据是什么？")
-             console.log(m);
-             console.log("blocks="+blocks.length)*/
-            for (var i = 0; i < blocks.length; i++) {
-                (function () {
-                    var point = temp[i];
-                    var index = i;
-                    blocks[i].addEventListener("click", clickAttribute);
-                    function clickAttribute() {
-                        var opts = {
-                            width: 250,    // 信息窗口宽度
-                            height: 100,    // 信息窗口高度
-                            title: row.machCode + row.machName + "-" + index// 信息窗口标题
-                        };
-
-                        var infoWindow = new BMap.InfoWindow("作业面积：" + temp_area[index + 1] + "亩", opts);  // 创建信息窗口对象
-                        /*                    infoWindow.setContent(
-                         "<div style='background-color: #001a35;height: 100px;width: 250px;'>"+row.machCode + row.machName+"作业面积："+temp_area[index+1]+"亩"+"</div>"
-                         );*/
-                        var pts = new BMap.Point(point.lngFixed, point.latFixed);
-                        map.openInfoWindow(infoWindow, pts);      // 打开信息窗口
-                    }
-                })();
-            }
 
         }
     });
@@ -364,4 +366,3 @@ function goCurrentPosition() {
  }
 
  */
-
