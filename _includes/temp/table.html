@@ -18,14 +18,14 @@
 
 <div class="container" style="z-index: 1">
     <div id="toolbar">
-        {% if(include.disableModal != 'true') %}
+        {% if(include.modalType == null || include.modalType = 'default') %}
         <button id="add" class="btn btn-primary" data-toggle="modal" data-target="#myModal" style="font-size: 12px">
             <i class="glyphicon glyphicon-plus"></i> 添加
         </button>
         <button id="remove" class="btn btn-danger" disabled style="font-size: 12px">
             <i class="glyphicon glyphicon-remove"></i> 删除已选
         </button>
-        {% else %}
+        {% elsif(include.modalType == 'bind') %}
         <button id="unBind" class="btn btn-primary" style="font-size: 12px">
             <i class="glyphicon glyphicon-filter"></i> 未绑定
         </button>
@@ -49,7 +49,7 @@
            data-page-list="[10, 25, 50, 100, ALL]"
            datatype="json"
            data-local="zh-US"
-            >
+    >
     </table>
 </div>
 {% if(include.disableModal != 'true') %}
@@ -144,8 +144,6 @@
 <script type="text/javascript" src="/static/js/pagesJS/table_gen.js" charset="utf-8"></script>
 
 <script>
-
-
 
 
 </script>
