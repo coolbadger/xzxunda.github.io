@@ -127,7 +127,8 @@
             </form>
         </div>
         <div class="modal-footer">
-            <button ng-click="saveObj()" class="btn btn-success">
+            <button ng-click="saveObj()" class="btn btn-success"  id="saveObj" style="display: none;"/>
+            <button onclick="checkOrganization()" class="btn btn-success">
                 <i class="glyphicon glyphicon-ok"></i> 保存
             </button>
             <button type="button" class="btn btn-primary" data-dismiss="modal">
@@ -145,7 +146,78 @@
 
 <script>
 
+function checkOrganization(){
+    var checkTag = "{{ include.apiName }}";
+    //根据操作页面的apiName判断操作的对象，即checkTag变量的值
+    // 如果是baseOrgs，调用组织机构重名校验代码，
+    // 如果是machines，调用机器重名校验代码，
+    // 如果是workers，调用司机重名校验
 
+    if(checkTag =="baseOrgs"){
+        var orgCode = jQuery('#orgCode').val();
+        checkData("baseOrgs","baseOrgs/checkOrganization",orgCode);
+    }else if(checkTag =="machines"){
+        var machCode = jQuery('#machCode').val();
+        checkData("machines","machines/checkMachine",machCode);
+    }else if(checkTag =="workers"){
+        var userName = jQuery('#userName').val();
+        checkData("workers","workers/checkWorker",userName);
+    }else{
+        jQuery("#saveObj").click();
+    }
+}
+
+//用于添加组织机构、农机信息、司机信息时，验证机构代码、农机号牌、司机账号是否已存在的方法
+//参数tag0：验证的对象、tag1：验证url(对应的controller和方法)、tag2：验证参数
+function  checkData(tag0,tag1,tag2){
+    $.ajax({
+        url:API_URL + "/api/"+tag1+"?checkCode="+tag2 ,
+        type:'GET', //GET
+        async:true,    //或false,是否异步
+        //data:{orgCode:'testCode'},
+        timeout:5000,    //超时时间
+        // dataType:'json',    //返回的数据格式：json/xml/html/script/jsonp/text
+        /*beforeSend:function(xhr){
+         console.log(xhr)
+         console.log('发送前')
+         },*/
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader("Authorization", $.cookie('author_code'));
+        },
+        success:function(data,textStatus,jqXHR){
+            console.log(data)
+            console.log(textStatus)
+            console.log(jqXHR)
+            if(data==1){
+                if(tag0=="baseOrgs"){
+                    alert("组织机构代码已存在，请重新输入。");
+                }
+                if(tag0=="machines"){
+                    alert("农机牌号已存在，请重新输入。");
+                }
+                if(tag0=="workers"){
+                    alert("司机账号已存在，请重新输入。");
+                }
+                return;
+            }else{
+                jQuery("#saveObj").click();
+            }
+            if(data==-1){
+                alert("操作出错，请重试。");
+                return;
+            }
+        },
+        error:function(xhr,textStatus){
+            console.log('错误')
+            console.log(xhr)
+            console.log(textStatus)
+        },
+        complete:function(){
+            console.log('结束')
+        }
+    })
+
+}
 
 
 </script>
