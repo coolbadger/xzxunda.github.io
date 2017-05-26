@@ -1,7 +1,6 @@
 <div>
     <label for="{{ include.id }}" class="col-md-3 lab_padding">{{ include.text }}</label>
-    <div class="input-group date form_datetime col-md-9" data-date="1979-09-16T05:25:07Z"
-         data-date-format="yyyy-MM-dd HH:ii p" data-link-field="{{ include.id }}">
+    <div class="input-group date form_datetime col-md-9" data-link-field="{{ include.id }}">
         <input id="{{ include.id }}" class="form-control input-sm" size="10" type="text" value=""
                readonly>
         <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
@@ -11,11 +10,11 @@
 <script type="text/javascript">
     $(".form_datetime").datetimepicker({
         language: "zh-CN",
-        format: "yyyy-MM-dd hh:ii:ss",
+        minView:"month",
+        format: "yyyy-mm-dd",
         autoclose: true,
         todayBtn: true,
-        initialDate: "2016-01-01 10:00",
-        minuteStep: 30,
+        initialDate: "2016-01-01",
         todayHighlight: true,
     });
     $('#{{ include.id }}').val(getCurrentDate({{ include.addDays}}));
