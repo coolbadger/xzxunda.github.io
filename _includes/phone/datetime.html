@@ -1,0 +1,21 @@
+<div>
+    <label for="{{ include.id }}">{{ include.text }}</label>
+    <div class="input-group date form_datetime col-md-9" data-link-field="{{ include.id }}">
+        <input id="{{ include.id }}" class="form-control" type="text" value=""
+               readonly>
+        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+    </div>
+    <p></p>
+</div>
+<script type="text/javascript">
+    $(".form_datetime").datetimepicker({
+        language: "zh-CN",
+        minView:"month",
+        format: "yyyy-mm-dd",
+        autoclose: true,
+        todayBtn: true,
+        initialDate: "2016-01-01",
+        todayHighlight: true,
+    });
+    $('#{{ include.id }}').val(getCurrentDate({{ include.addDays}}));
+</script>

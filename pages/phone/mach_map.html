@@ -1,0 +1,509 @@
+---
+layout: base_page
+title: 农机跟踪
+---
+
+{% include mapScript.html %}
+{% include temp/control_head.html %}
+{% include common/angular.html %}
+
+
+<div class="main_container">
+    <div class="row full_height">
+        <div class="col-md-9 map_part">
+            <div class="row map_top">
+                <div id="map_container"></div>
+            </div>
+            <div class="row map_bottom border">
+                <div class="row ">
+                    <div class="col-md-8">
+                        <ul class="list-group map_info" >
+                            <li id="successInfo" class="list-group-item list-group-item-success" >
+                                <span id="successNumber" class="badge">0</span>
+                                <label></label>
+                            </li>
+                            <li id="infoInfo" class="list-group-item list-group-item-info" >
+                                <span id="infoNumber" class="badge">0</span>
+                                <label></label>
+                            </li>
+                            <li id="warningInfo" class="list-group-item list-group-item-warning" >
+                                <span id="warningNumber" class="badge">0</span>
+                                <label></label>
+                            </li>
+                            <li id="dangerInfo" class="list-group-item list-group-item-danger" >
+                                <span id="dangerNumber" class="badge">0</span>
+                                <label></label>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    window.onload = function (){
+
+    }
+
+
+    // 新建地图
+    var machMap = new MachMap();
+    // 新建表格
+    var simpleTableGen = new SimpleTableGen();
+    // gps记录
+    var gpsRecordLine = new GpsRecordLine();
+    var map = machMap.map;
+    var apiObjUrl = API_URL + '/api/gpsRecords';
+
+    // 本地存储上次的查询条件
+    var startTime_local;
+    var endTime_local;
+    var carInfo_local;
+
+    var nm_drivingArea = 0;
+    var nm_workArea = 0;
+    var settings = new Object();
+    settings.columns = [{
+        field: 'machCode',
+        title: '车号',
+        align: 'center',
+    }, {
+        field: 'machName',
+        title: '车型',
+        align: 'center',
+    }, {
+        field: 'gpsStartTime',
+        title: '开始时间',
+        formatter: simpleTableGen.shortDateFormatter,
+        align: 'center',
+    }, {
+        field: 'gpsEndTime',
+        title: '结束时间',
+        formatter: simpleTableGen.shortDateFormatter,
+        align: 'center',
+    }];
+
+    settings.onDblClickRow = function (row, $element) {
+
+        $("#process").fadeIn('fast', function () {
+            $.when(onRowDbClick(row, $element)).done(
+                    function () {
+                        $("#process").fadeOut();
+                    }
+            );
+        });
+    }
+
+    var overLays = new Array();
+
+    simpleTableGen.settings = settings;
+    simpleTableGen.bind();
+
+    function cleanLines() {
+        overLays.forEach(function (overLay) {
+            map.removeOverlay(overLay);
+        });
+        overLays = [];
+    }
+
+    //跳转到徐州双沟镇
+    function goShuangGou() {
+//        var sgPoint = new BMap.Point(118.752403, 32.077680);
+        var sgPoint = new BMap.Point(117.606257, 34.042178);
+//        var sgPoint = new BMap.Point(117.60409658736, 34.041406811961);
+        var mk = new BMap.Marker(sgPoint);//添加标记点
+//        machMap.map.addOverlay(mk);
+        machMap.map.panTo(sgPoint);
+        machMap.map.setCenter(sgPoint);
+    }
+
+    //清除覆盖物
+    function clearAll() {
+
+        machMap.clearAll();
+    }
+
+    var fullData = null;
+
+    // 自动查询本地缓存结果
+    function onAutoSearch(value) {
+        //console.log(value)
+        if (fullData == null) {
+            fullData = simpleTableGen.table.bootstrapTable('getData');
+        }
+        var newData = new Array();
+        fullData.forEach(function (item) {
+            if (item.machCode.indexOf(value) > 0 || item.machName.indexOf(value) > 0) {
+                newData.push(item);
+            }
+        });
+        var checkCondition = value.length > carInfo_local.length && value.indexOf(carInfo_local) > 0 || (carInfo_local.length == 0 && value.length > 0);
+        if (checkCondition) {
+            simpleTableGen.table.bootstrapTable('load', newData);
+        }
+        else {
+            simpleTableGen.table.bootstrapTable('load', fullData);
+        }
+        cleanAllInfo();
+    }
+
+    // 查询农机列表
+    function onSearchClick() {
+        fullData = null;
+        startTime_local = $("#dtp_start").val();
+        endTime_local = $("#dtp_end").val();
+        carInfo_local = $("#dtp_car").val();
+        var requestUrl = encodeURI(apiObjUrl + "?startTime=" + startTime_local + "&endTime=" + endTime_local + "&machCode=" + carInfo_local);
+        $.ajax({
+            url: requestUrl,
+            type: 'GET',
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("Authorization", $.cookie('author_code'));
+            },
+            success: function (data) {
+                simpleTableGen.table.bootstrapTable('load', data);
+            },
+            error: function (err) {
+            }
+        });
+
+        cleanAllInfo();
+    }
+
+    var cssList = ['danger', 'warning', 'info', 'success'];
+    var cssRemain = cssList.slice(0);
+    function sortCss(a, b) {
+        var result = cssList.indexOf(a) - cssList.indexOf(b);
+        return cssList.indexOf(a) - cssList.indexOf(b);
+    }
+    // 双击选中行事件
+    function onRowDbClick(row, $element) {
+        var defer = $.Deferred();
+        var cssClass = $element.attr('class');
+        if (cssClass) {
+            $element.removeClass(cssClass);
+            clearInfo(cssClass);
+            cssRemain.push(cssClass);
+            cssRemain.sort(sortCss);
+            machMap.removeGpsRecords(row);
+
+            machMap.clearAll()
+            //清除坐标
+            var allOverlay = map.getOverlays();
+
+            for (var i = 0; i < allOverlay.length -1; i++){
+                    map.removeOverlay(allOverlay[i]);
+                    return false;
+            }
+            defer.resolve();
+        }
+        else {
+            if (machMap.gpsRecordLines.size < 4) {
+
+                cssClass = cssRemain.pop();
+                cssRemain.sort(sortCss);
+                $element.addClass(cssClass);
+                $.when(machMap.addGpsRecords(row, cssClass)).done(
+                        function (id,lines) {
+                            var gpsLines = lines.lines; //array[GpsLine]
+                            console.log(gpsLines);
+                            machMap.gpsRecordLines.set(id, gpsLines);
+                            for(lineIndex in gpsLines){
+                                var gpsLine = gpsLines[lineIndex];
+                                var polyline = new BMap.Polyline(gpsLine.points);
+                                polyline.setStrokeColor(gpsLine.colorString);
+                                machMap.map.addOverlay(polyline);
+
+                            }
+                            writeInfo(row, cssClass, gpsLines);
+                            //跳转到线路最后一个点位
+//                            var gpsLine = gpsLines[gpsLines.length - 1];
+                            var last_point=gpsLine.points[gpsLine.points.length - 1];
+                            gotoPosition(last_point);
+
+
+//                            var dateLength=gpsLines.points.length;//取出数据的长度
+//                            var dataFirst=gpsLines.records[0].gpsTime;//取第一个时间
+//                            var  strFirst=dataFirst.toString();
+//                            strFirst =  strFirst.replace(/-/g,"/");
+//                            var oDate1First = new Date(strFirst);
+//                            var dataFirst_getTime=oDate1First.getTime();//时间戳
+//                            var  custom_getTime=1000*60*60*3;//相隔时间定点时间戳
+                            var point = new BMap.Point(last_point.lng,last_point.lat);
+                            map.centerAndZoom(point, 15);
+                            var myIcon = new BMap.Icon("/static/images/image4.png", new BMap.Size(16,15));
+                            var marker2 = new BMap.Marker(point,{icon:myIcon});  // 创建标注
+                            map.addOverlay(marker2);
+
+
+//                            var opts = {
+//                                position : point,    // 指定文本标注所在的地理位置
+//                                offset   : new BMap.Size(30, -30)    //设置文本偏移量
+//                            }
+//                            var label = new BMap.Label(row.machCode+row.machName, opts);  // 创建文本标注对象
+//                            label.setStyle( {
+//                                color : "red",
+//                                fontSize : "12px",
+//                                height : "20px",
+//                                width:"none",
+//                                wrap:"break-word",
+//                                break :"break-all",
+//                                lineHeight : "20px",
+//                                fontFamily:"微软雅黑",
+//
+//                            });
+                            //map.addOverlay(label);
+                            defer.resolve();
+                        }
+                )
+            }
+            else {
+                alert("超过最大可选数!");
+            }
+        }
+        return defer.promise();
+    }
+    //跳转到点
+    function gotoPosition(point) {
+        machMap.map.setCenter(point);
+    }
+    // 清除页面GPS信息框
+    function clearInfo(cssClass) {
+        writeInfo('', cssClass, '0');
+    }
+
+
+    /**
+     *
+     * @param info
+     * @param cssClass
+     * @param gpsLines
+     */
+    // 写入页面GPS信息
+    function writeInfo(info, cssClass, gpsLines) {
+        var itemInfo = $("#" + cssClass + "Info");
+        var countStr;
+        var infoStr = '<label></label>';
+        var gpsCount = 0;
+        var co = 0.0015;
+        var width = 3;
+
+        if (info != '') {
+            var totalLength = 0;
+            var oldPoint = null;
+            for(lineIndex in gpsLines){
+                var gpsLine = gpsLines[lineIndex];
+                for(pointIndex in gpsLine.points){
+                    var point = gpsLine.points[pointIndex];
+                    if (oldPoint == null) {
+                        oldPoint = point;
+                    }
+                    else {
+                        totalLength += machMap.map.getDistance(point, oldPoint);
+                        oldPoint = point;
+                    }
+                }
+//                gpsLine.forEach(function (point) {
+//                    if (oldPoint == null) {
+//                        oldPoint = point;
+//                    }
+//                    else {
+//                        totalLength += machMap.map.getDistance(point, oldPoint);
+//                        oldPoint = point;
+//                    }
+//                });
+                gpsCount = gpsLine.points.length;
+            }
+            infoStr = info.machName + "\t" + info.machCode + ",总路长:" + totalLength.toFixed(2) + "米,作业宽度:" + "TODO" + "米,作业面积:" + (totalLength * 2 * co).toFixed(2) + "亩";
+        }
+        countStr = '<span class="badge">' + gpsCount + '</span>'
+        itemInfo.html(countStr + infoStr);
+    }
+
+    // 是否启用页面点击事件
+    var enableMapClick = false;
+    function shiftMapClick() {
+        enableMapClick = !enableMapClick;
+        machMap.enableMapClick(enableMapClick);
+        var mapClickButton = $("#mapClickButton");
+        if (enableMapClick) {
+            mapClickButton.val("取消点击坐标");
+        } else {
+            mapClickButton.val("启用点击坐标");
+        }
+    }
+
+    // 清除界面上所有GPS信息,并充值css列表
+    function cleanAllInfo() {
+
+        machMap.clearAll();
+        cssList.forEach(function (css) {
+            clearInfo(css);
+        });
+        cssRemain = cssList.slice(0);
+    }
+
+
+
+    onSearchClick();
+    goShuangGou();
+
+
+
+    /*处理gps数据，转化为面积*/
+    $.ajax({
+        url: apiObjUrl+"/getFinishingData",
+        dataType: "json",
+        type: 'GET',
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader("Authorization", $.cookie('author_code'));
+        },
+        success: function (data) {
+            var temp_sensor1=[];
+            var temp=[];
+            var temp_data=[];
+            var distance=0.0;
+            var mm_distance = 0;
+            var workTime = 0;
+            var total_number = 0.0;
+            var reMachTerminalId;
+
+            for(var i=0;i<data.length;i++){
+                if(temp.length<1){
+                    if(i>0){
+                        temp.push(data[i]);
+                        temp.push(data[i-1]);
+                    }else{
+                        temp.push(data[i]);
+                    }
+                }else{
+                    if(data[i].reMachTerminalId==data[i-1].reMachTerminalId){
+                        temp.push(data[i]);//相同农机GPS数据
+                    }else{
+                        temp_data.push("machCode"+temp[0].machCode)
+                        temp_data.push("machName"+temp[0].machName)
+                        temp_data.push("workTime"+((temp[temp.length-1].gpsTime-temp[0].gpsTime)/(1000*60*60)).toFixed(2))
+
+
+                        for(var ii=0;ii<temp.length;ii++){
+                            if(ii>=1){
+                                //行驶距离
+                                var pointA = new BMap.Point(temp[ii].lngFixed, temp[ii].latFixed);  // 创建点坐标
+                                var pointB = new BMap.Point(temp[ii - 1].lngFixed, temp[ii - 1].latFixed);  // 创建点坐标
+                                var mm = parseFloat((map.getDistance(pointA, pointB)).toFixed(2));
+                                if(temp[ii].lngFixed!=null&temp[ii].latFixed!=null){
+                                    mm_distance +=mm;
+                                }
+                            }
+
+
+                            if(temp[ii].sensor1=='1'){
+                                temp_sensor1.push(temp[ii]);
+                            }else{
+                                if(temp_sensor1.length>0){
+                                    for(var a=0;a<temp_sensor1.length;a++){
+                                        if(a>=1) {
+                                            //工作距离
+                                            var pointA = new BMap.Point(temp_sensor1[a].lngFixed, temp_sensor1[a].latFixed);  // 创建点坐标
+                                            var pointB = new BMap.Point(temp_sensor1[a - 1].lngFixed, temp_sensor1[a - 1].latFixed);  // 创建点坐标
+                                            var mm = parseFloat((map.getDistance(pointA, pointB)).toFixed(2));
+                                            if(temp_sensor1[a].lngFixed!=null&temp_sensor1[a].latFixed!=null){
+                                                distance += mm;//累加距离
+                                            }
+
+                                        }
+                                    }
+                                    total_number += distance;
+                                }
+
+                                distance=0;
+                                temp_sensor1=[];
+                            }
+                        }
+                        //console.log("shang"+data[i].machineryWidth)
+                        //console.log(temp.length)
+                       // var jsonData="{"+'"'+"machCode"+'"'+":"+'"'+userName+'"'+","+'"'+"machName"+'"'+":"+'"'+password+'"'+"}"
+                        var temp1="{"+'"'+"workArea"+'"'+":"+'"'+((total_number*data[i].machineryWidth*15)/10000).toFixed(2)+'"'+","+'"'+"workTime"+'"'+":"+'"'+((temp.length)/(12*60)).toFixed(2)+'"'+","+'"'+"drivingArea"+'"'+":"+'"'+((mm_distance*data[i].machineryWidth*15)/10000).toFixed(2)+'"'+"}"
+                        updateArea(temp1,temp[0].reMachTerminalId);
+                        temp_data.push("workArea"+((total_number*3*15)/10000).toPrecision(3))
+                        mm_distance=0
+                        total_number=0;
+                        temp=[];
+                    }
+                }
+
+            }
+
+            if(temp.length>0){
+                var machineryWidths=0;
+                var total_numbers=0;
+                for(var ii=0;ii<temp.length;ii++){
+                    if(ii>=1){
+                        //行驶距离
+                        var pointA = new BMap.Point(temp[ii].lngFixed, temp[ii].latFixed);  // 创建点坐标
+                        var pointB = new BMap.Point(temp[ii - 1].lngFixed, temp[ii - 1].latFixed);  // 创建点坐标
+                        var mm = parseFloat((map.getDistance(pointA, pointB)).toFixed(2));
+                        mm_distance +=mm;
+                    }
+
+                    if(temp[ii].sensor1=='1'){
+                        temp_sensor1.push(temp[ii]);
+                    }else{
+                        if(temp_sensor1.length>0){
+                            for(var a=0;a<temp_sensor1.length;a++){
+                                if(a>=1) {
+                                    var pointA = new BMap.Point(temp_sensor1[a].lngFixed, temp_sensor1[a].latFixed);  // 创建点坐标
+                                    var pointB = new BMap.Point(temp_sensor1[a - 1].lngFixed, temp_sensor1[a - 1].latFixed);  // 创建点坐标
+                                    var mm = parseFloat((map.getDistance(pointA, pointB)).toFixed(2));
+                                    distance += mm;//累加距离
+                                    //console.log("qwe"+distance)
+                                }
+                            }
+                            total_numbers += distance;
+
+                        }
+                        distance=0;
+                        temp_sensor1=[];
+                    }
+                    machineryWidths=temp[ii].machineryWidth;
+                }
+                //console.log("xia"+total_numbers)
+                //console.log("xia"+machineryWidths)
+                jsonData ="{"+'"'+"drivingArea"+'"'+":"+'"'+((mm_distance*machineryWidths*15)/10000).toFixed(2)+'"'+","+'"'+"workTime"+'"'+":"+'"'+((temp.length)/(12*60)).toFixed(2)+'"'+","+'"'+"workArea"+'"'+":"+'"'+((total_numbers*machineryWidths*15)/10000).toFixed(2)+'"'+"}";
+            }
+            if(temp.length>1){
+                updateArea(jsonData,temp[0].reMachTerminalId);
+            }
+
+        },
+        error: function (err) {
+        }});
+
+
+    function  updateArea(jsonData,id) {
+        $.ajax({
+            contentType: "application/json;charset=utf-8",
+            url: apiObjUrl + "/"+id,
+            data: jsonData,
+            dataType: "json",
+            type: 'PUT',
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("Authorization", $.cookie('author_code'));
+            },
+            success: function (data) {
+            },
+            error: function (err) {
+                console.log(err.status);
+            }
+        });
+    }
+
+    $(document).keyup(function (evnet) {
+        if (evnet.keyCode == '13') {
+            onSearchClick();
+        }
+    });
+
+</script>

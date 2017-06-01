@@ -1,0 +1,207 @@
+<script>
+    var apiObjUrl = '{{ site.apiurl }}' + '/api/' + '{{ include.apiName }}';
+</script>
+
+<div id="success" class="alert alert-success po">
+    <a href="#" class="close" data-dismiss="alert">&times;</a>
+    <strong>成功！&nbsp;</strong>操作成功！。
+</div>
+
+<div id="error" class="alert alert-danger po">
+    <a href="#" class="close" data-dismiss="alert">&times;</a>
+    <strong>失败！&nbsp;</strong>&nbsp;操作失败，请联系管理员。
+</div>
+
+<div id="info" class="alert alert-info po">
+</div>
+
+
+<div class="container" style="z-index: 1">
+    <table id="table"
+           class="table table-hover table-bordered table-striped"
+           data-toolbar="#toolbar"
+           data-search="true"
+           data-show-refresh="true"
+           data-show-toggle="true"
+           data-show-columns="true"
+           data-show-export="true"
+           data-minimum-count-columns="2"
+           data-show-pagination-switch="true"
+           data-pagination="true"
+           data-id-field="id"
+           data-page-list="[10, 25, 50, 100, ALL]"
+           datatype="json"
+           data-local="zh-US"
+            >
+    </table>
+</div>
+{% if(include.disableModal != 'true') %}
+<!-- Modal -->
+<div ng-app="app" ng-controller="ctrl" class="modal fade" id="myModal" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" data-backdrop="static">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">添加信息</h4>
+            </div>
+            <div class="modal-body">
+                <div id="myForm" action="#" method="post" class="form-horizontal">
+                    <!--定义上一个标签是否未完结-->
+                    {% assign isFinished = true %}
+                    {% for item in include.inData %}
+                    <!--如果当前为半长-->
+                    {% if item.span == 1 %}
+                    <!--判断上一个标签是否完结-->
+                    {% if isFinished %}
+                    <div class="form-group {% if item.visible == false %}hidden{% endif %}">
+                        <label for="{{ item.id }}" class="col-sm-2 control-label">{{ item.name }}</label>
+
+                        <div class="col-sm-4">
+                            <input type="{% if item.type == 'password' %}password{% else %}text{% endif %}"
+                                   class="form-control" id="{{ item.id }}" name="{{ item.id }}"
+                                   placeholder="{{ item.placeholder }}">
+                        </div>
+                        {% assign isFinished = false %}
+                        {% else %}
+                        <label for="{{ item.id }}" class="col-sm-2 control-label">{{ item.name }}</label>
+
+                        <div class="col-sm-4">
+                            <input type="{% if item.type == 'password' %}password{% else %}text{% endif %}"
+                                   class="form-control" id="{{ item.id }}" name="{{ item.id }}"
+                                   placeholder="{{ item.placeholder }}">
+                        </div>
+                    </div>
+                    {% assign isFinished = true %}
+                    {% endif %}
+                    <!--如果当前为全长-->
+                    {% else %}
+                    <!--判断上一个标签是否完结-->
+                    {% if isFinished %}
+                    <div class="form-group {% if item.visible == false %} hidden {% endif %}">
+                        <label for="{{ item.id }}" class="col-sm-2 control-label">{{ item.name }}</label>
+
+                        <div class="col-sm-10">
+                            <input type="{% if item.type == 'password' %}password{% else %}text{% endif %}"
+                                   class="form-control" id="{{ item.id }}" name="{{ item.id }}"
+                                   placeholder="{{ item.placeholder }}">
+                        </div>
+                    </div>
+                    {% else %}
+                </div>
+                <div class="form-group {% if item.visible == false %} hidden {% endif %}">
+                    <label for="{{ item.id }}" class="col-sm-2 control-label">{{ item.name }}</label>
+
+                    <div class="col-sm-10">
+                        <input type="{% if item.type == 'password' %}password{% else %}text{% endif %}"
+                               class="form-control" id="{{ item.id }}" name="{{ item.id }}"
+                               placeholder="{{ item.placeholder }}">
+                    </div>
+                </div>
+                {% endif %}
+                {% assign isFinished = true %}
+                {% endif %}
+                {% endfor %}
+                <!--判断结尾一个是否为半长,若为半长,则添加标签尾部-->
+                {% if !isFinished %}
+            </div>
+            {% endif%}
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button ng-click="saveObj()" class="btn btn-success"  id="saveObj" style="display: none;"/>
+            <button onclick="checkOrganization()" class="btn btn-success">
+                <i class="glyphicon glyphicon-ok"></i> 保存
+            </button>
+            <button type="button" class="btn btn-primary" data-dismiss="modal">
+                <i class="glyphicon glyphicon-remove"></i> 取消
+            </button>
+        </div>
+    </div>
+</div>
+{% else %}
+<!-- machTerminal Modal -->
+{% include temp/mach_terminal_modal.html %}
+{% endif %}
+
+<script type="text/javascript" src="/static/js/pagesJS/table_gen.js" charset="utf-8"></script>
+
+<script>
+
+function checkOrganization(){
+    var checkTag = "{{ include.apiName }}";
+    //根据操作页面的apiName判断操作的对象，即checkTag变量的值
+    // 如果是baseOrgs，调用组织机构重名校验代码，
+    // 如果是machines，调用机器重名校验代码，
+    // 如果是workers，调用司机重名校验
+
+    if(checkTag =="baseOrgs"){
+        var orgCode = jQuery('#orgCode').val();
+        checkData("baseOrgs","baseOrgs/checkOrganization",orgCode);
+    }else if(checkTag =="machines"){
+        var machCode = jQuery('#machCode').val();
+        checkData("machines","machines/checkMachine",machCode);
+    }else if(checkTag =="workers"){
+        var userName = jQuery('#userName').val();
+        checkData("workers","workers/checkWorker",userName);
+    }else{
+        jQuery("#saveObj").click();
+    }
+}
+
+//用于添加组织机构、农机信息、司机信息时，验证机构代码、农机号牌、司机账号是否已存在的方法
+//参数tag0：验证的对象、tag1：验证url(对应的controller和方法)、tag2：验证参数
+function  checkData(tag0,tag1,tag2){
+    $.ajax({
+        url:API_URL + "/api/"+tag1+"?checkCode="+tag2 ,
+        type:'GET', //GET
+        async:true,    //或false,是否异步
+        //data:{orgCode:'testCode'},
+        timeout:5000,    //超时时间
+        // dataType:'json',    //返回的数据格式：json/xml/html/script/jsonp/text
+        /*beforeSend:function(xhr){
+         console.log(xhr)
+         console.log('发送前')
+         },*/
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader("Authorization", $.cookie('author_code'));
+        },
+        success:function(data,textStatus,jqXHR){
+            console.log(data)
+            console.log(textStatus)
+            console.log(jqXHR)
+            if(data==1){
+                if(tag0=="baseOrgs"){
+                    alert("组织机构代码已存在，请重新输入。");
+                }
+                if(tag0=="machines"){
+                    alert("农机牌号已存在，请重新输入。");
+                }
+                if(tag0=="workers"){
+                    alert("司机账号已存在，请重新输入。");
+                    //测试git提交
+                }
+                return;
+            }else{
+                jQuery("#saveObj").click();
+            }
+            if(data==-1){
+                alert("操作出错，请重试。");
+                return;
+            }
+        },
+        error:function(xhr,textStatus){
+            console.log('错误')
+            console.log(xhr)
+            console.log(textStatus)
+        },
+        complete:function(){
+            console.log('结束')
+        }
+    })
+
+}
+
+
+</script>

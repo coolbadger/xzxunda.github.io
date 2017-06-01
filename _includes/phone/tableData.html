@@ -1,0 +1,170 @@
+<script>
+    var apiObjUrl = '{{ site.apiurl }}' + '/api/' + '{{ include.apiName }}';
+
+</script>
+
+<div style="width: 100%;height: 100%;border: solid 1px darkred">
+
+<div class=".container-fluid">
+
+    <table id="table"
+           class="table table-hover table-bordered table-striped"
+           data-toolbar="#toolbar"
+           data-search="true"
+           data-show-refresh="true"
+           data-show-toggle="true"
+           data-show-columns="true"
+           data-show-export="true"
+           data-minimum-count-columns="2"
+           data-show-pagination-switch="true"
+           data-pagination="true"
+           data-id-field="id"
+           data-page-list="[10, 25, ALL]"
+           datatype="json"
+           data-local="zh-US"
+            >
+    </table>
+</div>
+
+    <div style="background-color: #00a157;" class="col-md-6">
+
+        <div id="row" style="width: 100%;height: 100%; border: 0px solid red; margin-top: 40px">
+            <div class="col-md-12" style="height: 4%;">
+
+            </div>
+            <div class="col-md-12" id="columnChart-box" >
+                {% include temp/chart.html id='columnChart' heading='柱形图'%}
+            </div>
+
+            <div class="col-md-12" style="margin-top: 60px">
+
+            </div>
+
+
+            <div class="col-md-12">
+                {% include temp/chart.html id='pieChart' heading='饼图'%}
+            </div>
+        </div>
+
+
+
+    </div>
+
+</div>
+
+
+
+<script>
+    var nm_drivingArea=0.0;
+    var nm_workArea=0.0;
+    var allWorkTime=0.0;
+    function getData(data) {
+        for(var i=0;i<data.length;i++){
+            nm_workArea+=parseFloat(data[i].allWorkArea)
+            nm_drivingArea+=parseFloat(data[i].allDrivingArea)
+            allWorkTime+=parseFloat(data[i].allWorkTime)
+        }
+
+        for(var i=0;i<data.length;i++){
+            if(data[i].workTime!=undefined){
+                nm_drivingArea=0.0;
+                nm_workArea=0.0;
+                allWorkTime=0.0;
+                nm_workArea+=parseFloat(data[i].workArea)
+                nm_drivingArea+=parseFloat(data[i].drivingArea)
+                allWorkTime+=parseFloat(data[i].workTime)
+            }
+
+
+        }
+
+
+        pieChart(data)
+        columnChart();
+    }
+
+    function  onClickData(row) {
+        nm_workArea=parseFloat(row.allWorkArea)
+        nm_drivingArea=parseFloat(row.allDrivingArea)
+        allWorkTime=parseFloat(row.allWorkTime)
+
+        if(row.workTime!=undefined){
+            nm_workArea=parseFloat(row.workArea)
+            nm_drivingArea=parseFloat(row.drivingArea)
+            allWorkTime=parseFloat(row.workTime)
+        }
+        columnChart();
+    }
+
+
+
+    function columnChart(a) {
+        var chart = new CanvasJS.Chart("columnChart");
+        chart.options.title = {text: "所有作业面积分析柱形图"};
+        chart.options.data = [];
+        var series1 = {type: "column", name: "First Quarter"};
+
+        chart.options.data.push(series1);
+
+            series1.dataPoints = [
+                {label: "农机工作面积", y: nm_drivingArea},
+                {label: "农机有效作业面积", y: nm_workArea}
+            ];
+        chart.render();
+    }
+
+
+    function pieChart(general_data) {
+        var dataTime="[";
+        for(var i=0;i<general_data.length;i++){
+            if(general_data[i].workTime!=undefined){
+
+                dataTime += "{" + "y:" + general_data[i].workTime + "," + "legendText:" + "'" + general_data[i].machCode + general_data[i].machName + "'" + "," + "indexLabel:" + "'" + general_data[i].machCode + general_data[i].machName + "'" + "}" + ","
+
+            }else {
+
+                dataTime += "{" + "y:" + general_data[i].allWorkTime + "," + "legendText:" + "'" + general_data[i].orgCode + general_data[i].orgName + "'" + "," + "indexLabel:" + "'" + general_data[i].orgCode + general_data[i].orgName + "'" + "}" + ","
+            }
+        }
+        dataTime +="]";
+        var j = eval('(' + dataTime + ')');
+        var chart = new CanvasJS.Chart("pieChart",
+                {
+                    title: {
+                        text: "农机工作时间"
+                    },
+                    animationEnabled: true,
+                    legend: {
+                        verticalAlign: "bottom",
+                        horizontalAlign: "center"
+                    },
+                    data: [
+                        {
+                            indexLabelFontSize: 20,
+                            indexLabelFontFamily: "Monospace",
+                            indexLabelFontColor: "darkgrey",
+                            indexLabelLineColor: "darkgrey",
+                            indexLabelPlacement: "outside",
+                            type: "pie",
+                            showInLegend: true,
+                            toolTipContent: "{y} - <strong>#percent%</strong>",
+                            dataPoints: j
+                        }
+                    ]
+                });
+        chart.render();
+    }
+
+
+
+    function  onclick_data(row) {
+        if(row.allWorkTime!=undefined){
+            window.parent.universas(row)
+        }
+    }
+
+
+
+</script>
+
+

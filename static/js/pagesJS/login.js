@@ -9,8 +9,6 @@ $.cookie('management', '', { expires: -1 }); // 删除 cookie
 var secondCtrl = angular.module('login', ['ngRoute', 'httpService']);
 
 
-
-
 secondCtrl.controller('loginCtrl', function ($scope, $location, httpService) {
     $scope.login = function () {
         var userName = $scope.username;
@@ -20,6 +18,26 @@ secondCtrl.controller('loginCtrl', function ($scope, $location, httpService) {
             "password": password
         };
         var author_code = "Basic " + btoa(userName + ":" + password);
+
+        /**
+         * Created by sw on 2017-5-30 20:16:37
+         * 判断pc还是移动端访问
+         * true为pc；false为移动端
+         */
+        var ua = navigator.userAgent.toLocaleLowerCase();
+        var pf = navigator.platform.toLocaleLowerCase();
+        var isAndroid = (/android/i).test(ua)||((/iPhone|iPod|iPad/i).test(ua) && (/linux/i).test(pf))
+            || (/ucweb.*linux/i.test(ua));
+        var isIOS =(/iPhone|iPod|iPad/i).test(ua) && !isAndroid;
+        var isWinPhone = (/Windows Phone|ZuneWP7/i).test(ua);
+
+        var mobileType = {
+            pc:!isAndroid && !isIOS && !isWinPhone,
+            ios:isIOS,
+            android:isAndroid,
+            winPhone:isWinPhone
+        };
+        var pc_phone=mobileType.pc;
 
         $.ajax({
             url: API_URL + "/api/orgUsers",
@@ -35,7 +53,11 @@ secondCtrl.controller('loginCtrl', function ($scope, $location, httpService) {
                         $.cookie('id',data[i].id)
                         $.cookie('management',data[i].management);
                         if(data[i].management=="1"){
-                            window.location.href = "/pages/home.html";
+                            if(pc_phone==false){
+                                window.location.href = "/pages/phone/cartime.html";
+                            }else{
+                                window.location.href = "/pages/home.html";
+                            }
                         }else{
                             window.location.href = "/pages/userHome.html";
                         }

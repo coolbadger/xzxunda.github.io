@@ -1,0 +1,13 @@
+<div>
+    <label for="{{ include.id }}" class="col-md-3 lab_padding">{{ include.text }}</label>
+    <div class="input-group col-md-9">
+        <input id="{{ include.id }}" onchange="{{ include.onTextChange }}"
+               class="form-control input-sm {% if include.showButton != true %}text_input{% endif%}" type="text"
+               placeholder="{{ include.placeholder }}"/>
+        {% if include.showButton == true %}
+        <span class="input-group-btn">
+            <button class="btn btn-sm btn-default" type="button" onclick="{{ include.onclick }}">查询</button>
+        </span>
+        {% endif%}
+    </div>
+</div>
