@@ -7,7 +7,7 @@ layout: base_page
 <script type="text/javascript">
 
     var tableGen = new TableGen();
-    tableGen.editFields = new Array('id', 'orgCode', 'orgName', 'orgContact', 'orgAddress', 'orgTell', 'orgFax', 'orgEmail', 'notes');
+    tableGen.editFields = new Array(/*'id',*/ 'orgCode', 'orgName', 'orgContact', 'orgAddress', 'orgTell', 'orgFax', 'orgEmail', 'notes');
 
     tableGen.validates = {orgCode: "notEmpty", orgName: "notEmpty", orgContact: "notEmpty"};
 
@@ -19,12 +19,12 @@ layout: base_page
                 checkbox: true,
                 align: 'center',
                 valign: 'middle'
-            }, {
+            },/* {
                 title: 'ID',
                 field: 'id',
                 align: 'center',
                 sortable: true,
-            }, {
+            }, */{
                 title: '组织代码',
                 field: 'orgCode',
                 align: 'center',

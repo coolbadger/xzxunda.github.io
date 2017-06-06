@@ -1,0 +1,61 @@
+---
+layout: base_data_charts
+---
+
+{% include mapScript.html %}
+{% include temp/control_head.html %}
+{% include common/canvas.html %}
+{% include phone/tableData.html %}
+<script type="text/javascript" src="/static/js/pagesJS/tableData.js"></script>
+<script type="text/javascript">
+
+    var tableGen = new TableGen();
+    tableGen.editFields = new Array('id', 'orgCode', 'orgName', 'orgContact', 'orgAddress', 'orgTell', 'orgFax', 'orgEmail', 'notes');
+
+    tableGen.validates = {orgCode: "notEmpty", orgName: "notEmpty", orgContact: "notEmpty"};
+
+    tableGen.setTable = function (inTable) {
+        inTable.bootstrapTable({
+            height: $(window).height(),
+            columns: [{
+                field: 'orgName',
+                title: '合作社',
+                align: 'center'
+            }, {
+                field: 'orgAddress',
+                title: '地址',
+                align: 'center'
+            }, {
+                field: 'machSize',
+                title: '农机数/辆',
+                align: 'center'
+            }, {
+                field: 'allDrivingArea',
+                title: '行驶面积/亩',
+                align: 'center'
+            }
+                , {
+                    field: 'allWorkArea',
+                    title: '工作面积/亩',
+                    align: 'center'
+                }
+                , {
+                    field: 'allWorkTime',
+                    title: '工作时间/小时',
+                    align: 'center'
+                }]
+        });
+    };
+
+
+    
+
+    window.operateEvents = tableGen.operationEvent();
+    tableGen.apiName = 'DetailsPage';
+    tableGen.bind();
+
+
+
+
+
+</script>
