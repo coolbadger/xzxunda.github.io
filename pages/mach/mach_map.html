@@ -70,7 +70,7 @@ title: 农机跟踪
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-12" style="min-height:250px;overflow-y:auto;max-height:600px;">
+                <div class="col-md-12" style="min-height:250px;overflow-y:auto;max-height:500px;">
                     {% include temp/simple_table.html %}
                 </div>
             </div>
@@ -268,7 +268,7 @@ title: 农机跟踪
 //                            var dataFirst_getTime=oDate1First.getTime();//时间戳
 //                            var  custom_getTime=1000*60*60*3;//相隔时间定点时间戳
                             var point = new BMap.Point(last_point.lng,last_point.lat);
-                            map.centerAndZoom(point, 15);
+                            map.centerAndZoom(point, 18);
                             var myIcon = new BMap.Icon("/static/images/image4.png", new BMap.Size(16,15));
                             var marker2 = new BMap.Marker(point,{icon:myIcon});  // 创建标注
                             map.addOverlay(marker2);
@@ -325,22 +325,26 @@ title: 农机跟踪
         var gpsCount = 0;
         var co = 0.0015;
         var width = 3;
+        console.log(info);
 
         if (info != '') {
-            var totalLength = 0;
+            var workLength = 0;
             var oldPoint = null;
             for(lineIndex in gpsLines){
                 var gpsLine = gpsLines[lineIndex];
-                for(pointIndex in gpsLine.points){
-                    var point = gpsLine.points[pointIndex];
-                    if (oldPoint == null) {
-                        oldPoint = point;
-                    }
-                    else {
-                        totalLength += machMap.map.getDistance(point, oldPoint);
-                        oldPoint = point;
+                if(gpsLine.sensor1 == "1"){
+                    for(pointIndex in gpsLine.points){
+                        var point = gpsLine.points[pointIndex];
+                        if (oldPoint == null) {
+                            oldPoint = point;
+                        }
+                        else {
+                            workLength += machMap.map.getDistance(point, oldPoint);
+                            oldPoint = point;
+                        }
                     }
                 }
+
 //                gpsLine.forEach(function (point) {
 //                    if (oldPoint == null) {
 //                        oldPoint = point;
@@ -352,7 +356,7 @@ title: 农机跟踪
 //                });
                 gpsCount = gpsLine.points.length;
             }
-            infoStr = info.machName + "\t" + info.machCode + ",总路长:" + totalLength.toFixed(2) + "米,作业宽度:" + "TODO" + "米,作业面积:" + (totalLength * 2 * co).toFixed(2) + "亩";
+            infoStr = info.machName + "\t" + info.machCode + ",作业路长:" + workLength.toFixed(2) + "米,作业宽度:" + width + "米,作业面积:" + (workLength * width * co).toFixed(2) + "亩";
         }
         countStr = '<span class="badge">' + gpsCount + '</span>'
         itemInfo.html(countStr + infoStr);
