@@ -328,20 +328,23 @@ title: 农机跟踪
         console.log(info);
 
         if (info != '') {
-            var totalLength = 0;
+            var workLength = 0;
             var oldPoint = null;
             for(lineIndex in gpsLines){
                 var gpsLine = gpsLines[lineIndex];
-                for(pointIndex in gpsLine.points){
-                    var point = gpsLine.points[pointIndex];
-                    if (oldPoint == null) {
-                        oldPoint = point;
-                    }
-                    else {
-                        totalLength += machMap.map.getDistance(point, oldPoint);
-                        oldPoint = point;
+                if(gpsLine.sensor1 == "1"){
+                    for(pointIndex in gpsLine.points){
+                        var point = gpsLine.points[pointIndex];
+                        if (oldPoint == null) {
+                            oldPoint = point;
+                        }
+                        else {
+                            workLength += machMap.map.getDistance(point, oldPoint);
+                            oldPoint = point;
+                        }
                     }
                 }
+
 //                gpsLine.forEach(function (point) {
 //                    if (oldPoint == null) {
 //                        oldPoint = point;
@@ -353,7 +356,7 @@ title: 农机跟踪
 //                });
                 gpsCount = gpsLine.points.length;
             }
-            infoStr = info.machName + "\t" + info.machCode + ",总路长:" + totalLength.toFixed(2) + "米,作业宽度:" + width + "米,作业面积:" + (totalLength * 2 * co).toFixed(2) + "亩";
+            infoStr = info.machName + "\t" + info.machCode + ",作业路长:" + workLength.toFixed(2) + "米,作业宽度:" + width + "米,作业面积:" + (workLength * 2 * co).toFixed(2) + "亩";
         }
         countStr = '<span class="badge">' + gpsCount + '</span>'
         itemInfo.html(countStr + infoStr);
