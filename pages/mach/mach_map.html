@@ -356,7 +356,7 @@ title: 农机跟踪
 //                });
                 gpsCount = gpsLine.points.length;
             }
-            infoStr = info.machName + "\t" + info.machCode + ",作业路长:" + workLength.toFixed(2) + "米,作业宽度:" + width + "米,作业面积:" + (workLength * 2 * co).toFixed(2) + "亩";
+            infoStr = info.machName + "\t" + info.machCode + ",作业路长:" + workLength.toFixed(2) + "米,作业宽度:" + width + "米,作业面积:" + (workLength * width * co).toFixed(2) + "亩";
         }
         countStr = '<span class="badge">' + gpsCount + '</span>'
         itemInfo.html(countStr + infoStr);
