@@ -14,9 +14,24 @@ title: 农机跟踪
             <div class="row map_top">
                 <div id="map_container"></div>
             </div>
+            <div class="row map_bottom border">
+                <div class="row ">
+                    <div class="col-md-8">
+                        <ul class="list-group map_info" >
+                            <li id="successInfo" class="list-group-item list-group-item-success" >
+                                <span id="successNumber" class="badge">0</span>
+                                <label></label>
+                            </li>
+                        </ul>
+
+                    </div>
+                    <input type="button" class="btn btn-info btn-mini" value="返回" onclick="history.go(0)"
+                           style="width: 100%"/>
+                </div>
+            </div>
         </div>
 
-        <div class="col-md-3 info_part ">
+        <div class="col-md-3 info_part " id="dtlbid">
             <div class="row">
                 <div class="col-md-12">
                     {% include temp/datetime.html id='dtp_start' addDays='-10' text='开始时间:' %}
@@ -80,11 +95,14 @@ title: 农机跟踪
         align: 'center',
     }];
 
-    settings.onDblClickRow = function (row, $element) {
+    settings.onClickRow = function (row, $element) {
 
         $("#process").fadeIn('fast', function () {
             $.when(onRowDbClick(row, $element)).done(
                 function () {
+                    $("#zdjqid").css("display","block");
+                    $("#dtlbid").css("display","none");
+
                     $("#process").fadeOut();
                 }
             );
@@ -187,7 +205,6 @@ title: 农机跟踪
             machMap.clearAll()
             //清除坐标
             var allOverlay = map.getOverlays();
-
             for (var i = 0; i < allOverlay.length -1; i++){
                 map.removeOverlay(allOverlay[i]);
                 return false;
