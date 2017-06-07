@@ -1,12 +1,16 @@
 ---
 layout: base_page
-title: 农机跟踪
+title: 农机列表
 ---
 
 {% include mapScript.html %}
 {% include temp/control_head.html %}
 {% include common/angular.html %}
-
+<ul id="myTab" class="nav nav-tabs">
+    <li class="active col-md-4" onclick="javascript:window.location.href='cartime.html'" style="width:33%;"><a data-toggle="tab">农机</a></li>
+    <li class="col-md-4" onclick="javascript:window.location.href='data_chart.html'" style="width:33%;"><a data-toggle="tab">数据</a></li>
+    <li class="col-md-4" onclick="javascript:window.location.href='groundDails.html'" style="width:33%;"><a data-toggle="tab">设备</a></li>
+</ul>
 
 <div class="main_container">
     <div class="row full_height">
@@ -14,11 +18,12 @@ title: 农机跟踪
             <div class="row map_top">
                 <div id="map_container"></div>
             </div>
-            <div class="row map_bottom border">
+
+            <div class="row map_bottom border" style="border: none">
                 <div class="row ">
 
                     <div class="col-md-8">
-                        <ul class="list-group map_info" >
+                        <ul class="list-group map_info">
                             <li id="successInfo" class="list-group-item list-group-item-success" >
                                 <span id="successNumber" class="badge">0</span>
                                 <label></label>
@@ -26,9 +31,10 @@ title: 农机跟踪
                         </ul>
                     </div>
                     <input type="button" class="btn btn-info btn-mini" value="返回" onclick="history.go(0)"
-                           style="width: 100%"/>
+                           style="width: 96%"/>
                 </div>
             </div>
+
         </div>
         <div class="col-md-3 info_part " id="dtlbid">
             <div class="row">
