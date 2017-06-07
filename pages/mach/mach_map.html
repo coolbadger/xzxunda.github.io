@@ -70,7 +70,7 @@ title: 农机跟踪
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-12" style="min-height:250px;overflow-y:auto;max-height:600px;">
+                <div class="col-md-12" style="min-height:250px;overflow-y:auto;max-height:500px;">
                     {% include temp/simple_table.html %}
                 </div>
             </div>
@@ -268,7 +268,7 @@ title: 农机跟踪
 //                            var dataFirst_getTime=oDate1First.getTime();//时间戳
 //                            var  custom_getTime=1000*60*60*3;//相隔时间定点时间戳
                             var point = new BMap.Point(last_point.lng,last_point.lat);
-                            map.centerAndZoom(point, 15);
+                            map.centerAndZoom(point, 18);
                             var myIcon = new BMap.Icon("/static/images/image4.png", new BMap.Size(16,15));
                             var marker2 = new BMap.Marker(point,{icon:myIcon});  // 创建标注
                             map.addOverlay(marker2);
@@ -352,7 +352,7 @@ title: 农机跟踪
 //                });
                 gpsCount = gpsLine.points.length;
             }
-            infoStr = info.machName + "\t" + info.machCode + ",总路长:" + totalLength.toFixed(2) + "米,作业宽度:" + "2" + "米,作业面积:" + (totalLength * 2 * co).toFixed(2) + "亩";
+            infoStr = info.machName + "\t" + info.machCode + ",总路长:" + totalLength.toFixed(2) + "米,作业宽度:" + width + "米,作业面积:" + (totalLength * 2 * co).toFixed(2) + "亩";
         }
         countStr = '<span class="badge">' + gpsCount + '</span>'
         itemInfo.html(countStr + infoStr);
