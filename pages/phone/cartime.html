@@ -2,7 +2,7 @@
 layout: base_page
 title: 农机跟踪
 ---
-<!--手机端不支持双击事件，可以做双击时间间隔处理或更换触发事件-->
+
 {% include mapScript.html %}
 {% include temp/control_head.html %}
 {% include common/angular.html %}
@@ -16,6 +16,7 @@ title: 农机跟踪
             </div>
             <div class="row map_bottom border">
                 <div class="row ">
+
                     <div class="col-md-8">
                         <ul class="list-group map_info" >
                             <li id="successInfo" class="list-group-item list-group-item-success" >
@@ -23,14 +24,12 @@ title: 农机跟踪
                                 <label></label>
                             </li>
                         </ul>
-
                     </div>
                     <input type="button" class="btn btn-info btn-mini" value="返回" onclick="history.go(0)"
                            style="width: 100%"/>
                 </div>
             </div>
         </div>
-
         <div class="col-md-3 info_part " id="dtlbid">
             <div class="row">
                 <div class="col-md-12">
@@ -44,7 +43,7 @@ title: 农机跟踪
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-12" style="min-height:250px;overflow-y:auto;max-height:600px;">
+                <div class="col-md-12" style="min-height:250px;overflow-y:auto;max-height:500px;">
                     {% include temp/simple_table.html %}
                 </div>
             </div>
@@ -100,9 +99,6 @@ title: 农机跟踪
         $("#process").fadeIn('fast', function () {
             $.when(onRowDbClick(row, $element)).done(
                 function () {
-                    $("#zdjqid").css("display","block");
-                    $("#dtlbid").css("display","none");
-
                     $("#process").fadeOut();
                 }
             );
@@ -193,6 +189,9 @@ title: 农机跟踪
     }
     // 双击选中行事件
     function onRowDbClick(row, $element) {
+        $("#zdjqid").css("display","block");
+        $("#dtlbid").css("display","none");
+
         var defer = $.Deferred();
         var cssClass = $element.attr('class');
         if (cssClass) {
@@ -205,6 +204,7 @@ title: 农机跟踪
             machMap.clearAll()
             //清除坐标
             var allOverlay = map.getOverlays();
+
             for (var i = 0; i < allOverlay.length -1; i++){
                 map.removeOverlay(allOverlay[i]);
                 return false;
@@ -244,7 +244,7 @@ title: 农机跟踪
 //                            var dataFirst_getTime=oDate1First.getTime();//时间戳
 //                            var  custom_getTime=1000*60*60*3;//相隔时间定点时间戳
                         var point = new BMap.Point(last_point.lng,last_point.lat);
-                        map.centerAndZoom(point, 15);
+                        map.centerAndZoom(point, 18);
                         var myIcon = new BMap.Icon("/static/images/image4.png", new BMap.Size(16,15));
                         var marker2 = new BMap.Marker(point,{icon:myIcon});  // 创建标注
                         map.addOverlay(marker2);
@@ -301,22 +301,26 @@ title: 农机跟踪
         var gpsCount = 0;
         var co = 0.0015;
         var width = 3;
+        console.log(info);
 
         if (info != '') {
-            var totalLength = 0;
+            var workLength = 0;
             var oldPoint = null;
             for(lineIndex in gpsLines){
                 var gpsLine = gpsLines[lineIndex];
-                for(pointIndex in gpsLine.points){
-                    var point = gpsLine.points[pointIndex];
-                    if (oldPoint == null) {
-                        oldPoint = point;
-                    }
-                    else {
-                        totalLength += machMap.map.getDistance(point, oldPoint);
-                        oldPoint = point;
+                if(gpsLine.sensor1 == "1"){
+                    for(pointIndex in gpsLine.points){
+                        var point = gpsLine.points[pointIndex];
+                        if (oldPoint == null) {
+                            oldPoint = point;
+                        }
+                        else {
+                            workLength += machMap.map.getDistance(point, oldPoint);
+                            oldPoint = point;
+                        }
                     }
                 }
+
 //                gpsLine.forEach(function (point) {
 //                    if (oldPoint == null) {
 //                        oldPoint = point;
@@ -328,7 +332,7 @@ title: 农机跟踪
 //                });
                 gpsCount = gpsLine.points.length;
             }
-            infoStr = info.machName + "\t" + info.machCode + ",总路长:" + totalLength.toFixed(2) + "米,作业宽度:" + "TODO" + "米,作业面积:" + (totalLength * 2 * co).toFixed(2) + "亩";
+            infoStr = info.machName + "\t" + info.machCode + ",作业路长:" + workLength.toFixed(2) + "米,作业宽度:" + width + "米,作业面积:" + (workLength * width * co).toFixed(2) + "亩";
         }
         countStr = '<span class="badge">' + gpsCount + '</span>'
         itemInfo.html(countStr + infoStr);
