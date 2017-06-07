@@ -12,10 +12,10 @@ GpsLine.prototype.colorString;
 GpsLine.prototype.setSensor1 = function (sensor1) {
     this.sensor1 = sensor1;
     if(sensor1 == "0"){
-        this.colorString = "#20ae15";
+        this.colorString = "#c7deea";
     }
     else{
-        this.colorString = "#efd6d6";
+        this.colorString = "#20ae15";
     }
 }
 
