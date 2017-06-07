@@ -68,35 +68,41 @@ GpsRecordLine.prototype.addRecords = function (records) {
             if (isAnother == false && spanTime > 5 * 1000 * 60) {
                 isAnother = true;
             }
-            //距离大于150米，则是第二条线
+            //距离大于50米，则是第二条线
             var lastBPoint = new BMap.Point(lastItem.lngFixed, lastItem.latFixed);
             var thisBPoint = new BMap.Point(item.lngFixed, item.latFixed);
             var distance = machMap.map.getDistance(lastBPoint,thisBPoint);
-            if(isAnother == false && distance>15){
+            if(isAnother == false && distance>50){
+                // console.log("distance:" + distance)
                 isAnother = true;
             }
+
             //当是另一条线或是最后一个点时，划线
-            if(isAnother||i==records.length-1){
+            if(isAnother||i==records.length-1) {
                 //划线
                 // console.log("端点");
+                // console.log(item);
 
-                if(lineItems.length<3){
-                    //TODO:N个点内的线段过滤
-                    lineItems = [item];
-                }
-                else {
-                    var line = new GpsLine();
-                    for(var j=0;j<lineItems.length;j++) {
-                        if(j==0){
-                            line.setSensor1(lineItems[j].sensor1);
-                        }
-                        var point = new BMap.Point(lineItems[j].lngFixed, lineItems[j].latFixed);
-                        line.points.push(point);
+                // if(lineItems.length<3){
+                //     //TODO:N个点内的线段过滤
+                //     lineItems = [item];
+                //     console.log("过滤掉的线段");
+                //     console.log(lineItems);
+                // }
+                // else {
+                // }
+
+                var line = new GpsLine();
+                for (var j = 0; j < lineItems.length; j++) {
+                    if (j == 0) {
+                        line.setSensor1(lineItems[j].sensor1);
                     }
-                    this.lines.push(line);
-                    //清除记录
-                    lineItems = [item];
+                    var point = new BMap.Point(lineItems[j].lngFixed, lineItems[j].latFixed);
+                    line.points.push(point);
                 }
+                this.lines.push(line);
+                //清除记录
+                lineItems = [item];
             }
             else {
                 lineItems.push(item)
