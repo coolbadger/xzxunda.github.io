@@ -15,12 +15,11 @@ layout: base_page
         inTable.bootstrapTable({
             height: $(window).height(),
             columns: [{
-                title: 'ID',
-                field: 'id',
-                align: 'center',
-                sortable: true,
-            },
-                {
+                    title: 'ID',
+                    field: 'id',
+                    align: 'center',
+                    sortable: true,
+                }, {
                     title: '合作社',
                     field: 'orgName',
                     align: 'center',
@@ -32,45 +31,63 @@ layout: base_page
                     title: '所在地',
                     field: 'orgAddress',
                     align: 'center',
-                },
-
-                {
-                title: '电话',
-                field: 'orgTell',
-                align: 'center',
-            },{
+                }, {
+                    title: '电话',
+                    field: 'orgTell',
+                    align: 'center',
+                }, {
                     title: '传真',
                     field: 'orgFax',
                     align: 'center',
-                },{
+                }, {
                     title: '邮箱',
                     field: 'orgEmail',
                     align: 'center',
-                },
-                {
-                title: '创建时间',
-                field: 'createTime',
-                align: 'center',
-            }, {
-                title: '创建用户',
-                field: 'creator',
-                align: 'center',
-            },
-                {
+                }, {
+                    title: '创建时间',
+                    field: 'createTime',
+                    align: 'center',
+                    formatter: function (value, row, index) {
+                        return changeDateFormat(value)
+                    }
+                }, {
+                    title: '创建用户',
+                    field: 'creator',
+                    align: 'center',
+                }, {
                     title: '农机数量',
                     field: 'machSize',
                     align: 'center',
-                },{
-                title: '备注',
-                field: 'notes',
-                align: 'center',
-            }]
+                }, {
+                    title: '备注',
+                    field: 'notes',
+                    align: 'center',
+                }
+            ]
         });
+    }
+
+    function changeDateFormat(val){
+        var date = new Date();
+        date.setTime(val);
+        var rs = date.getFullYear() + "-";
+        rs += PrefixInteger(date.getMonth() + 1, 2) + "-";
+        rs += PrefixInteger(date.getDate(), 2) + " ";
+        rs += PrefixInteger(date.getHours(), 2) + ":";
+        rs += PrefixInteger(date.getMinutes(), 2) + ":";
+        rs += PrefixInteger(date.getSeconds(), 2);
+
+        return rs;
+    }
+
+    function PrefixInteger(num, length) {
+        return (Array(length).join('0') + num).slice(-length);
     }
 
     window.operateEvents = tableGen.operationEvent();
     tableGen.apiName = 'CptDetails';
 
     tableGen.bind();
+    $("#toolbar").hide();
 
 </script>
