@@ -324,7 +324,9 @@ title: 农机跟踪
         var infoStr = '<label></label>';
         var gpsCount = 0;
         var co = 0.0015;
-        var width = 3;
+        var factor = 0.84;
+        var width = 2.5;
+        width = width * factor;
         console.log(info);
 
         if (info != '') {
